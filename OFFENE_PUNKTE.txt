@@ -1,0 +1,70 @@
+Offene Punkte (Stand 20.10.2026)
+================================
+
+Erledigt am 17.10.2026
+- zucker.html: Polarimeter neu gezeichnet (Lichtstrahl mit Photonen als Wellenpakete,
+  Kreise "Blick in den Lichtstrahl" in eigener Reihe, Messen auf Dunkelheit,
+  Halbschatten als Schalter, Helligkeit in % im Schirm), Fischer-Projektionen.
+- drehung.html: "Drehen um C–C-Bindungen" fertig und online (Scans, Export, Seite,
+  Menü, Karte, README, Quellen).
+- "Kurve löschen" in Elektronenpaarabstoßung und Drehen um C–C.
+- methoden.html: Methodenseite, von jeder Seite (Modell und Grenzen) verlinkt.
+
+1. drehung.html – Literaturwerte prüfen
+   - Dichlorethan gauche–anti in der Gasphase "etwa 5 kJ/mol" (Text unter "Modell und
+     Grenzen"); Rechnung ergibt 6,7 kJ/mol.
+   - Vergleichswert Ethen 270 kJ/mol: Douglas, Rabinovitch, Looney, J. Chem. Phys. 23
+     (1955) 315 – Zitat prüfen. Rechnung für Dichlorethen: 232 kJ/mol.
+   - Evtl. Siedepunkte Z/E-Dichlorethen (ca. 60 °C / 48 °C) als Antwort zu Aufgabe 4.
+
+1b. methoden.html gegenlesen (fachlich und sprachlich); die Tabelle "Rechnung gegen
+   Messung" enthält dieselben Literaturwerte wie unter Punkt 1.
+
+2. Zucker im Polarimeter: Halbwertszeit der Mutarotation (45 min) ist ein Näherungswert;
+   Literatur prüfen.
+
+3. Rechtliches: Impressum/Datenschutz von Fachperson prüfen lassen;
+   Aussage zum EU-US Data Privacy Framework bei GitHub gegen aktuelle
+   GitHub-Datenschutzerklärung prüfen.
+
+4. Nicht auf echter Hardware getestet (nur Headless-Browser): Elektronenwolken,
+   Eis, Elektronenpaarabstoßung (WebGL) auf iPad / echter Grafikkarte prüfen;
+   ebenso die Photonen-Animation im Polarimeter und drehung.html auf dem Handy.
+
+5. Neue Seiten Chemie 8 (NTG), LehrplanPLUS LB 3 "Chemische Reaktion" (ca. 36 Std.)
+   Vier kurze Seiten statt einer großen. Reihenfolge beim Bauen: 2, 1, 3, 4.
+   Jede Seite: Vorhersage, Experiment, Erklärung, "Modell und Grenzen" (-> methoden.html);
+   dazu Menü auf allen Seiten, Karte auf index.html, README, quellen.html.
+   Stoffwerte (molare Massen, ΔH) vor dem Veröffentlichen gegen Quelle prüfen.
+   a) Energie der Reaktion: exotherm/endotherm, Aktivierung, Katalyse. Energiediagramm mit
+      Schiebereglern für Edukt/Produkt; Katalysator senkt die Hürde, ΔH bleibt; Teilchenbild
+      (Bindungen lösen/knüpfen, Dalton-Modell).
+   b) Gleichungen ausgleichen: Erhaltung der Masse, Reaktionsgleichung. Atom-Kugeln (Dalton),
+      Koeffizienten einstellen, Atombilanz links/rechts live, Waage. H2O bis CH4-Verbrennung.
+   c) Stoffmenge und molare Masse: n, m, N, V, Avogadro-Konstante, M, Vm. "Zählen durch
+      Wiegen", Umrechnen in beide Richtungen mit Kontrolle.
+   d) Stoffumsatz: Verbindet b) und c). "10 g Mg ergibt wie viel g MgO?", dazu
+      Gasvariante; schrittweise mit Hilfen.
+   Offen: Arbeitsblatt (PDF) zu jeder Seite gewünscht? Für wen genau (eigene Klasse,
+   Kollegin/Kollege, Wiederholung NTG 9 / SG 9)?
+
+6. Neue Seiten Elektrochemie: NTG 9 LB 3 "Donator-Akzeptor-Konzept – Elektronenübergänge"
+   (ca. 18 Std., 7 Profil); SG 9 LB 6 (ca. 9 Std.); SG 10 LB 5 "Redoxreaktionen in
+   wässriger Lösung" (ca. 18 Std.). Inhalte NTG 9: Elektrolyse, exotherme Salzbildung und
+   Gitterenergie, Redox, Teilgleichungen, Oxidations-/Reduktionsmittel, galvanische
+   Elemente (Zink-Iod, Magnesium-Iod, Daniell), Redoxreihe, Batterien; Profil: Thermit,
+   Pyrotechnik, Metallherstellung durch Elektrolyse.
+   Vorschlag, ein Satz Seiten für beide Klassen:
+   a) Salzbildung Na + Cl2: Elektronenübergang, Gitterenergie als Energietreppe
+      (Anschluss an ionisierung.html, fuellen.html, pse.html)
+   b) Elektrolyse: Ionenwanderung, Entladen an den Elektroden, Teilgleichungen
+   c) Redox-Baukasten: Teilgleichungen kombinieren, Oxidations-/Reduktionsmittel
+   d) Galvanische Zelle (Daniell, Zn–I): Spannung, Elektronenfluss
+   e) Redoxreihe: Metalle gegeneinander, Vorhersage und Experiment
+   f) nur SG 10: Oxidationszahlen-Trainer, Brennstoffzelle (Methanol/Ethanol)
+   g) optional Profil NTG 9: Thermit, Pyrotechnik
+   Hinweis: Im SG-10-Lehrplantext kommen Elektrolyse, galvanische Zelle, Redoxreihe nicht
+   vor (stehen in SG 9 LB 6). Zeitpunkt des Beginns klären.
+   Quellen: lehrplanplus.bayern.de/fachlehrplan/gymnasium/{8/chemie, 9/chemie/ch-ntg,
+   9/chemie/ch, 10/chemie/ch, 10/chemie/ch-ntg}; Q12 "Redoxgleichgewichte" nur aus ISB-
+   Übersicht bekannt, nicht geprüft.
