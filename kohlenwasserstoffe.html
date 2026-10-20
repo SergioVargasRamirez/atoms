@@ -289,7 +289,7 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
     <div class="lab">
       <div class="stagewrap">
         <div class="status" id="status" aria-live="polite"></div>
-        <canvas id="stage" tabindex="0" aria-label="Räumliches Modell des Moleküls. Ziehen dreht es. Tippen auf ein H-Atom hängt ein C-Atom an, Tippen auf eine C–C-Bindung ändert die Bindung."></canvas>
+        <canvas id="stage" tabindex="0" aria-label="Räumliches Modell des Moleküls. Ziehen dreht es. Zwei Finger, Strg plus Mausrad oder die Tasten Plus und Minus zoomen. Tippen auf ein H-Atom hängt ein C-Atom an, Tippen auf eine C–C-Bindung ändert die Bindung."></canvas>
         <div class="meter"><span>Summenformel</span><b id="formout">CH₄</b></div>
         <div class="readout" id="readout"></div>
         <div class="flatwrap">
@@ -358,6 +358,12 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
         <label class="switch"><input type="checkbox" id="hchk" checked> Wasserstoffatome zeigen</label>
         <label class="switch"><input type="checkbox" id="numchk"> Hauptkette nummerieren</label>
         <label class="switch"><input type="checkbox" id="autochk"> Dreht sich langsam</label>
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap" role="group" aria-label="Zoom">
+          <span style="font-weight:600">Zoom</span>
+          <button class="btn" type="button" id="z-out" aria-label="Verkleinern">−</button>
+          <button class="btn" type="button" id="z-in" aria-label="Vergrößern">+</button>
+          <button class="btn" type="button" id="z-reset">Zurücksetzen</button>
+        </div>
         <p class="hint" id="viewhint" style="margin:0"></p>
       </div>
     </div>
@@ -909,7 +915,7 @@ let undo = [], task = null, lastName = "", tips = [], tipShown = 0;
 let reveal = false, viewingTyped = false, typedMol = null;
 let showH = true, showNum = false, auto = false, flatMode = "semi";
 let rotY = 0.7, rotX = 0.35;
-let W = 0, H = 0, SC = 1, hits = [], bondHits = [];
+let W = 0, H = 0, SC = 1, SC0 = 1, ZM = 1, hits = [], bondHits = [];   // SC0: automatische Größe, ZM: Zoom der Schüler, SC = SC0 * ZM
 let iso = null;
 
 const useStereo = () => mode === "frei" || (mode === "isomere" ? $("isoz").checked : level === 3);
@@ -1173,7 +1179,7 @@ function refresh(){
   const r = safeName(useStereo() ? mol : stripZ(mol));
   nameRes = r;
   const R = Math.max(1, ...geo.atoms.map(a => v3.len(a.p)));
-  SC = Math.min(0.44 * Math.min(W, H) / (R + 0.5), Math.min(W, H) / 4.6);
+  SC0 = Math.min(0.44 * Math.min(W, H) / (R + 0.5), Math.min(W, H) / 4.6); SC = SC0 * ZM;
   $("formout").textContent = formula(mol);
   $("readout").textContent = (mode === "frei" || mode === "isomere" || reveal) && r ? r.name : `${mol.n} C-Atom${mol.n === 1 ? "" : "e"}`;
   if (mode === "frei") $("freename").textContent = r ? r.name : (mol.n > 1 ? "(kein Name möglich)" : "Methan");
@@ -1423,15 +1429,31 @@ $("hchk").addEventListener("change", e => { showH = e.target.checked; refresh();
 $("numchk").addEventListener("change", e => { showNum = e.target.checked; draw(); });
 $("autochk").addEventListener("change", e => { auto = e.target.checked; });
 $("anschk").addEventListener("change", e => $("obs").classList.toggle("show", e.target.checked));
+// Zoom: Knöpfe, Tasten + − 0, Strg + Mausrad (auch Pinch am Trackpad), zwei Finger am Touchscreen
+function setZoom(z){ ZM = Math.max(0.5, Math.min(4, z)); SC = SC0 * ZM; draw(); }
+$("z-in").addEventListener("click", () => setZoom(ZM * 1.25));
+$("z-out").addEventListener("click", () => setZoom(ZM / 1.25));
+$("z-reset").addEventListener("click", () => setZoom(1));
+cv.addEventListener("wheel", e => { if (!e.ctrlKey) return; e.preventDefault(); setZoom(ZM * Math.exp(-e.deltaY * 0.01)); }, {passive:false});
+const ptrs = new Map(); let pinch = null;
+const ptrDist = () => { const [a, b] = [...ptrs.values()]; return Math.hypot(a.x - b.x, a.y - b.y) || 1; };
 // Ziehen dreht, kurzes Tippen baut
 let drag = null;
-cv.addEventListener("pointerdown", e => { cv.setPointerCapture(e.pointerId); drag = {x:e.clientX, y:e.clientY, moved:0}; });
+cv.addEventListener("pointerdown", e => {
+  cv.setPointerCapture(e.pointerId); ptrs.set(e.pointerId, {x:e.clientX, y:e.clientY});
+  if (ptrs.size === 2){ pinch = {d0:ptrDist(), z0:ZM}; drag = null; return; }
+  drag = {x:e.clientX, y:e.clientY, moved:0};
+});
+cv.addEventListener("pointercancel", e => { ptrs.delete(e.pointerId); pinch = null; drag = null; });
 cv.addEventListener("pointermove", e => {
+  if (ptrs.has(e.pointerId)) ptrs.set(e.pointerId, {x:e.clientX, y:e.clientY});
+  if (pinch && ptrs.size === 2){ setZoom(pinch.z0 * ptrDist() / pinch.d0); return; }
   if (!drag) return;
   const dx = e.clientX - drag.x, dy = e.clientY - drag.y; drag.moved += Math.abs(dx) + Math.abs(dy); drag.x = e.clientX; drag.y = e.clientY;
   if (drag.moved > 4){ rotY += dx * 0.01; rotX = Math.max(-1.6, Math.min(1.6, rotX + dy * 0.01)); draw(); }
 });
 cv.addEventListener("pointerup", e => {
+  ptrs.delete(e.pointerId); if (ptrs.size < 2) pinch = null;
   if (drag && drag.moved <= 4 && editable()){
     const r = cv.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
     const near = hits.filter(h => Math.hypot(h.X - x, h.Y - y) < h.r).sort((p, q) => q.z - p.z)[0];
@@ -1449,6 +1471,9 @@ cv.addEventListener("pointerup", e => {
   drag = null;
 });
 cv.addEventListener("keydown", e => {
+  if (e.key === "+" || e.key === "="){ setZoom(ZM * 1.25); e.preventDefault(); return; }
+  if (e.key === "-" || e.key === "_"){ setZoom(ZM / 1.25); e.preventDefault(); return; }
+  if (e.key === "0"){ setZoom(1); e.preventDefault(); return; }
   if (e.key === "ArrowLeft") rotY -= 0.1; else if (e.key === "ArrowRight") rotY += 0.1;
   else if (e.key === "ArrowUp") rotX -= 0.1; else if (e.key === "ArrowDown") rotX += 0.1; else return;
   e.preventDefault(); draw();
