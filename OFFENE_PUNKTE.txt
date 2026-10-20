@@ -106,3 +106,21 @@ Erledigt am 17.10.2026
    d) Auf Handy und iPad mit dem Finger testen (Plus/Minus-Knöpfe 40 bis 44 px).
    e) Aggregatzustände (g), (l), (s), (aq) und Reaktionsbedingungen fehlen bewusst.
    f) Verknüpfung mit den nächsten Seiten: Stoffmenge (c) soll dieselben Reaktionen nutzen.
+
+9. Noch zu bauen (Stand 20.10.2026)
+   Chemie 8 (Punkt 5): a) Energie der Reaktion, c) Stoffmenge und molare Masse, d) Stoffumsatz.
+      c) und d) sollen die Reaktionen und Atommassen aus gleichungen.html nutzen.
+   Elektrochemie (Punkt 6): NTG 9 LB 3, SG 9 LB 6, SG 10 LB 5; vorher klären, wann NTG 9 LB 3 beginnt.
+   Kohlenwasserstoffe (Punkt 7): Schreibweise gegen Schulbuch, Hauptkettenregel, Tastaturbedienung,
+      Ringe (Cycloalkane) als möglicher nächster Schritt.
+   Älteres (Punkte 1 bis 4): Literaturwerte Drehung, Methoden korrekturlesen, Mutarotation-Halbwertszeit,
+      rechtliche Prüfung, Test auf echten Geräten.
+   Alle neuen Seiten (kohlenwasserstoffe, gleichungen): mit dem Finger auf Handy und iPad testen.
+
+10. Seiten nach Jahrgangsstufe ordnen (Menü und Startseite sind zu voll)
+   Menü und index.html sind nach Thema gruppiert und mit jeder Seite länger geworden.
+   Idee: Auswahl nach Jahrgangsstufe (8, 9 NTG, 9 SG, 10 NTG, 10 SG) zusätzlich zur Themenliste,
+   zum Beispiel Filter-Knöpfe auf index.html und im Menü eine einklappbare Gruppierung.
+   Dazu jeder Seite die Jahrgangsstufe zuordnen (Tags stehen schon auf den Karten, aber teils
+   ungenau, z. B. "Jgst. 8–10" bei Alkane). Vorher mit LehrplanPLUS abgleichen.
+   Betrifft template/site/nav.html, build.py (Menü wird in alle Seiten kopiert) und index.html.
