@@ -215,6 +215,8 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
     <a href="london.html">London-Kräfte</a>
     <a href="wasser.html">Wasser: Tropfen und Eis</a>
     <a href="eis.html">Eis und Wasser in 3D</a>
+    <p class="sidenav-group">Chemische Reaktion</p>
+    <a href="gleichungen.html">Gleichungen ausgleichen</a>
     <p class="sidenav-group">Säuren und Basen</p>
     <a href="protonen.html">Protonenübergang</a>
     <a href="ammoniak.html">Ammoniak in Wasser</a>
@@ -301,6 +303,7 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
             <tr><th scope="row"><a href="#s-london">London-Kräfte</a></th><td><span class="kind k-sim">Simulation</span></td><td>schwankende Elektronenwolken (Drude-Modell), Lennard-Jones-Teilchen</td></tr>
             <tr><th scope="row"><a href="#s-wasser">Wasser: Tropfen und Eis</a></th><td><span class="kind k-sim">Simulation</span></td><td>zweidimensionales Wassermodell mit drei Armen (Mercedes-Benz-Modell)</td></tr>
             <tr><th scope="row"><a href="#s-eis">Eis und Wasser in 3D</a></th><td><span class="kind k-sim">Simulation</span></td><td>Eisgitter nach den Eisregeln, Schnappschuss aus OpenMM (TIP4P-Ew)</td></tr>
+            <tr><th scope="row"><a href="#s-gleichungen">Gleichungen ausgleichen</a></th><td><span class="kind k-rule">Regeln</span> <span class="kind k-lit">Messwerte</span></td><td>Atombilanz, kleinste ganze Zahlen (Gauß-Verfahren mit Brüchen), Atommassen, Waage, Kugelbild</td></tr>
             <tr><th scope="row"><a href="#s-saeuren">Protonenübergang, Ammoniak, Neutralisation</a></th><td><span class="kind k-sim">Simulation</span> <span class="kind k-rule">Regeln</span></td><td>gemeinsame Teilchen-Engine, Protonensprünge nach Regeln</td></tr>
           </tbody>
         </table>
@@ -523,6 +526,16 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
       <div class="page-entry" id="s-eis">
         <h3><a href="eis.html">Eis und Wasser in 3D</a></h3>
         <p>Eis Ih aus 96 Molekülen, H-Atome nach den Eisregeln auf einem Euler-Weg durch das Brückennetz verteilt. Flüssiges Wasser: Schnappschuss aus einer <a href="#md">OpenMM-Rechnung</a> (TIP4P-Ew, 20 °C, 1 bar). Als Wasserstoffbrücke zählt O···O kürzer als 3,5 Å mit dem H höchstens 30° neben der Verbindungslinie.</p>
+      </div>
+
+      <div class="page-entry" id="s-gleichungen">
+        <h3><a href="gleichungen.html">Gleichungen ausgleichen</a></h3>
+        <ul>
+          <li><b>Atombilanz:</b> Für jede Atomsorte wird die Zahl der Atome links und rechts aus Koeffizient mal Index berechnet (Klammern in Formeln wie Ca(OH)₂ werden aufgelöst). Die Gleichung gilt als ausgeglichen, wenn alle Sorten links und rechts gleich sind. Wenn dazu die Zahlen noch einen gemeinsamen Teiler haben, meldet die Seite, dass man kürzen muss.</li>
+          <li><b>Lösung:</b> Die Seite löst jede Gleichung selbst: Die Atombilanz ist ein lineares Gleichungssystem, dessen Lösungen alle Vielfache eines Zahlenvektors sind. Er wird mit dem Gauß-Verfahren in Brüchen bestimmt und mit dem kleinsten gemeinsamen Nenner auf die kleinsten ganzen Zahlen gebracht. Alle 35 Reaktionen haben eine eindeutige, positive Lösung; die Lösungen stimmen mit den bekannten Gleichungen überein (zum Beispiel 2 C₄H₁₀ + 13 O₂ → 8 CO₂ + 10 H₂O).</li>
+          <li><b>Waage:</b> Sie addiert Koeffizient mal Masse der Formel für beide Seiten. Die Atommassen sind gerundete Standardatomgewichte (IUPAC, gekürzte Tabelle). Der Ausschlag ist nur eine Anzeige (je größer der Unterschied, desto stärker, aber begrenzt), keine Messung.</li>
+          <li><b>Teilchenbild:</b> Jedes Teilchen ist eine kleine Gruppe von Kugeln (Dalton-Modell). Zweiatomige Teilchen liegen nebeneinander, bei Wasser, Ammoniak, Methan, Schwefelwasserstoff und Schwefeldioxid steht das Zentralatom in der Mitte (Wasser gewinkelt, Kohlenstoffdioxid gestreckt), alle anderen werden kompakt gepackt, ohne Bindungen. Die Kugelgröße wächst grob mit dem Atomradius, ist aber nicht maßstäblich. Die Größe des ganzen Bilds passt sich der Zahl der Teilchen an.</li>
+        </ul>
       </div>
 
       <div class="page-entry" id="s-saeuren">

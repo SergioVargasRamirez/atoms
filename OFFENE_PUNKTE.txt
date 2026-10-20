@@ -36,10 +36,12 @@ Erledigt am 17.10.2026
    Jede Seite: Vorhersage, Experiment, Erklärung, "Modell und Grenzen" (-> methoden.html);
    dazu Menü auf allen Seiten, Karte auf index.html, README, quellen.html.
    Stoffwerte (molare Massen, ΔH) vor dem Veröffentlichen gegen Quelle prüfen.
+   Stand 20.10.2026: b) ist gebaut (gleichungen.html, siehe Punkt 8). Keine PDF-Arbeitsblätter
+   (Entscheidung von Sergio). a), c), d) offen.
    a) Energie der Reaktion: exotherm/endotherm, Aktivierung, Katalyse. Energiediagramm mit
       Schiebereglern für Edukt/Produkt; Katalysator senkt die Hürde, ΔH bleibt; Teilchenbild
       (Bindungen lösen/knüpfen, Dalton-Modell).
-   b) Gleichungen ausgleichen: Erhaltung der Masse, Reaktionsgleichung. Atom-Kugeln (Dalton),
+   b) [FERTIG, Punkt 8] Gleichungen ausgleichen: Erhaltung der Masse, Reaktionsgleichung. Atom-Kugeln (Dalton),
       Koeffizienten einstellen, Atombilanz links/rechts live, Waage. H2O bis CH4-Verbrennung.
    c) Stoffmenge und molare Masse: n, m, N, V, Avogadro-Konstante, M, Vm. "Zählen durch
       Wiegen", Umrechnen in beide Richtungen mit Kontrolle.
@@ -89,3 +91,18 @@ Erledigt am 17.10.2026
       Cycloalkane wären der nächste Schritt (C4H8: 6 Isomere statt 4).
    g) Vergleichszahlen der Tabelle (Alkane bis C8, Alkene bis C6 mit Z/E 4, 6, 17) stimmen mit
       der Literatur; Quelle für Alkene/Alkine noch ergänzen (z. B. OEIS-Folgen).
+
+8. gleichungen.html (neu, 20.10.2026): Reaktionsgleichungen ausgleichen (Chemie 8 b)
+   Fertig: Koeffizienten per Plus/Minus, Atombilanz live, Teilchenbild (Dalton), Waage,
+   Aufgabenart Ausgleichen (3 Stufen, Prüfen, Tipp, Lösung) und Erkunden (alle 35 Reaktionen),
+   Index-Falle, Menü, Karte, README, Methoden, Quellen. Alle Reaktionen sind mit einem
+   Gauß-Löser auf eindeutige kleinste Lösung geprüft. Noch zu klären:
+   a) Atommassen (gerundete IUPAC-Werte, z. B. Cl 35,45; Schulbuch nutzt oft 35,5, Cu 63,5)
+      gegen die Tabelle im Schulbuch halten; ggf. auf Schulwerte umstellen.
+   b) Schreibweise im Schulbuch: "Wasserstoffperoxid", "Eisen(II,III)-oxid", "Photosynthese"
+      (Duden erlaubt auch Fotosynthese), "Kohlenstoffmonooxid" gegen das, was im Unterricht gilt.
+   c) Stufen sortieren: Reaktionen mit Säuren, Thermit und Ostwald-Verfahren stehen im NTG
+      erst später; ggf. in Stufe 3 behalten oder entfernen.
+   d) Auf Handy und iPad mit dem Finger testen (Plus/Minus-Knöpfe 40 bis 44 px).
+   e) Aggregatzustände (g), (l), (s), (aq) und Reaktionsbedingungen fehlen bewusst.
+   f) Verknüpfung mit den nächsten Seiten: Stoffmenge (c) soll dieselben Reaktionen nutzen.
