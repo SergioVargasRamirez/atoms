@@ -283,6 +283,7 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
           <button type="button" role="radio" aria-checked="false" data-level="2">2 · Alkene, Alkine</button>
           <button type="button" role="radio" aria-checked="false" data-level="3">3 · verzweigt, Z/E</button>
         </div>
+        <label class="switch" id="alkwrap" hidden><input type="checkbox" id="alkchk"> Nur Alkane (verzweigt)</label>
       </div>
     </div>
 
@@ -965,7 +966,8 @@ function altNames(res){   // gleichwertige Schreibweisen
 }
 
 function newTask(){
-  const p = pool(level);
+  let p = pool(level);
+  if (level === 3 && $("alkchk").checked) p = p.filter(t => t.mol.edges.every(e => e.o === 1));   // nur verzweigte Alkane
   let t, guard = 0; do { t = pick(p); } while (t.res.name === lastName && p.length > 1 && ++guard < 20);
   lastName = t.res.name; task = {mol:t.mol, res:t.res};
   tips = []; tipShown = 0; reveal = false; viewingTyped = false; typedMol = null;
@@ -1394,14 +1396,16 @@ function setMode(m){
   document.querySelectorAll("[data-mode]").forEach(b => b.setAttribute("aria-checked", String(b.dataset.mode === m)));
   for (const k of ["bauen", "benennen", "isomere", "frei"]) $("p-" + k).hidden = k !== m;
   $("p-tools").hidden = m === "benennen"; $("hr-build").hidden = m === "benennen";
-  $("levelgroup").hidden = m === "frei";
+  $("levelgroup").hidden = m === "frei"; syncAlk();
   $("numchk").closest("label").hidden = false;
   if (m === "isomere"){ fillForms(); $("isoz").checked = level === 3; initIso(); }
   else if (m === "frei"){ mol = {n:1, edges:[]}; undo = []; setStatus("Baue, was du willst: Der Name erscheint rechts."); refresh(); after(); }
   else newTask();
 }
+function syncAlk(){ $("alkwrap").hidden = !(level === 3 && (mode === "bauen" || mode === "benennen")); }
+$("alkchk").addEventListener("change", () => { if (mode === "bauen" || mode === "benennen") newTask(); });
 function setLevel(l){
-  level = l;
+  level = l; syncAlk();
   document.querySelectorAll("[data-level]").forEach(b => b.setAttribute("aria-checked", String(+b.dataset.level === l)));
   if (mode === "isomere"){ fillForms(); $("isoz").checked = level === 3; initIso(); } else if (mode !== "frei") newTask();
 }
