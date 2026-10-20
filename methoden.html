@@ -208,6 +208,7 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
     <a href="vsepr.html">Elektronenpaarabstoßung</a>
     <a href="zucker.html">Zucker im Polarimeter</a>
     <a href="drehung.html">Drehen um C–C-Bindungen</a>
+    <a href="kohlenwasserstoffe.html">Alkane, Alkene, Alkine</a>
     <p class="sidenav-group">Wechselwirkungen</p>
     <a href="polaritaet.html">Moleküle im elektrischen Feld</a>
     <a href="elektronenwolken.html">Elektronenwolken</a>
@@ -294,6 +295,7 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
             <tr><th scope="row"><a href="#s-vsepr">Elektronenpaarabstoßung</a></th><td><span class="kind k-qc">Quantenchemie</span></td><td>Winkelscan MP2/aug-cc-pVTZ, lokalisierte Elektronenpaare</td></tr>
             <tr><th scope="row"><a href="#s-zucker">Zucker im Polarimeter</a></th><td><span class="kind k-lit">Messwerte</span> <span class="kind k-sim">Simulation</span></td><td>Gesetz von Biot, Gesetz von Malus, Photonen, Mutarotation, Strukturen mit RDKit</td></tr>
             <tr><th scope="row"><a href="#s-drehung">Drehen um C–C-Bindungen</a></th><td><span class="kind k-qc">Quantenchemie</span></td><td>Diederwinkel-Scans B3LYP/def2-TZVP, Eyring-Gleichung</td></tr>
+            <tr><th scope="row"><a href="#s-kohlenwasserstoffe">Alkane, Alkene, Alkine</a></th><td><span class="kind k-rule">Regeln</span></td><td>IUPAC-Namensregeln, CIP-Rangfolge für Z/E, idealisierte Geometrie, Aufzählen aller Bindungsbäume</td></tr>
             <tr><th scope="row"><a href="#s-polaritaet">Moleküle im elektrischen Feld</a></th><td><span class="kind k-sim">Simulation</span></td><td>starre Moleküle mit Teilladungen zwischen geladenen Platten</td></tr>
             <tr><th scope="row"><a href="#s-elektronenwolken">Elektronenwolken</a></th><td><span class="kind k-qc">Quantenchemie</span></td><td>Elektronendichte und elektrostatisches Potential B3LYP/6-31G(d)</td></tr>
             <tr><th scope="row"><a href="#s-london">London-Kräfte</a></th><td><span class="kind k-sim">Simulation</span></td><td>schwankende Elektronenwolken (Drude-Modell), Lennard-Jones-Teilchen</td></tr>
@@ -377,7 +379,7 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
     <section id="raum">
       <h2>Räumliche Bilder</h2>
       <h3>Kugel-Stab-Modelle</h3>
-      <p>Die 3D-Moleküle auf den Seiten Van ’t Hoff, Zucker und Drehen um C–C werden direkt in einer Zeichenfläche (Canvas) gezeichnet: Jedes Atom wird um die eingestellten Winkel gedreht und perspektivisch verkleinert, je weiter es hinten liegt. Dann werden alle Kugeln und Stäbe von hinten nach vorn gemalt, sodass die vorderen die hinteren verdecken (Maleralgorithmus). Eine Kugel ist ein Kreis mit einem Farbverlauf von einem hellen Lichtpunkt oben links zu einem dunklen Rand; das wirkt räumlich, ohne echte Beleuchtung zu rechnen. Mehrfachbindungen sind als zwei oder drei parallele Stäbe gezeichnet. Bindungen werden meist aus den Abständen der Atome erkannt: Zwei Atome gelten als verbunden, wenn sie kaum weiter voneinander entfernt sind als die Summe ihrer Kovalenzradien.</p>
+      <p>Die 3D-Moleküle auf den Seiten Van ’t Hoff, Zucker, Drehen um C–C und Alkane, Alkene, Alkine werden direkt in einer Zeichenfläche (Canvas) gezeichnet: Jedes Atom wird um die eingestellten Winkel gedreht und perspektivisch verkleinert, je weiter es hinten liegt. Dann werden alle Kugeln und Stäbe von hinten nach vorn gemalt, sodass die vorderen die hinteren verdecken (Maleralgorithmus). Eine Kugel ist ein Kreis mit einem Farbverlauf von einem hellen Lichtpunkt oben links zu einem dunklen Rand; das wirkt räumlich, ohne echte Beleuchtung zu rechnen. Mehrfachbindungen sind als zwei oder drei parallele Stäbe gezeichnet. Bindungen werden meist aus den Abständen der Atome erkannt: Zwei Atome gelten als verbunden, wenn sie kaum weiter voneinander entfernt sind als die Summe ihrer Kovalenzradien.</p>
       <p>Atomfarben wie in Molekülbaukästen üblich: Kohlenstoff grau, Wasserstoff weiß, Sauerstoff rot, Chlor grün. Jede 3D-Ansicht hat unten links ein Achsenkreuz (x rot, y grün, z blau), das sich mitdreht.</p>
       <h3>Elektronenwolken und Elektronenpaare</h3>
       <p>Die Seiten Elektronenwolken, Elektronenpaarabstoßung und Eis in 3D nutzen WebGL, die 3D-Grafik des Browsers. Eine Elektronenwolke liegt als Gitter von Dichtewerten vor (Abstand 0,3 bohr ≈ 0,16 Å). Die Hülle ist die Fläche, auf der die Dichte genau den eingestellten Wert hat; sie wird mit dem Verfahren „Marching Tetrahedra“ aus dem Gitter gewonnen: Jede Gitterzelle wird in sechs Tetraeder geteilt, und wo die Dichte an den Ecken über und unter dem Wert liegt, wird ein Stück Fläche eingesetzt. Die Punktwolke verteilt 22 000 Punkte zufällig, aber so, dass in jedem Gitterwürfel so viele Punkte landen, wie es seiner Elektronendichte entspricht (ganz nah an den Kernen gekappt).</p>
@@ -484,6 +486,18 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
       <div class="page-entry" id="s-drehung">
         <h3><a href="drehung.html">Drehen um C–C-Bindungen</a></h3>
         <p>Psi4, B3LYP/def2-TZVP: Diederwinkel Cl–C–C–Cl von 0° bis 180° in Schritten von 10° festgehalten, alles andere optimiert; 180° bis 360° ist das Spiegelbild. Jeder Punkt startet von der fertigen Form des Nachbarpunkts. Dichlorethen <a href="#quantenchemie">unbeschränkt</a> und mit beiden Diederwinkeln festgehalten. Zwischen den Punkten sind Energie (Spline) und Atompositionen interpoliert. Der Dipolpfeil zeigt in Richtung der Summe der C→Cl-Bindungen, seine Länge ist das berechnete Dipolmoment. Drehungen pro Sekunde nach Eyring: k = (k<sub>B</sub>T/h) · e<sup>−E/(RT)</sup> mit der Höhe der Hürde für E.</p>
+      </div>
+
+      <div class="page-entry" id="s-kohlenwasserstoffe">
+        <h3><a href="kohlenwasserstoffe.html">Alkane, Alkene, Alkine</a></h3>
+        <ul>
+          <li><b>Moleküle:</b> Das Kohlenstoffgerüst ist ein Baum (keine Ringe); die Wasserstoffatome ergeben sich aus vier Bindungen je C-Atom. Gleich sind zwei Moleküle, wenn ihre Bindungsbäume mit allen Bindungsordnungen (und, falls verlangt, Z/E) übereinstimmen; das prüft die Seite mit einer eindeutigen Zeichenkette, die vom Baumzentrum aus gebildet wird, nicht mit dem Aussehen.</li>
+          <li><b>Aufzählen:</b> Alle Bäume mit n Knoten (höchstens vier Nachbarn) werden durch Anhängen eines Blatts erzeugt und mit der Zeichenkette von Doppelten befreit; dann werden die Mehrfachbindungen auf alle Weisen verteilt (höchstens vier Bindungen je C). Das ergibt für Alkane 2, 3, 5, 9, 18 Moleküle bei C₄ bis C₈, wie in der Literatur; bei den Alkenen 3, 5, 13 (4, 6, 17 mit Z/E).</li>
+          <li><b>Namen:</b> Alle Wege von Blatt zu Blatt sind mögliche Hauptketten. Gewählt wird, in dieser Reihenfolge: die meisten Mehrfachbindungen, die längste Kette, die meisten Seitenketten, dann die kleinsten Zahlen für alle Mehrfachbindungen, für die Doppelbindungen, für die Seitenketten und für die alphabetisch zuerst genannte Seitenkette. Seitenketten werden ebenso benannt, vom Ansatzpunkt aus gezählt (zum Beispiel „1-Methylethyl“). Die Namen wurden für alle Moleküle bis zu zehn Kohlenstoffatomen (Alkane) und mindestens sieben (Alkene, Alkine) zurückgelesen: Der Name ergibt wieder genau das Ausgangsmolekül.</li>
+          <li><b>Z/E:</b> Rangfolge der Partner nach den CIP-Regeln, Kugelschale für Kugelschale (Kohlenstoff vor Wasserstoff, Mehrfachbindungen mit Duplikatatomen). Z oder E wird nach dem Bau aus der räumlichen Form noch einmal abgelesen und mit der gewählten Form verglichen; bei allen aufgezählten Molekülen stimmt es überein.</li>
+          <li><b>Form:</b> idealisiert, Winkel 109,5°, 120° und 180°, Lehrbuch-Bindungslängen. Einfachbindungen werden zuerst gestaffelt (Zickzack) gesetzt, bei Zusammenstößen verdreht, bis sich keine Atome mehr durchdringen. Nicht berechnet, keine Energie.</li>
+          <li><b>Strukturformel:</b> Die Hauptkette wird als Zickzack gezeichnet (cis-Doppelbindungen biegen die Kette zur selben Seite, Dreifachbindungen sind gerade), Seitenketten stehen senkrecht dazu. Bei dicht besetzten Atomen können sich Beschriftungen berühren.</li>
+        </ul>
       </div>
 
       <div class="page-entry" id="s-polaritaet">

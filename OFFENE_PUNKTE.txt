@@ -68,3 +68,24 @@ Erledigt am 17.10.2026
    Quellen: lehrplanplus.bayern.de/fachlehrplan/gymnasium/{8/chemie, 9/chemie/ch-ntg,
    9/chemie/ch, 10/chemie/ch, 10/chemie/ch-ntg}; Q12 "Redoxgleichgewichte" nur aus ISB-
    Übersicht bekannt, nicht geprüft.
+
+7. kohlenwasserstoffe.html (neu, 20.10.2026): Alkane, Alkene, Alkine – Bauen, Benennen, Isomere
+   Fertig: Engine (Namen, CIP, Z/E, Isomere aufzählen, Name lesen), 3D mit Achsenkreuz,
+   Strukturformel, vier Aufgabenarten, drei Stufen, Tabelle. Menü, Karte, README, Methoden,
+   Quellen. Noch zu klären:
+   a) Schreibweise gegen das Schulbuch (Galvani Bayern) prüfen: "(Z)-But-2-en" gegen
+      "cis-But-2-en", "Propen" gegen "Prop-1-en" (beide werden akzeptiert), "(3E)-Hexa-1,3-dien"
+      bei mehreren Doppelbindungen, Okt-/Oct-. Wird Z/E schon in NTG 9 verlangt oder erst
+      in Jgst. 10? (Stufe 3 setzt es voraus.)
+   b) Hauptkettenregel: Die Seite nimmt die Kette mit den Mehrfachbindungen (Schulregel); die
+      IUPAC-Empfehlung 2013 nimmt zuerst die längste Kette. Mit der Lehrkraft-Praxis abgleichen.
+   c) Lehrplantexte genauer lesen (Tiefe je Jahrgang: verzweigte Alkane in 8? Namen der
+      Seitenketten, Isopropyl/tert-Butyl als Trivialnamen erlaubt?). Stufen ggf. verschieben.
+   d) Auf dem Handy und iPad mit dem Finger testen (Tippflächen für H, C und Bindungen); nur im
+      Headless-Browser mit simulierten Zeigerereignissen getestet.
+   e) Bedienung nur mit Tastatur fehlt (Bauen geht nur durch Tippen auf die Atome); bei Bedarf
+      Auswahlliste "Atom Nr. …" ergänzen.
+   f) Nicht enthalten: Ringe (Cycloalkane), Spiegelbild-Isomere (R/S), Allen-Chiralität.
+      Cycloalkane wären der nächste Schritt (C4H8: 6 Isomere statt 4).
+   g) Vergleichszahlen der Tabelle (Alkane bis C8, Alkene bis C6 mit Z/E 4, 6, 17) stimmen mit
+      der Literatur; Quelle für Alkene/Alkine noch ergänzen (z. B. OEIS-Folgen).
