@@ -43,6 +43,9 @@ button:focus-visible,input:focus-visible,summary:focus-visible,canvas:focus-visi
 .stagewrap{background:var(--stage);border-radius:10px;overflow:hidden;position:relative}
 canvas{display:block;width:100%}
 #stage{aspect-ratio:4/3;touch-action:none;cursor:grab}
+.zoombtns{position:absolute;right:10px;bottom:10px;display:flex;flex-direction:column;gap:6px}
+.zoombtns button{font:700 1.2rem/1 var(--font);width:36px;height:36px;border-radius:8px;border:1px solid #33405c;background:rgba(17,26,44,.85);color:var(--stage-fg);cursor:pointer}
+.zoombtns button:hover{border-color:#7d9bff}
 .status{color:var(--stage-fg);background:#111a2c;border-bottom:1px solid #1b2338;border-left:4px solid #7d9bff;padding:10px 14px;min-height:3.2em;font-size:1rem;line-height:1.45}
 .status.new{border-left-color:#5fd39a}
 .status.same{border-left-color:#ffd166}
@@ -290,7 +293,10 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
     <div class="lab">
       <div class="stagewrap">
         <div class="status" id="status" aria-live="polite"></div>
-        <canvas id="stage" tabindex="0" aria-label="Räumliches Modell des Moleküls. Ziehen dreht es. Zwei Finger, Strg plus Mausrad oder die Tasten Plus und Minus zoomen. Tippen auf ein H-Atom hängt ein C-Atom an, Tippen auf eine C–C-Bindung ändert die Bindung."></canvas>
+        <div style="position:relative">
+          <canvas id="stage" tabindex="0" aria-label="Räumliches Modell des Moleküls. Ziehen dreht es. Zwei Finger, Mausrad oder die Tasten Plus und Minus zoomen. Tippen auf ein H-Atom hängt ein C-Atom an, Tippen auf eine C–C-Bindung ändert die Bindung."></canvas>
+          <div class="zoombtns"><button type="button" id="z-in" aria-label="Vergrößern">+</button><button type="button" id="z-out" aria-label="Verkleinern">−</button></div>
+        </div>
         <div class="meter"><span>Summenformel</span><b id="formout">CH₄</b></div>
         <div class="readout" id="readout"></div>
         <div class="flatwrap">
@@ -359,12 +365,6 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
         <label class="switch"><input type="checkbox" id="hchk" checked> Wasserstoffatome zeigen</label>
         <label class="switch"><input type="checkbox" id="numchk"> Hauptkette nummerieren</label>
         <label class="switch"><input type="checkbox" id="autochk"> Dreht sich langsam</label>
-        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap" role="group" aria-label="Zoom">
-          <span style="font-weight:600">Zoom</span>
-          <button class="btn" type="button" id="z-out" aria-label="Verkleinern">−</button>
-          <button class="btn" type="button" id="z-in" aria-label="Vergrößern">+</button>
-          <button class="btn" type="button" id="z-reset">Zurücksetzen</button>
-        </div>
         <p class="hint" id="viewhint" style="margin:0"></p>
       </div>
     </div>
@@ -1433,12 +1433,11 @@ $("hchk").addEventListener("change", e => { showH = e.target.checked; refresh();
 $("numchk").addEventListener("change", e => { showNum = e.target.checked; draw(); });
 $("autochk").addEventListener("change", e => { auto = e.target.checked; });
 $("anschk").addEventListener("change", e => $("obs").classList.toggle("show", e.target.checked));
-// Zoom: Knöpfe, Tasten + − 0, Strg + Mausrad (auch Pinch am Trackpad), zwei Finger am Touchscreen
-function setZoom(z){ ZM = Math.max(0.5, Math.min(4, z)); SC = SC0 * ZM; draw(); }
+// Zoom wie in protonen.html: Knöpfe im Bild, Tasten + − 0, Mausrad, zwei Finger am Touchscreen
+function setZoom(z){ ZM = Math.max(0.5, Math.min(3.5, z)); SC = SC0 * ZM; draw(); }
 $("z-in").addEventListener("click", () => setZoom(ZM * 1.25));
 $("z-out").addEventListener("click", () => setZoom(ZM / 1.25));
-$("z-reset").addEventListener("click", () => setZoom(1));
-cv.addEventListener("wheel", e => { if (!e.ctrlKey) return; e.preventDefault(); setZoom(ZM * Math.exp(-e.deltaY * 0.01)); }, {passive:false});
+cv.addEventListener("wheel", e => { e.preventDefault(); setZoom(ZM * Math.exp(-e.deltaY * 0.0015)); }, {passive:false});
 const ptrs = new Map(); let pinch = null;
 const ptrDist = () => { const [a, b] = [...ptrs.values()]; return Math.hypot(a.x - b.x, a.y - b.y) || 1; };
 // Ziehen dreht, kurzes Tippen baut
