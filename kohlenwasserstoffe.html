@@ -295,7 +295,7 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
         <div class="status" id="status" aria-live="polite"></div>
         <div style="position:relative">
           <canvas id="stage" tabindex="0" aria-label="Räumliches Modell des Moleküls. Ziehen dreht es. Zwei Finger, Mausrad oder die Tasten Plus und Minus zoomen. Tippen auf ein H-Atom hängt ein C-Atom an, Tippen auf eine C–C-Bindung ändert die Bindung."></canvas>
-          <div class="zoombtns"><button type="button" id="z-in" aria-label="Vergrößern">+</button><button type="button" id="z-out" aria-label="Verkleinern">−</button></div>
+          <div class="zoombtns"><button type="button" id="z-in" aria-label="Vergrößern">+</button><button type="button" id="z-out" aria-label="Verkleinern">−</button><button type="button" id="z-reset" aria-label="Zoom zurücksetzen" title="Zoom zurücksetzen" style="font-size:.95rem">⟲</button></div>
         </div>
         <div class="meter"><span>Summenformel</span><b id="formout">CH₄</b></div>
         <div class="readout" id="readout"></div>
@@ -1437,6 +1437,7 @@ $("anschk").addEventListener("change", e => $("obs").classList.toggle("show", e.
 function setZoom(z){ ZM = Math.max(0.5, Math.min(3.5, z)); SC = SC0 * ZM; draw(); }
 $("z-in").addEventListener("click", () => setZoom(ZM * 1.25));
 $("z-out").addEventListener("click", () => setZoom(ZM / 1.25));
+$("z-reset").addEventListener("click", () => setZoom(1));
 cv.addEventListener("wheel", e => { e.preventDefault(); setZoom(ZM * Math.exp(-e.deltaY * 0.0015)); }, {passive:false});
 const ptrs = new Map(); let pinch = null;
 const ptrDist = () => { const [a, b] = [...ptrs.values()]; return Math.hypot(a.x - b.x, a.y - b.y) || 1; };
