@@ -264,7 +264,7 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
     <div class="task tasks">
       <b>Aufgaben</b>
       <ol>
-        <li><b>Bauen:</b> Baue Pentan. Tippe dazu auf ein H-Atom, dort wächst ein neues C-Atom an. Prüfe dein Molekül. Dann: Baue But-1-en und But-2-en. Tippe auf eine C–C-Bindung, um sie zur Doppelbindung zu machen. Warum geht das nicht an jeder Stelle?</li>
+        <li><b>Bauen:</b> Baue Pentan. Tippe dazu auf ein H-Atom, dort wächst ein neues C-Atom an. Prüfe dein Molekül. Auf Stufe 1 kommen auch verzweigte Alkane vor, etwa 2-Methylbutan (abschaltbar). Dann: Baue But-1-en und But-2-en. Tippe auf eine C–C-Bindung, um sie zur Doppelbindung zu machen. Warum geht das nicht an jeder Stelle?</li>
         <li><b>Benennen:</b> Stufe 1 bis 3: Wie heißt das Molekül? Beachte die Schreibweise genau: Zahlen, Bindestriche, Komma, Groß- und Kleinschreibung. Suche zuerst die längste Kette und nummeriere dann so, dass die Mehrfachbindung die kleinste Zahl bekommt.</li>
         <li><b>Isomere:</b> Wie viele verschiedene Moleküle haben die Formel C₅H₁₂? Baue sie alle. Zwei Moleküle sind gleich, wenn man das eine durch Drehen um C–C-Einfachbindungen und durch Drehen im Raum in das andere überführen kann. Schaue dein Molekül dazu von allen Seiten an.</li>
         <li><b>Vergleichen:</b> Wie viele Isomere gibt es bei C₄H₁₀, C₄H₈, C₄H₆? Warum ist es bei C₄H₈ eines mehr, wenn man Z und E unterscheidet? Trage deine Zahlen in die Tabelle ein.</li>
@@ -282,10 +282,11 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
       </div>
       <div class="group" id="levelgroup"><span>Stufe</span>
         <div class="seg" role="radiogroup" aria-label="Stufe" id="levelseg">
-          <button type="button" role="radio" aria-checked="true" data-level="1">1 · Alkane</button>
+          <button type="button" role="radio" aria-checked="true" data-level="1">1 · Alkane (auch verzweigt)</button>
           <button type="button" role="radio" aria-checked="false" data-level="2">2 · Alkene, Alkine</button>
           <button type="button" role="radio" aria-checked="false" data-level="3">3 · verzweigt, Z/E</button>
         </div>
+        <label class="switch" id="brwrap"><input type="checkbox" id="brchk" checked> Auch verzweigte Alkane</label>
         <label class="switch" id="alkwrap" hidden><input type="checkbox" id="alkchk"> Nur Alkane (verzweigt)</label>
       </div>
     </div>
@@ -940,7 +941,10 @@ function pool(lv){
   if (pools[lv]) return pools[lv];
   const list = [], st = lv === 3;
   const add = (n, u, keep) => { for (const m of isomers(n, u, st)){ const r = safeName(m); if (r && keep(m, r)) list.push({mol:m, res:r}); } };
-  if (lv === 1) for (let n = 1; n <= 10; n++){ const m = {n, edges:[...Array(n - 1).keys()].map(i => ({a:i, b:i + 1, o:1}))}; list.push({mol:m, res:nameOf(m)}); }
+  if (lv === 1){
+    for (let n = 1; n <= 10; n++){ const m = {n, edges:[...Array(n - 1).keys()].map(i => ({a:i, b:i + 1, o:1}))}; list.push({mol:m, res:nameOf(m)}); }
+    for (let n = 4; n <= 8; n++) add(n, 0, (m, r) => r.subs.length > 0);
+  }
   if (lv === 2){
     for (let n = 2; n <= 8; n++){
       add(n, 1, (m, r) => r.L === n);
@@ -967,6 +971,7 @@ function altNames(res){   // gleichwertige Schreibweisen
 
 function newTask(){
   let p = pool(level);
+  if (level === 1 && !$("brchk").checked) p = p.filter(t => !t.res.subs.length);
   if (level === 3 && $("alkchk").checked) p = p.filter(t => t.mol.edges.every(e => e.o === 1));   // nur verzweigte Alkane
   let t, guard = 0; do { t = pick(p); } while (t.res.name === lastName && p.length > 1 && ++guard < 20);
   lastName = t.res.name; task = {mol:t.mol, res:t.res};
@@ -1402,7 +1407,8 @@ function setMode(m){
   else if (m === "frei"){ mol = {n:1, edges:[]}; undo = []; setStatus("Baue, was du willst: Der Name erscheint rechts."); refresh(); after(); }
   else newTask();
 }
-function syncAlk(){ $("alkwrap").hidden = !(level === 3 && (mode === "bauen" || mode === "benennen")); }
+function syncAlk(){ $("brwrap").hidden = !(level === 1 && (mode === "bauen" || mode === "benennen")); $("alkwrap").hidden = !(level === 3 && (mode === "bauen" || mode === "benennen")); }
+$("brchk").addEventListener("change", () => { if (mode === "bauen" || mode === "benennen") newTask(); });
 $("alkchk").addEventListener("change", () => { if (mode === "bauen" || mode === "benennen") newTask(); });
 function setLevel(l){
   level = l; syncAlk();
