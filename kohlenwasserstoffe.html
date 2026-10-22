@@ -264,8 +264,8 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
     <div class="task tasks">
       <b>Aufgaben</b>
       <ol>
-        <li><b>Bauen:</b> Baue Pentan. Tippe dazu auf ein H-Atom, dort wächst ein neues C-Atom an. Prüfe dein Molekül. Auf Stufe 1 kommen auch verzweigte Alkane vor, etwa 2-Methylbutan (abschaltbar). Dann: Baue But-1-en und But-2-en. Tippe auf eine C–C-Bindung, um sie zur Doppelbindung zu machen. Warum geht das nicht an jeder Stelle?</li>
-        <li><b>Benennen:</b> Stufe 1 bis 3: Wie heißt das Molekül? Beachte die Schreibweise genau: Zahlen, Bindestriche, Komma, Groß- und Kleinschreibung. Suche zuerst die längste Kette und nummeriere dann so, dass die Mehrfachbindung die kleinste Zahl bekommt.</li>
+        <li><b>Bauen:</b> Baue Pentan. Tippe dazu auf ein H-Atom, dort wächst ein neues C-Atom an. Prüfe dein Molekül. Dann: Baue But-1-en und But-2-en. Tippe auf eine C–C-Bindung, um sie zur Doppelbindung zu machen. Warum geht das nicht an jeder Stelle?</li>
+        <li><b>Benennen:</b> Stufe 1 bis 4: Wie heißt das Molekül? Beachte die Schreibweise genau: Zahlen, Bindestriche, Komma, Groß- und Kleinschreibung. Suche zuerst die längste Kette und nummeriere dann so, dass die Mehrfachbindung die kleinste Zahl bekommt.</li>
         <li><b>Isomere:</b> Wie viele verschiedene Moleküle haben die Formel C₅H₁₂? Baue sie alle. Zwei Moleküle sind gleich, wenn man das eine durch Drehen um C–C-Einfachbindungen und durch Drehen im Raum in das andere überführen kann. Schaue dein Molekül dazu von allen Seiten an.</li>
         <li><b>Vergleichen:</b> Wie viele Isomere gibt es bei C₄H₁₀, C₄H₈, C₄H₆? Warum ist es bei C₄H₈ eines mehr, wenn man Z und E unterscheidet? Trage deine Zahlen in die Tabelle ein.</li>
       </ol>
@@ -282,12 +282,11 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
       </div>
       <div class="group" id="levelgroup"><span>Stufe</span>
         <div class="seg" role="radiogroup" aria-label="Stufe" id="levelseg">
-          <button type="button" role="radio" aria-checked="true" data-level="1">1 · Alkane (auch verzweigt)</button>
-          <button type="button" role="radio" aria-checked="false" data-level="2">2 · Alkene, Alkine</button>
-          <button type="button" role="radio" aria-checked="false" data-level="3">3 · verzweigt, Z/E</button>
+          <button type="button" role="radio" aria-checked="true" data-level="1">1 · Alkane</button>
+          <button type="button" role="radio" aria-checked="false" data-level="2">2 · Verzweigte Alkane</button>
+          <button type="button" role="radio" aria-checked="false" data-level="3">3 · Alkene, Alkine</button>
+          <button type="button" role="radio" aria-checked="false" data-level="4">4 · Z/E-Isomere</button>
         </div>
-        <label class="switch" id="brwrap"><input type="checkbox" id="brchk" checked> Auch verzweigte Alkane</label>
-        <label class="switch" id="alkwrap" hidden><input type="checkbox" id="alkchk"> Nur Alkane (verzweigt)</label>
       </div>
     </div>
 
@@ -385,7 +384,7 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
   <details>
     <summary>Regeln, Modell und Grenzen</summary>
     <ul>
-      <li><b>Lehrplan:</b> Die Namen der Alkane gehören in die 8. Klasse (NTG), Alkene, Alkine und Isomerie in die 9. (NTG), Nomenklatur mit Verzweigungen und Z/E-Isomerie in die 10. Klasse. Die drei Stufen folgen dieser Reihenfolge; Bauen und Isomere-Finden funktioniert auf jeder Stufe.</li>
+      <li><b>Lehrplan:</b> Die Namen der Alkane gehören in die 8. Klasse (NTG), Alkene, Alkine und Isomerie in die 9. (NTG), Nomenklatur mit Verzweigungen und Z/E-Isomerie in die 10. Klasse. Die vier Stufen folgen dieser Reihenfolge (Stufe 2 mit verzweigten Alkanen schon vor den Alkenen); Bauen und Isomere-Finden funktioniert auf jeder Stufe.</li>
       <li><b>Namensregeln, wie sie hier gelten:</b> (1) Hauptkette ist die Kette, die möglichst alle Mehrfachbindungen enthält, und davon die längste; bei gleicher Länge die mit den meisten Seitenketten. (2) Nummeriert wird von der Seite, an der die Mehrfachbindungen die kleinsten Zahlen bekommen (Doppel- und Dreifachbindungen zusammen, dann Doppelbindungen vor Dreifachbindungen), danach die Seitenketten. (3) Seitenketten stehen vor dem Grundnamen, alphabetisch geordnet; di-, tri- zählen dabei nicht mit. (4) Bei Doppelbindungen mit Z/E-Isomerie steht (Z) oder (E) vor dem Namen; bei mehreren Doppelbindungen mit Stellung, etwa (3E).</li>
       <li><b>Schreibweise:</b> Der erste Buchstabe des Namens ist groß, alles andere klein. Zahlen werden durch Komma getrennt, Zahlen und Namen durch Bindestrich. Beispiele: 2,3-Dimethylpentan, 3-Ethyl-2-methylhexan, Penta-1,3-dien, Hex-1-en-4-in. Bei Ethen, Ethin, Propen und Propin entfällt die Stellung; „Prop-1-en“ wird auch als richtig gewertet. „Okt-“ und „Oct-“ gelten beide.</li>
       <li><b>Hauptkettenregel:</b> Die IUPAC-Empfehlungen von 2013 wählen zuerst die längste Kette, auch wenn die Doppelbindung nicht darin liegt. Im Unterricht üblich, und hier verwendet, ist die Kette mit der Mehrfachbindung. Die Namen können deshalb von denen in neuen Nachschlagewerken abweichen.</li>
@@ -920,7 +919,7 @@ let rotY = 0.7, rotX = 0.35;
 let W = 0, H = 0, SC = 1, SC0 = 1, ZM = 1, hits = [], bondHits = [];   // SC0: automatische Größe, ZM: Zoom der Schüler, SC = SC0 * ZM
 let iso = null;
 
-const useStereo = () => mode === "frei" || (mode === "isomere" ? $("isoz").checked : level === 3);
+const useStereo = () => mode === "frei" || (mode === "isomere" ? $("isoz").checked : level === 4);
 const editable = () => mode !== "benennen";
 function stripZ(m){ const c = cloneMol(m); c.edges.forEach(e => { delete e.z; }); return c; }
 function normalizeZ(m){
@@ -939,20 +938,17 @@ function relabel(m){ const perm = shuffle([...Array(m.n).keys()]); return {n:m.n
 const pools = {};
 function pool(lv){
   if (pools[lv]) return pools[lv];
-  const list = [], st = lv === 3;
+  const list = [], st = lv === 4;
   const add = (n, u, keep) => { for (const m of isomers(n, u, st)){ const r = safeName(m); if (r && keep(m, r)) list.push({mol:m, res:r}); } };
-  if (lv === 1){
-    for (let n = 1; n <= 10; n++){ const m = {n, edges:[...Array(n - 1).keys()].map(i => ({a:i, b:i + 1, o:1}))}; list.push({mol:m, res:nameOf(m)}); }
-    for (let n = 4; n <= 8; n++) add(n, 0, (m, r) => r.subs.length > 0);
-  }
-  if (lv === 2){
+  if (lv === 1) for (let n = 1; n <= 10; n++){ const m = {n, edges:[...Array(n - 1).keys()].map(i => ({a:i, b:i + 1, o:1}))}; list.push({mol:m, res:nameOf(m)}); }
+  if (lv === 2) for (let n = 4; n <= 8; n++) add(n, 0, (m, r) => r.subs.length > 0);
+  if (lv === 3){
     for (let n = 2; n <= 8; n++){
       add(n, 1, (m, r) => r.L === n);
       add(n, 2, (m, r) => r.L === n && m.edges.filter(e => e.o === 3).length === 1);
     }
   }
-  if (lv === 3){
-    for (let n = 4; n <= 8; n++) add(n, 0, (m, r) => r.subs.length > 0);
+  if (lv === 4){
     for (let n = 4; n <= 7; n++) add(n, 1, (m, r) => r.subs.length > 0 || r.stereo.length > 0);
     for (let n = 4; n <= 6; n++) add(n, 2, () => true);
   }
@@ -971,8 +967,6 @@ function altNames(res){   // gleichwertige Schreibweisen
 
 function newTask(){
   let p = pool(level);
-  if (level === 1 && !$("brchk").checked) p = p.filter(t => !t.res.subs.length);
-  if (level === 3 && $("alkchk").checked) p = p.filter(t => t.mol.edges.every(e => e.o === 1));   // nur verzweigte Alkane
   let t, guard = 0; do { t = pick(p); } while (t.res.name === lastName && p.length > 1 && ++guard < 20);
   lastName = t.res.name; task = {mol:t.mol, res:t.res};
   tips = []; tipShown = 0; reveal = false; viewingTyped = false; typedMol = null;
@@ -1010,7 +1004,7 @@ function showTip(){
 /* ---------- Bauen prüfen ---------- */
 function typeCounts(m){ return {d:m.edges.filter(e => e.o === 2).length, t:m.edges.filter(e => e.o === 3).length}; }
 function checkBauen(){
-  const st = level === 3, mine = counts(mol), want = counts(task.mol);
+  const st = level === 4, mine = counts(mol), want = counts(task.mol);
   const nm = nameFor(mol);
   if (mol.n === 1){ setStatus("Noch nichts gebaut: Tippe auf ein H-Atom.", "same"); return; }
   if (keyFor(mol, st) === keyFor(task.mol, st)){
@@ -1032,7 +1026,7 @@ function lev(a, b){ const d = Array.from({length:a.length + 1}, (_, i) => [i]); 
 function checkName(){
   const typed = $("nameinp").value.trim();
   if (!typed){ setStatus("Schreibe zuerst einen Namen in das Feld.", "same"); return; }
-  const acc = altNames(task.res), st = level === 3;
+  const acc = altNames(task.res), st = level === 4;
   $("n-show").hidden = true; viewingTyped = false;
   if (acc.has(typed)){
     reveal = true; showNum = true; $("numchk").checked = true;
@@ -1080,9 +1074,10 @@ function toggleTyped(){
 
 /* ---------- Isomere ---------- */
 const FORMS = {
-  1:[[4, 0], [5, 0], [6, 0]],
-  2:[[4, 1], [5, 1], [6, 1], [4, 2], [5, 2]],
-  3:[[6, 0], [7, 0], [8, 0], [5, 1], [6, 1], [5, 2], [6, 2]],
+  1:[[4, 0], [5, 0]],
+  2:[[6, 0], [7, 0], [8, 0]],
+  3:[[4, 1], [5, 1], [6, 1], [4, 2], [5, 2]],
+  4:[[4, 1], [5, 1], [6, 1], [5, 2], [6, 2]],
 };
 const formName = (n, u) => `C${SUB(n)}H${SUB(2 * n + 2 - 2 * u)}`;
 const kindName = u => u === 0 ? "Alkane" : u === 1 ? "Alkene" : "Alkine und Diene";
@@ -1401,19 +1396,16 @@ function setMode(m){
   document.querySelectorAll("[data-mode]").forEach(b => b.setAttribute("aria-checked", String(b.dataset.mode === m)));
   for (const k of ["bauen", "benennen", "isomere", "frei"]) $("p-" + k).hidden = k !== m;
   $("p-tools").hidden = m === "benennen"; $("hr-build").hidden = m === "benennen";
-  $("levelgroup").hidden = m === "frei"; syncAlk();
+  $("levelgroup").hidden = m === "frei";
   $("numchk").closest("label").hidden = false;
-  if (m === "isomere"){ fillForms(); $("isoz").checked = level === 3; initIso(); }
+  if (m === "isomere"){ fillForms(); $("isoz").checked = level === 4; initIso(); }
   else if (m === "frei"){ mol = {n:1, edges:[]}; undo = []; setStatus("Baue, was du willst: Der Name erscheint rechts."); refresh(); after(); }
   else newTask();
 }
-function syncAlk(){ $("brwrap").hidden = !(level === 1 && (mode === "bauen" || mode === "benennen")); $("alkwrap").hidden = !(level === 3 && (mode === "bauen" || mode === "benennen")); }
-$("brchk").addEventListener("change", () => { if (mode === "bauen" || mode === "benennen") newTask(); });
-$("alkchk").addEventListener("change", () => { if (mode === "bauen" || mode === "benennen") newTask(); });
 function setLevel(l){
-  level = l; syncAlk();
+  level = l;
   document.querySelectorAll("[data-level]").forEach(b => b.setAttribute("aria-checked", String(+b.dataset.level === l)));
-  if (mode === "isomere"){ fillForms(); $("isoz").checked = level === 3; initIso(); } else if (mode !== "frei") newTask();
+  if (mode === "isomere"){ fillForms(); $("isoz").checked = level === 4; initIso(); } else if (mode !== "frei") newTask();
 }
 document.querySelectorAll("[data-mode]").forEach(b => b.addEventListener("click", () => setMode(b.dataset.mode)));
 document.querySelectorAll("[data-level]").forEach(b => b.addEventListener("click", () => setLevel(+b.dataset.level)));
