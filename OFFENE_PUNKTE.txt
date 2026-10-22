@@ -36,8 +36,8 @@ Erledigt am 17.10.2026
    Jede Seite: Vorhersage, Experiment, Erklärung, "Modell und Grenzen" (-> methoden.html);
    dazu Menü auf allen Seiten, Karte auf index.html, README, quellen.html.
    Stoffwerte (molare Massen, ΔH) vor dem Veröffentlichen gegen Quelle prüfen.
-   Stand 20.10.2026: b) ist gebaut (gleichungen.html, siehe Punkt 8). Keine PDF-Arbeitsblätter
-   (Entscheidung von Sergio). a), c), d) offen.
+   Stand 22.10.2026: a) ist gebaut (energie.html, Punkt 11). Stand 20.10.2026: b) ist gebaut (gleichungen.html, siehe Punkt 8). Keine PDF-Arbeitsblätter
+   (Entscheidung von Sergio). c), d) offen.
    a) Energie der Reaktion: exotherm/endotherm, Aktivierung, Katalyse. Energiediagramm mit
       Schiebereglern für Edukt/Produkt; Katalysator senkt die Hürde, ΔH bleibt; Teilchenbild
       (Bindungen lösen/knüpfen, Dalton-Modell).
@@ -126,3 +126,13 @@ Erledigt am 17.10.2026
    Dazu jeder Seite die Jahrgangsstufe zuordnen (Tags stehen schon auf den Karten, aber teils
    ungenau, z. B. "Jgst. 8–10" bei Alkane). Vorher mit LehrplanPLUS abgleichen.
    Betrifft template/site/nav.html, build.py (Menü wird in alle Seiten kopiert) und index.html.
+
+11. energie.html (neu, 22.10.2026): Energie der Reaktion (Chemie 8 a)
+   Fertig: Diagramm (Edukte, Produkte, Hürde, Katalysator, sieben Reaktionen mit Standard-ΔH),
+   Bindungen lösen/knüpfen (Knallgas, Methan, Ammoniak; Bilanz aus Bindungsenergien), Quiz,
+   Menü, Karte, README, Methoden, Quellen. Noch zu klären:
+   a) ΔH- und Bindungsenergiewerte gegen das Schulbuch prüfen (Methan: Wasser flüssig -890,
+      gasförmig -802; Schule nutzt oft -890).
+   b) Hürden (Eₐ) sind schematisch; echte Werte nur, wenn eine Quelle gewünscht ist.
+   c) Auf Handy und iPad testen; Teilchenbild ist nur im Headless-Browser gesehen.
+   d) Lehrplan: Wird die Bindungsbilanz schon in Jgst. 8 verlangt oder erst später?

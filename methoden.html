@@ -217,6 +217,7 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
     <a href="eis.html">Eis und Wasser in 3D</a>
     <p class="sidenav-group">Chemische Reaktion</p>
     <a href="gleichungen.html">Gleichungen ausgleichen</a>
+    <a href="energie.html">Energie der Reaktion</a>
     <p class="sidenav-group">Säuren und Basen</p>
     <a href="protonen.html">Protonenübergang</a>
     <a href="ammoniak.html">Ammoniak in Wasser</a>
@@ -304,6 +305,7 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
             <tr><th scope="row"><a href="#s-wasser">Wasser: Tropfen und Eis</a></th><td><span class="kind k-sim">Simulation</span></td><td>zweidimensionales Wassermodell mit drei Armen (Mercedes-Benz-Modell)</td></tr>
             <tr><th scope="row"><a href="#s-eis">Eis und Wasser in 3D</a></th><td><span class="kind k-sim">Simulation</span></td><td>Eisgitter nach den Eisregeln, Schnappschuss aus OpenMM (TIP4P-Ew)</td></tr>
             <tr><th scope="row"><a href="#s-gleichungen">Gleichungen ausgleichen</a></th><td><span class="kind k-rule">Regeln</span> <span class="kind k-lit">Messwerte</span></td><td>Atombilanz, kleinste ganze Zahlen (Gauß-Verfahren mit Brüchen), Atommassen, Waage, Kugelbild</td></tr>
+            <tr><th scope="row"><a href="#s-energie">Energie der Reaktion</a></th><td><span class="kind k-rule">Regeln</span> <span class="kind k-lit">Messwerte</span></td><td>Energiediagramm als geglättete Kurve, Standard-Reaktionsenthalpien, Bilanz aus mittleren Bindungsenergien</td></tr>
             <tr><th scope="row"><a href="#s-saeuren">Protonenübergang, Ammoniak, Neutralisation</a></th><td><span class="kind k-sim">Simulation</span> <span class="kind k-rule">Regeln</span></td><td>gemeinsame Teilchen-Engine, Protonensprünge nach Regeln</td></tr>
           </tbody>
         </table>
@@ -532,9 +534,18 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
         <h3><a href="gleichungen.html">Gleichungen ausgleichen</a></h3>
         <ul>
           <li><b>Atombilanz:</b> Für jede Atomsorte wird die Zahl der Atome links und rechts aus Koeffizient mal Index berechnet (Klammern in Formeln wie Ca(OH)₂ werden aufgelöst). Die Gleichung gilt als ausgeglichen, wenn alle Sorten links und rechts gleich sind. Wenn dazu die Zahlen noch einen gemeinsamen Teiler haben, meldet die Seite, dass man kürzen muss.</li>
-          <li><b>Lösung:</b> Die Seite löst jede Gleichung selbst: Die Atombilanz ist ein lineares Gleichungssystem, dessen Lösungen alle Vielfache eines Zahlenvektors sind. Er wird mit dem Gauß-Verfahren in Brüchen bestimmt und mit dem kleinsten gemeinsamen Nenner auf die kleinsten ganzen Zahlen gebracht. Alle 35 Reaktionen haben eine eindeutige, positive Lösung; die Lösungen stimmen mit den bekannten Gleichungen überein (zum Beispiel 2 C₄H₁₀ + 13 O₂ → 8 CO₂ + 10 H₂O).</li>
+          <li><b>Lösung:</b> Die Seite löst jede Gleichung selbst: Die Atombilanz ist ein lineares Gleichungssystem, dessen Lösungen alle Vielfache eines Zahlenvektors sind. Er wird mit dem Gauß-Verfahren in Brüchen bestimmt und mit dem kleinsten gemeinsamen Nenner auf die kleinsten ganzen Zahlen gebracht. Alle Reaktionen (über 200) haben eine eindeutige, positive Lösung; die Lösungen stimmen mit den bekannten Gleichungen überein (zum Beispiel 2 C₄H₁₀ + 13 O₂ → 8 CO₂ + 10 H₂O).</li>
           <li><b>Waage:</b> Sie addiert Koeffizient mal Masse der Formel für beide Seiten. Die Atommassen sind gerundete Standardatomgewichte (IUPAC, gekürzte Tabelle). Der Ausschlag ist nur eine Anzeige (je größer der Unterschied, desto stärker, aber begrenzt), keine Messung.</li>
           <li><b>Teilchenbild:</b> Jedes Teilchen ist eine kleine Gruppe von Kugeln (Dalton-Modell). Zweiatomige Teilchen liegen nebeneinander, bei Wasser, Ammoniak, Methan, Schwefelwasserstoff und Schwefeldioxid steht das Zentralatom in der Mitte (Wasser gewinkelt, Kohlenstoffdioxid gestreckt), alle anderen werden kompakt gepackt, ohne Bindungen. Die Kugelgröße wächst grob mit dem Atomradius, ist aber nicht maßstäblich. Die Größe des ganzen Bilds passt sich der Zahl der Teilchen an.</li>
+        </ul>
+      </div>
+
+      <div class="page-entry" id="s-energie">
+        <h3><a href="energie.html">Energie der Reaktion</a></h3>
+        <ul>
+          <li><b>Diagramm:</b> Die Kurve ist keine Rechnung zum Reaktionsweg, sondern eine glatte Verbindung der Niveaus von Edukten und Produkten (Stufe aus einer Glättungsfunktion) mit einem glockenförmigen Buckel, dessen Spitze Eₐ über dem höheren Niveau liegt. Beim Katalysator wird die Hürde auf 45 % gesetzt; ΔH ändert sich nicht. Die Hürden der sieben Reaktionen sind schematisch, nicht gemessen.</li>
+          <li><b>ΔH:</b> Standard-Reaktionsenthalpien in kJ/mol bei 25 °C: Methanverbrennung −890 (Wasser flüssig), Knallgas −286, MgO-Bildung −602, NH₃-Bildung −46, Neutralisation −56, CaCO₃ → CaO + CO₂ +178, Lösen von NH₄NO₃ +26.</li>
+          <li><b>Bindungsbilanz:</b> Summe der Bindungsenergien der gelösten Bindungen minus Summe der geknüpften (mittlere Werte in kJ/mol: H–H 436, O=O 498, O–H 463, N≡N 945, N–H 391, C–H 413, C=O in CO₂ 799). Ergebnis für die gezeigten Gleichungen (Gas): −482 (Tabelle −484), −802 (−802), −93 (−92). Die Atome werden je Element der Reihe nach den Produktatomen zugeordnet, die Bewegung ist eine geglättete Linie über den Zustand freier Atome.</li>
         </ul>
       </div>
 
