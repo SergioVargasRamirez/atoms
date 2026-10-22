@@ -267,7 +267,7 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
       <b>Aufgaben</b>
       <ol>
         <li><b>Vorhersage:</b> Die erste Gleichung ist H₂ + O₂ → H₂O, alle Zahlen sind 1. Was zeigt die Waage: links schwerer, rechts schwerer oder gleich? Überlege, bevor du etwas anklickst, und prüfe dann.</li>
-        <li><b>Ausprobieren:</b> Gleiche die Gleichung aus. Du darfst nur die großen Zahlen vor den Formeln ändern. Löse danach mehrere Aufgaben auf Stufe 1, 2 und 3. Probiere die Index-Falle unten aus.</li>
+        <li><b>Ausprobieren:</b> Gleiche die Gleichung aus. Du darfst nur die großen Zahlen vor den Formeln ändern. Löse danach mehrere Aufgaben auf Stufe 1, 2 und 3. Wähle einen Reaktionstyp (Verbrennung, Säure-Base, Fällung …) und übe ihn gezielt. Probiere die Index-Falle unten aus.</li>
         <li><b>Erklären:</b> Warum müssen links und rechts gleich viele Atome jeder Sorte stehen? Schreibe die Antwort in einem Satz auf. Warum zeigt die Waage bei einer falschen Gleichung einen Unterschied, obwohl bei einer echten Reaktion die Masse gleich bleibt?</li>
         <li><b>Nachdenken:</b> In 2 C₄H₁₀ + 13 O₂ → 8 CO₂ + 10 H₂O steht die ungerade Zahl 13. Warum geht es nicht mit kleineren Zahlen?</li>
       </ol>
@@ -286,6 +286,9 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
           <button type="button" role="radio" aria-checked="false" data-level="2">2 · mittel</button>
           <button type="button" role="radio" aria-checked="false" data-level="3">3 · schwer</button>
         </div>
+      </div>
+      <div class="group" id="kindgroup"><span>Reaktionstyp</span>
+        <select class="sel" id="kindsel" aria-label="Reaktionstyp"></select>
       </div>
     </div>
 
@@ -335,7 +338,7 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
   <details>
     <summary>Regeln, Modell und Grenzen</summary>
     <ul>
-      <li><b>Lehrplan:</b> Das Aufstellen und Ausgleichen von Reaktionsgleichungen gehört in die 8. Klasse (NTG, Lernbereich „Chemische Reaktion“). Die Stufen sind nur nach der Schwierigkeit geordnet: Stufe 1 hat einfache Reaktionen mit zwei oder drei Stoffen, Stufe 2 mehr Atomsorten und Säuren, Stufe 3 Verbrennungen großer Moleküle und mehrere Atomsorten, die in vielen Stoffen vorkommen. Einige Reaktionen der Stufe 3 (zum Beispiel die Thermitreaktion) stehen im Lehrplan erst später.</li>
+      <li><b>Lehrplan:</b> Das Aufstellen und Ausgleichen von Reaktionsgleichungen gehört in die 8. Klasse (NTG, Lernbereich „Chemische Reaktion“). Es gibt sechs Reaktionstypen: Verbrennung, Synthese, Zersetzung, Säure-Base (Neutralisation, Oxide, Carbonate, Ammoniak), Metall mit Säure oder Wasser und Fällung. Die Stufen sind nur nach der Schwierigkeit geordnet: Stufe 1 hat kleine Zahlen und bis zu drei Stoffe, Stufe 3 große Zahlen (etwa Verbrennungen großer Moleküle), vier oder fünf Stoffe oder Formeln mit Klammern. Reaktionen, bei denen das Ausgleichen nur über Elektronenübergänge verstanden wird (Redox-Gleichungen mit Teilgleichungen), kommen nicht vor. Metalle in Säuren und Verbrennungen sind aufgenommen, hier aber nur als Gleichungen zum Ausgleichen.</li>
       <li><b>Zwei Arten von Zahlen:</b> Der <i>Koeffizient</i> steht vor der Formel und sagt, wie viele Teilchen reagieren. Der <i>Index</i> steht klein hinter dem Elementsymbol und gehört zum Stoff. Beim Ausgleichen ändert man nur Koeffizienten. Ändert man einen Index, entsteht ein anderer Stoff.</li>
       <li><b>Vorgehen:</b> (1) Atome jeder Sorte links und rechts zählen. (2) Mit einem Element beginnen, das links und rechts in je nur einem Stoff steckt. (3) Elemente, die in vielen Stoffen vorkommen (oft O und H), zuletzt. (4) Alles noch einmal zählen. (5) Prüfen, ob sich alle Zahlen durch dieselbe Zahl teilen lassen; es gelten die kleinsten ganzen Zahlen. Eine Zahl 1 schreibt man nicht.</li>
       <li><b>Waage:</b> Sie addiert die Atommassen aller gezeichneten Atome (links und rechts). Bei einer ausgeglichenen Gleichung sind beide Seiten gleich schwer. Bei einer nicht ausgeglichenen Gleichung hätte man Atome erzeugt oder vernichtet, deshalb kippt die Waage. Das Kippen zeigt nur, dass die Gleichung nicht stimmt, nicht eine echte Messung. Echte Reaktionen kann man auf einer Waage prüfen, wenn man auch die Gase wiegt (Lavoisier, 1789).</li>
@@ -358,7 +361,8 @@ const EL = {
   Al:{m:26.982, r:1.05, c:"#b9c6d8"}, S:{m:32.06, r:1.00, c:"#f2d04a"}, Cl:{m:35.45, r:1.00, c:"#5fd38d"},
   K:{m:39.098, r:1.30, c:"#d79bf0"}, Ca:{m:40.078, r:1.20, c:"#8bd0c8"}, Fe:{m:55.845, r:1.00, c:"#d9805a"},
   Cu:{m:63.546, r:.95, c:"#e8975a"}, Zn:{m:65.38, r:.95, c:"#8fb0c8"}, Ag:{m:107.868, r:1.10, c:"#d6dde6"},
-  Hg:{m:200.59, r:1.10, c:"#a3adbd"}
+  Hg:{m:200.59, r:1.10, c:"#a3adbd"}, Li:{m:6.94, r:.95, c:"#ff8fa3"}, P:{m:30.974, r:1.00, c:"#ff9f40"},
+  Ba:{m:137.327, r:1.35, c:"#6fcf97"}, Br:{m:79.904, r:1.10, c:"#b5523b"}
 };
 // Stoffe: f = Formel, n = Name, ctr = Zentralatom für das Teilchenbild, lin = gestreckt
 const SUBS = {
@@ -382,43 +386,38 @@ const SUBS = {
 delete SUBS.CO2b;
 // Reaktionen: lv = Stufe, t = Titel, l/r = Stoffe links/rechts
 const REACTS = [
-  {lv:1, t:"Knallgasreaktion", l:["H2","O2"], r:["H2O"]},
-  {lv:1, t:"Verbrennung von Magnesium", l:["Mg","O2"], r:["MgO"]},
-  {lv:1, t:"Natrium brennt in Chlor", l:["Na","Cl2"], r:["NaCl"]},
-  {lv:1, t:"Ammoniaksynthese (Haber-Bosch)", l:["N2","H2"], r:["NH3"]},
-  {lv:1, t:"Kupfer wird an der Luft erhitzt", l:["Cu","O2"], r:["CuO"]},
-  {lv:1, t:"Verbrennung von Zink", l:["Zn","O2"], r:["ZnO"]},
-  {lv:1, t:"Zersetzung von Wasser (Elektrolyse)", l:["H2O"], r:["H2","O2"]},
-  {lv:1, t:"Zersetzung von Quecksilberoxid (Lavoisier)", l:["HgO"], r:["Hg","O2"]},
-  {lv:1, t:"Verbrennung von Kohlenstoffmonooxid", l:["CO","O2"], r:["CO2"]},
-  {lv:1, t:"Zersetzung von Wasserstoffperoxid", l:["H2O2"], r:["H2O","O2"]},
-  {lv:2, t:"Verbrennung von Methan (Erdgas)", l:["CH4","O2"], r:["CO2","H2O"]},
-  {lv:2, t:"Verbrennung von Aluminium", l:["Al","O2"], r:["Al2O3"]},
-  {lv:2, t:"Eisen reagiert mit Sauerstoff (Rost, vereinfacht)", l:["Fe","O2"], r:["Fe2O3"]},
-  {lv:2, t:"Eisen verbrennt in reinem Sauerstoff", l:["Fe","O2"], r:["Fe3O4"]},
-  {lv:2, t:"Zink in Salzsäure", l:["Zn","HCl"], r:["ZnCl2","H2"]},
-  {lv:2, t:"Magnesium in Salzsäure", l:["Mg","HCl"], r:["MgCl2","H2"]},
-  {lv:2, t:"Aluminium in Salzsäure", l:["Al","HCl"], r:["AlCl3","H2"]},
-  {lv:2, t:"Natrium in Wasser", l:["Na","H2O"], r:["NaOH","H2"]},
-  {lv:2, t:"Magnesium brennt in Kohlenstoffdioxid", l:["Mg","CO2"], r:["MgO","C"]},
-  {lv:2, t:"Kupferoxid wird mit Kohlenstoff reduziert", l:["CuO","C"], r:["Cu","CO2"]},
-  {lv:2, t:"Neutralisation: Natriumhydroxid und Schwefelsäure", l:["NaOH","H2SO4"], r:["Na2SO4","H2O"]},
-  {lv:2, t:"Neutralisation: Calciumhydroxid und Salzsäure", l:["CaOH2","HCl"], r:["CaCl2","H2O"]},
-  {lv:2, t:"Kalk in Salzsäure", l:["CaCO3","HCl"], r:["CaCl2","H2O","CO2"]},
-  {lv:2, t:"Verbrennung von Propan", l:["C3H8","O2"], r:["CO2","H2O"]},
-  {lv:3, t:"Verbrennung von Ethan", l:["C2H6","O2"], r:["CO2","H2O"]},
-  {lv:3, t:"Verbrennung von Butan (Feuerzeuggas)", l:["C4H10","O2"], r:["CO2","H2O"]},
-  {lv:3, t:"Verbrennung von Ethanol", l:["C2H5OH","O2"], r:["CO2","H2O"]},
-  {lv:3, t:"Zellatmung (Verbrennung von Traubenzucker)", l:["C6H12O6","O2"], r:["CO2","H2O"]},
-  {lv:3, t:"Photosynthese (vereinfacht)", l:["CO2","H2O"], r:["C6H12O6","O2"]},
-  {lv:3, t:"Hochofen: Eisenerz wird reduziert", l:["Fe2O3","CO"], r:["Fe","CO2"]},
-  {lv:3, t:"Thermitreaktion", l:["Al","Fe2O3"], r:["Al2O3","Fe"]},
-  {lv:3, t:"Kaliumchlorat zersetzt sich beim Erhitzen", l:["KClO3"], r:["KCl","O2"]},
-  {lv:3, t:"Ostwald-Verfahren (erster Schritt)", l:["NH3","O2"], r:["NO","H2O"]},
-  {lv:3, t:"Verbrennung von Schwefelwasserstoff", l:["H2S","O2"], r:["SO2","H2O"]},
-  {lv:3, t:"Kupfer in Silbernitrat-Lösung", l:["Cu","AgNO3"], r:["CuNO32","Ag"]}
+  {lv:1, t:"Knallgasreaktion", l:["H2","O2"], r:["H2O"], k:"Verbrennung"},
+  {lv:1, t:"Verbrennung von Magnesium", l:["Mg","O2"], r:["MgO"], k:"Verbrennung"},
+  {lv:1, t:"Natrium brennt in Chlor", l:["Na","Cl2"], r:["NaCl"], k:"Verbrennung"},
+  {lv:1, t:"Ammoniaksynthese (Haber-Bosch)", l:["N2","H2"], r:["NH3"], k:"Synthese"},
+  {lv:1, t:"Kupfer wird an der Luft erhitzt", l:["Cu","O2"], r:["CuO"], k:"Verbrennung"},
+  {lv:1, t:"Verbrennung von Zink", l:["Zn","O2"], r:["ZnO"], k:"Verbrennung"},
+  {lv:1, t:"Zersetzung von Wasser (Elektrolyse)", l:["H2O"], r:["H2","O2"], k:"Zersetzung"},
+  {lv:1, t:"Zersetzung von Quecksilberoxid (Lavoisier)", l:["HgO"], r:["Hg","O2"], k:"Zersetzung"},
+  {lv:1, t:"Verbrennung von Kohlenstoffmonooxid", l:["CO","O2"], r:["CO2"], k:"Verbrennung"},
+  {lv:1, t:"Zersetzung von Wasserstoffperoxid", l:["H2O2"], r:["H2O","O2"], k:"Zersetzung"},
+  {lv:2, t:"Verbrennung von Methan (Erdgas)", l:["CH4","O2"], r:["CO2","H2O"], k:"Verbrennung"},
+  {lv:2, t:"Verbrennung von Aluminium", l:["Al","O2"], r:["Al2O3"], k:"Verbrennung"},
+  {lv:2, t:"Eisen reagiert mit Sauerstoff (Rost, vereinfacht)", l:["Fe","O2"], r:["Fe2O3"], k:"Verbrennung"},
+  {lv:2, t:"Eisen verbrennt in reinem Sauerstoff", l:["Fe","O2"], r:["Fe3O4"], k:"Verbrennung"},
+  {lv:2, t:"Zink in Salzsäure", l:["Zn","HCl"], r:["ZnCl2","H2"], k:"Metall + Säure/Wasser"},
+  {lv:2, t:"Magnesium in Salzsäure", l:["Mg","HCl"], r:["MgCl2","H2"], k:"Metall + Säure/Wasser"},
+  {lv:2, t:"Aluminium in Salzsäure", l:["Al","HCl"], r:["AlCl3","H2"], k:"Metall + Säure/Wasser"},
+  {lv:2, t:"Natrium in Wasser", l:["Na","H2O"], r:["NaOH","H2"], k:"Metall + Säure/Wasser"},
+  {lv:2, t:"Neutralisation: Natriumhydroxid und Schwefelsäure", l:["NaOH","H2SO4"], r:["Na2SO4","H2O"], k:"Säure-Base"},
+  {lv:2, t:"Neutralisation: Calciumhydroxid und Salzsäure", l:["CaOH2","HCl"], r:["CaCl2","H2O"], k:"Säure-Base"},
+  {lv:2, t:"Kalk in Salzsäure", l:["CaCO3","HCl"], r:["CaCl2","H2O","CO2"], k:"Säure-Base"},
+  {lv:2, t:"Verbrennung von Propan", l:["C3H8","O2"], r:["CO2","H2O"], k:"Verbrennung"},
+  {lv:3, t:"Verbrennung von Ethan", l:["C2H6","O2"], r:["CO2","H2O"], k:"Verbrennung"},
+  {lv:3, t:"Verbrennung von Butan (Feuerzeuggas)", l:["C4H10","O2"], r:["CO2","H2O"], k:"Verbrennung"},
+  {lv:3, t:"Verbrennung von Ethanol", l:["C2H5OH","O2"], r:["CO2","H2O"], k:"Verbrennung"},
+  {lv:3, t:"Zellatmung (Verbrennung von Traubenzucker)", l:["C6H12O6","O2"], r:["CO2","H2O"], k:"Verbrennung"},
+  {lv:3, t:"Photosynthese (vereinfacht)", l:["CO2","H2O"], r:["C6H12O6","O2"], k:"Synthese"},
+  {lv:3, t:"Kaliumchlorat zersetzt sich beim Erhitzen", l:["KClO3"], r:["KCl","O2"], k:"Zersetzung"},
+  {lv:3, t:"Ostwald-Verfahren (erster Schritt)", l:["NH3","O2"], r:["NO","H2O"], k:"Verbrennung"},
+  {lv:3, t:"Verbrennung von Schwefelwasserstoff", l:["H2S","O2"], r:["SO2","H2O"], k:"Verbrennung"}
 ];
-const MAXC = 20;
+const MAXC = 30;
 
 function parseF(f){   // "Ca(OH)2" -> {Ca:1, O:2, H:2}
   let i = 0;
@@ -483,6 +482,125 @@ function masses(rx, coef){
   return [ml, mr];
 }
 const balanced = (rx, coef) => Object.values(tally(rx, coef)).every(([a, b]) => a === b);
+
+/* ---------- Weitere Reaktionen: aus Bausteinen erzeugt und mit solve() geprüft ---------- */
+(() => {
+  const S = (f, n) => {   // Id eines Stoffes; legt ihn an, wenn es ihn noch nicht gibt
+    const old = Object.keys(SUBS).find(k => SUBS[k] && SUBS[k].f === f);
+    if (old) return old;
+    if (!n) throw new Error("Name fehlt: " + f);
+    SUBS[f] = {f, n}; return f;
+  };
+  const CAT = {Li:["Li", 1, "Lithium"], Na:["Na", 1, "Natrium"], K:["K", 1, "Kalium"], Mg:["Mg", 2, "Magnesium"], Ca:["Ca", 2, "Calcium"], Ba:["Ba", 2, "Barium"],
+    Zn:["Zn", 2, "Zink"], Al:["Al", 3, "Aluminium"], Cu:["Cu", 2, "Kupfer(II)"], Fe2:["Fe", 2, "Eisen(II)"], Fe3:["Fe", 3, "Eisen(III)"], NH4:["NH4", 1, "Ammonium", true]};
+  const AN = {Cl:["Cl", 1, "chlorid"], Br:["Br", 1, "bromid"], NO3:["NO3", 1, "nitrat", true], SO4:["SO4", 2, "sulfat", true], PO4:["PO4", 3, "phosphat", true],
+    CO3:["CO3", 2, "carbonat", true], OH:["OH", 1, "hydroxid", true], O:["O", 2, "oxid"], S:["S", 2, "sulfid"]};
+  const gcd2 = (a, b) => b ? gcd2(b, a % b) : a;
+  const salt = (c, a) => {   // Ionenverbindung aus Kation- und Anionschlüssel
+    const [cs, cz, cn, cpoly] = CAT[c], [as, az, an, apoly] = AN[a], g = gcd2(cz, az), nc = az / g, na = cz / g;
+    const f = (cpoly && nc > 1 ? "(" + cs + ")" + nc : cs + (nc > 1 ? nc : "")) + (apoly && na > 1 ? "(" + as + ")" + na : as + (na > 1 ? na : ""));
+    return S(f, cn + (cn.includes("(") ? "-" : "") + an);
+  };
+  const ELN = {Li:"Lithium", Na:"Natrium", K:"Kalium", Mg:"Magnesium", Ca:"Calcium", Ba:"Barium", Zn:"Zink", Al:"Aluminium", Cu:"Kupfer", Fe:"Eisen"};
+  const el = m => S(CAT[m][0], ELN[CAT[m][0]]);
+  const ACID = {HCl:["HCl", "Salzsäure"], HBr:["HBr", "Bromwasserstoffsäure"], HNO3:["HNO3", "Salpetersäure"], H2SO4:["H2SO4", "Schwefelsäure"], H3PO4:["H3PO4", "Phosphorsäure"]};
+  const acidAn = {HCl:"Cl", HBr:"Br", HNO3:"NO3", H2SO4:"SO4", H3PO4:"PO4"};
+  const acid = k => S(ACID[k][0], ACID[k][1]);
+  const hyd = c => salt(c, "OH"), oxid = c => salt(c, "O");
+  const out = [];
+  const add = (k, t, l, r) => out.push({k, t, l, r});
+  const nm = id => SUBS[id].n;
+  // Säure-Base
+  for (const a in ACID) for (const b of ["Na", "K", "Li", "Mg", "Ca", "Ba", "Al", "Zn"]) {
+    const H2O = S("H2O");
+    add("Säure-Base", "Neutralisation: " + ACID[a][1] + " und " + nm(hyd(b)), [acid(a), hyd(b)], [salt(b, acidAn[a]), H2O]);
+  }
+  for (const a in ACID) for (const b of ["Mg", "Ca", "Zn", "Cu", "Al", "Fe3"]) add("Säure-Base", nm(oxid(b)) + " in " + ACID[a][1], [oxid(b), acid(a)], [salt(b, acidAn[a]), S("H2O")]);
+  for (const a of ["HCl", "H2SO4", "HNO3"]) for (const b of ["Na", "K", "Mg", "Ca"]) add("Säure-Base", nm(salt(b, "CO3")) + " in " + ACID[a][1], [salt(b, "CO3"), acid(a)], [salt(b, acidAn[a]), S("H2O"), S("CO2")]);
+  for (const a in ACID) add("Säure-Base", "Ammoniak und " + ACID[a][1], [S("NH3"), acid(a)], [salt("NH4", acidAn[a])]);
+  add("Säure-Base", "Ammoniak in Wasser (Salmiakgeist)", [S("NH3"), S("H2O")], [S("NH4OH", "Ammoniumhydroxid")]);
+  const NMO = [["CO2", "H2CO3", "Kohlenstoffdioxid", "Kohlensäure"], ["SO2", "H2SO3", "Schwefeldioxid", "Schweflige Säure"], ["SO3", "H2SO4", "Schwefeltrioxid", "Schwefelsäure"], ["N2O5", "HNO3", "Distickstoffpentoxid", "Salpetersäure"], ["P4O10", "H3PO4", "Phosphor(V)-oxid", "Phosphorsäure"]];
+  for (const [o, a, on, an] of NMO) add("Säure-Base", on + " löst sich in Wasser (Säurebildung)", [S(o, on), S("H2O")], [S(a, an)]);
+  for (const b of ["Li", "Na", "K", "Ca", "Ba"]) add("Säure-Base", nm(oxid(b)) + " in Wasser (Laugenbildung)", [oxid(b), S("H2O")], [hyd(b)]);
+  for (const [o, f, n] of [["CO2", "Na2CO3", "Natriumcarbonat"], ["SO3", "Na2SO4", "Natriumsulfat"], ["N2O5", "NaNO3", "Natriumnitrat"], ["P4O10", "Na3PO4", "Natriumphosphat"]])
+    add("Säure-Base", nm(S(o)) + " und Natriumhydroxid", [S(o), S("NaOH")], [S(f, n), S("H2O")]);
+  // Metall + Säure / Wasser
+  for (const a of ["HCl", "H2SO4"]) for (const m of ["Mg", "Zn", "Al", "Fe2", "Ca", "Na", "K"]) add("Metall + Säure/Wasser", ELN[CAT[m][0]] + " in " + ACID[a][1], [el(m), acid(a)], [salt(m, acidAn[a]), S("H2")]);
+  for (const m of ["Li", "K", "Ca", "Ba"]) add("Metall + Säure/Wasser", ELN[CAT[m][0]] + " in Wasser", [el(m), S("H2O")], [hyd(m), S("H2")]);
+  // Verbrennung
+  const ALK = ["Methan", "Ethan", "Propan", "Butan", "Pentan", "Hexan", "Heptan", "Octan"], ALE = [["C2H4", "Ethen"], ["C3H6", "Propen"], ["C4H8", "But-1-en"]];
+  const H2O = () => S("H2O"), CO2 = () => S("CO2"), O2 = () => S("O2");
+  ALK.forEach((n, i) => add("Verbrennung", "Verbrennung von " + n, [S("C" + (i + 1 > 1 ? i + 1 : "") + "H" + (2 * (i + 1) + 2), n), O2()], [CO2(), H2O()]));
+  ALE.forEach(([f, n]) => add("Verbrennung", "Verbrennung von " + n, [S(f, n), O2()], [CO2(), H2O()]));
+  add("Verbrennung", "Verbrennung von Ethin (Autogenschweißen)", [S("C2H2", "Ethin"), O2()], [CO2(), H2O()]);
+  add("Verbrennung", "Verbrennung von Propin", [S("C3H4", "Propin"), O2()], [CO2(), H2O()]);
+  [["CH3OH", "Methanol"], ["C3H7OH", "Propan-1-ol"], ["C4H9OH", "Butan-1-ol"], ["C3H8O3", "Glycerin"], ["C3H6O", "Aceton"], ["CH3COOH", "Essigsäure"], ["C12H22O11", "Saccharose (Haushaltszucker)"], ["C6H6", "Benzol"]]
+    .forEach(([f, n]) => add("Verbrennung", "Verbrennung von " + n.replace(/ \(.*/, ""), [S(f, n), O2()], [CO2(), H2O()]));
+  add("Verbrennung", "Verbrennung von Wasserstoff in Chlor", [S("H2"), S("Cl2")], [S("HCl")]);
+  add("Verbrennung", "Verbrennung von Kohlenstoff (genug Sauerstoff)", [S("C"), O2()], [CO2()]);
+  add("Verbrennung", "Verbrennung von Kohlenstoff (zu wenig Sauerstoff)", [S("C"), O2()], [S("CO")]);
+  add("Verbrennung", "Verbrennung von Schwefel", [S("S", "Schwefel"), O2()], [S("SO2")]);
+  add("Verbrennung", "Verbrennung von weißem Phosphor", [S("P4", "Phosphor"), O2()], [S("P4O10", "Phosphor(V)-oxid")]);
+  add("Verbrennung", "Verbrennung von Schwefelkohlenstoff", [S("CS2", "Schwefelkohlenstoff"), O2()], [CO2(), S("SO2")]);
+  add("Verbrennung", "Verbrennung von Ammoniak (zu Stickstoff)", [S("NH3"), O2()], [S("N2"), H2O()]);
+  for (const m of ["Li", "Na", "K", "Ca", "Ba"]) add("Verbrennung", "Verbrennung von " + CAT[m][2], [el(m), O2()], [oxid(m)]);
+  // Synthese
+  add("Synthese", "Wasserstoff und Brom", [S("H2"), S("Br2", "Brom")], [S("HBr", "Bromwasserstoff")]);
+  add("Synthese", "Schwefeldioxid wird zu Schwefeltrioxid oxidiert", [S("SO2"), O2()], [S("SO3", "Schwefeltrioxid")]);
+  add("Synthese", "Stickstoff und Sauerstoff im Blitz", [S("N2"), O2()], [S("NO")]);
+  add("Synthese", "Stickstoffmonooxid und Sauerstoff", [S("NO"), O2()], [S("NO2", "Stickstoffdioxid")]);
+  add("Synthese", "Kohlenstoffdioxid und Kohlenstoff (Boudouard)", [CO2(), S("C")], [S("CO")]);
+  for (const [m, h] of [["Fe3", "Eisen reagiert mit Chlor"], ["Al", "Aluminium reagiert mit Chlor"], ["Mg", "Magnesium reagiert mit Chlor"], ["Na", "Natrium reagiert mit Brom"]])
+    add("Synthese", h, [el(m), S(m === "Na" ? "Br2" : "Cl2")], [salt(m, m === "Na" ? "Br" : "Cl")]);
+  for (const [m, h] of [["Zn", "Zink und Schwefel"], ["Fe2", "Eisen und Schwefel"], ["Al", "Aluminium und Schwefel"], ["Mg", "Magnesium und Schwefel"]])
+    add("Synthese", h, [el(m), S("S")], [salt(m, "S")]);
+  add("Synthese", "Magnesium und Stickstoff", [S("Mg"), S("N2")], [S("Mg3N2", "Magnesiumnitrid")]);
+  add("Synthese", "Calciumoxid und Kohlenstoffdioxid", [oxid("Ca"), CO2()], [salt("Ca", "CO3")]);
+  // Zersetzung
+  add("Zersetzung", "Kalkbrennen", [salt("Ca", "CO3")], [oxid("Ca"), CO2()]);
+  for (const m of ["Mg", "Zn", "Cu"]) add("Zersetzung", nm(salt(m, "CO3")) + " zersetzt sich beim Erhitzen", [salt(m, "CO3")], [oxid(m), CO2()]);
+  for (const m of ["Cu", "Mg", "Al", "Zn"]) add("Zersetzung", nm(hyd(m)) + " zersetzt sich beim Erhitzen", [hyd(m)], [oxid(m), H2O()]);
+  add("Zersetzung", "Kohlensäure zerfällt", [S("H2CO3", "Kohlensäure")], [H2O(), CO2()]);
+  add("Zersetzung", "Natron (Backpulver) beim Backen", [S("NaHCO3", "Natriumhydrogencarbonat")], [salt("Na", "CO3"), H2O(), CO2()]);
+  add("Zersetzung", "Tropfstein: Calciumhydrogencarbonat zerfällt", [S("Ca(HCO3)2", "Calciumhydrogencarbonat")], [salt("Ca", "CO3"), H2O(), CO2()]);
+  add("Zersetzung", "Salmiak zerfällt beim Erhitzen", [salt("NH4", "Cl")], [S("NH3"), S("HCl")]);
+  add("Zersetzung", "Silberoxid zerfällt beim Erhitzen", [S("Ag2O", "Silberoxid")], [S("Ag"), O2()]);
+  add("Zersetzung", "Zersetzung von Chlorwasserstoff (Elektrolyse)", [S("HCl")], [S("H2"), S("Cl2")]);
+  add("Zersetzung", "Zersetzung von Ammoniak", [S("NH3")], [S("N2"), S("H2")]);
+  add("Zersetzung", "Zersetzung von Natriumchlorid (Schmelzelektrolyse)", [S("NaCl")], [S("Na"), S("Cl2")]);
+  add("Zersetzung", "Zersetzung von Aluminiumoxid (Schmelzelektrolyse)", [oxid("Al")], [S("Al"), O2()]);
+  add("Zersetzung", "Kaliumnitrat zerfällt beim Erhitzen", [salt("K", "NO3")], [S("KNO2", "Kaliumnitrit"), O2()]);
+  // Fällung
+  const fall = (t, l, r) => add("Fällung", t, l, r);
+  const AgCl = S("AgCl", "Silberchlorid"), AgBr = S("AgBr", "Silberbromid"), BaSO4 = S("BaSO4", "Bariumsulfat");
+  const Ag = S("AgNO3");
+  fall("Silberchlorid fällt aus: Silbernitrat und Natriumchlorid", [Ag, salt("Na", "Cl")], [AgCl, salt("Na", "NO3")]);
+  fall("Silberchlorid fällt aus: Silbernitrat und Calciumchlorid", [Ag, salt("Ca", "Cl")], [AgCl, salt("Ca", "NO3")]);
+  fall("Silberchlorid fällt aus: Silbernitrat und Aluminiumchlorid", [Ag, salt("Al", "Cl")], [AgCl, salt("Al", "NO3")]);
+  fall("Silberbromid fällt aus: Silbernitrat und Kaliumbromid", [Ag, salt("K", "Br")], [AgBr, salt("K", "NO3")]);
+  fall("Bariumsulfat fällt aus: Bariumchlorid und Natriumsulfat", [salt("Ba", "Cl"), salt("Na", "SO4")], [BaSO4, salt("Na", "Cl")]);
+  fall("Bariumsulfat fällt aus: Bariumchlorid und Schwefelsäure", [salt("Ba", "Cl"), acid("H2SO4")], [BaSO4, acid("HCl")]);
+  fall("Bariumsulfat fällt aus: Bariumnitrat und Aluminiumsulfat", [salt("Ba", "NO3"), salt("Al", "SO4")], [BaSO4, salt("Al", "NO3")]);
+  fall("Calciumcarbonat fällt aus: Calciumchlorid und Natriumcarbonat", [salt("Ca", "Cl"), salt("Na", "CO3")], [salt("Ca", "CO3"), salt("Na", "Cl")]);
+  fall("Calciumphosphat fällt aus: Calciumchlorid und Natriumphosphat", [salt("Ca", "Cl"), salt("Na", "PO4")], [salt("Ca", "PO4"), salt("Na", "Cl")]);
+  fall("Kalkwasser-Nachweis von Kohlenstoffdioxid", [hyd("Ca"), CO2()], [salt("Ca", "CO3"), H2O()]);
+  fall("Calciumcarbonat fällt aus: Calciumhydroxid und Natriumcarbonat", [hyd("Ca"), salt("Na", "CO3")], [salt("Ca", "CO3"), S("NaOH")]);
+  for (const [c, an, t] of [["Mg", "Cl", "Magnesiumhydroxid"], ["Cu", "SO4", "Kupfer(II)-hydroxid"], ["Fe3", "Cl", "Eisen(III)-hydroxid"], ["Al", "Cl", "Aluminiumhydroxid"], ["Zn", "SO4", "Zinkhydroxid"], ["Fe2", "SO4", "Eisen(II)-hydroxid"], ["Fe3", "SO4", "Eisen(III)-hydroxid"]])
+    fall(t + " fällt aus: " + nm(salt(c, an)) + " und Natriumhydroxid", [salt(c, an), S("NaOH")], [hyd(c), salt("Na", an)]);
+  fall("Kupfer(II)-sulfid fällt aus: Kupfer(II)-sulfat und Natriumsulfid", [salt("Cu", "SO4"), salt("Na", "S")], [salt("Cu", "S"), salt("Na", "SO4")]);
+  // Übernehmen: nur, was eindeutig lösbar und nicht schon vorhanden ist; Stufe aus der Lösung
+  const have = new Set(REACTS.map(r => r.l.join("+") + ">" + r.r.join("+")));
+  for (const r of out) {
+    const key = r.l.join("+") + ">" + r.r.join("+");
+    if (have.has(key)) continue;
+    const v = solve(r);
+    if (!v || Math.max(...v) > MAXC) { console.warn("nicht aufgenommen:", r.t, v); continue; }
+    have.add(key);
+    const mx = Math.max(...v), nSp = r.l.length + r.r.length;
+    r.lv = (mx <= 2 && nSp <= 3) ? 1 : (mx >= 7 || nSp >= 5 || (mx >= 4 && nSp >= 4) || r.l.concat(r.r).some(x => /\(.*\)\d.*\(|\d.*\(.*\)\d/.test(SUBS[x].f))) ? 3 : 2;
+    REACTS.push(r);
+  }
+})();
 /* ===== /LOGIK ===== */
 /* ---------- Oberfläche ---------- */
 const $ = id => document.getElementById(id);
@@ -689,7 +807,9 @@ function loadRx(r){
 }
 
 /* ---------- Aufgaben ---------- */
-const pool = lv => REACTS.filter(r => r.lv === lv);
+const KINDS = ["Verbrennung", "Synthese", "Zersetzung", "Säure-Base", "Metall + Säure/Wasser", "Fällung"];
+let kind = "";
+const pool = lv => { const p = REACTS.filter(r => r.lv === lv && (!kind || r.k === kind)); return p.length ? p : REACTS.filter(r => r.lv === lv); };
 function newTask(){
   let r;
   if (first){ r = pool(1)[0]; first = false; }
@@ -738,9 +858,9 @@ function showSolution(){
 /* ---------- Erkunden: Auswahl ---------- */
 function fillSel(){
   const s = $("rxsel"); s.innerHTML = "";
-  [1, 2, 3].forEach(lv => {
-    const og = document.createElement("optgroup"); og.label = "Stufe " + lv + " · " + ["einfach", "mittel", "schwer"][lv - 1];
-    REACTS.forEach((r, i) => { if (r.lv === lv){ const o = document.createElement("option"); o.value = i; o.textContent = r.t + ": " + r.l.map(fml).join(" + ") + " → " + r.r.map(fml).join(" + "); og.appendChild(o); } });
+  KINDS.forEach(k => {
+    const og = document.createElement("optgroup"); og.label = k;
+    REACTS.forEach((r, i) => { if (r.k === k){ const o = document.createElement("option"); o.value = i; o.textContent = "Stufe " + r.lv + " · " + r.t + ": " + r.l.map(fml).join(" + ") + " → " + r.r.map(fml).join(" + "); og.appendChild(o); } });
     s.appendChild(og);
   });
 }
@@ -750,7 +870,7 @@ $("rxsel").addEventListener("change", () => loadRx(REACTS[+$("rxsel").value]));
 function setMode(m){
   mode = m;
   document.querySelectorAll("[data-mode]").forEach(b => b.setAttribute("aria-checked", String(b.dataset.mode === m)));
-  $("levelgroup").hidden = m !== "aus"; $("p-aus").hidden = m !== "aus"; $("p-erk").hidden = m !== "erk";
+  $("levelgroup").hidden = m !== "aus"; $("kindgroup").hidden = m !== "aus"; $("p-aus").hidden = m !== "aus"; $("p-erk").hidden = m !== "erk";
   $("p-erk").style.display = m === "erk" ? "flex" : "none"; $("p-aus").style.display = m === "aus" ? "flex" : "none";
   if (m === "aus") newTask(); else { if (!$("rxsel").value) $("rxsel").value = "0"; loadRx(REACTS[+$("rxsel").value || 0]); }
 }
@@ -760,6 +880,11 @@ function setLevel(l){
   newTask();
 }
 document.querySelectorAll("[data-mode]").forEach(b => b.addEventListener("click", () => setMode(b.dataset.mode)));
+(() => {
+  const s = $("kindsel"), o0 = document.createElement("option"); o0.value = ""; o0.textContent = "alle Typen"; s.appendChild(o0);
+  KINDS.forEach(k => { const o = document.createElement("option"); o.value = k; o.textContent = k; s.appendChild(o); });
+  s.addEventListener("change", () => { kind = s.value; newTask(); });
+})();
 document.querySelectorAll("[data-level]").forEach(b => b.addEventListener("click", () => setLevel(+b.dataset.level)));
 $("a-check").addEventListener("click", check);
 $("a-hint").addEventListener("click", hint);

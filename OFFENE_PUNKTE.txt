@@ -101,8 +101,10 @@ Erledigt am 17.10.2026
       gegen die Tabelle im Schulbuch halten; ggf. auf Schulwerte umstellen.
    b) Schreibweise im Schulbuch: "Wasserstoffperoxid", "Eisen(II,III)-oxid", "Photosynthese"
       (Duden erlaubt auch Fotosynthese), "Kohlenstoffmonooxid" gegen das, was im Unterricht gilt.
-   c) Stufen sortieren: Reaktionen mit Säuren, Thermit und Ostwald-Verfahren stehen im NTG
-      erst später; ggf. in Stufe 3 behalten oder entfernen.
+   c) [ERLEDIGT 22.10.2026] Redox-Reaktionen (Thermit, Hochofen, CuO + C, Mg + CO2, Cu + AgNO3)
+      entfernt; dafür über 200 Reaktionen in sechs Typen (Verbrennung, Synthese, Zersetzung,
+      Säure-Base, Metall + Säure/Wasser, Fällung), per Code erzeugt und mit dem Gauß-Löser geprüft;
+      Filter "Reaktionstyp". Offen: Stufenzuordnung (automatisch nach Zahlen) im Unterricht prüfen.
    d) Auf Handy und iPad mit dem Finger testen (Plus/Minus-Knöpfe 40 bis 44 px).
    e) Aggregatzustände (g), (l), (s), (aq) und Reaktionsbedingungen fehlen bewusst.
    f) Verknüpfung mit den nächsten Seiten: Stoffmenge (c) soll dieselben Reaktionen nutzen.
