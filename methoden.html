@@ -217,6 +217,8 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
     <a href="protonen.html">Protonenübergang</a>
     <a href="ammoniak.html">Ammoniak in Wasser</a>
     <a href="neutralisation.html">Neutralisation</a>
+    <p class="sidenav-group">Elektrochemie</p>
+    <a href="elektrolyse.html">Elektrolyse</a>
     <p class="sidenav-group">Über die Seiten</p>
     <a href="methoden.html" aria-current="page">Methoden: wie gerechnet wurde</a>
     <a href="quellen.html">Quellen und Danksagung</a>
@@ -300,6 +302,7 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
             <tr><th scope="row"><a href="#s-eis">Eis und Wasser in 3D</a></th><td><span class="kind k-sim">Simulation</span></td><td>Eisgitter nach den Eisregeln, Schnappschuss aus OpenMM (TIP4P-Ew)</td></tr>
             <tr><th scope="row"><a href="#s-gleichungen">Gleichungen ausgleichen</a></th><td><span class="kind k-rule">Regeln</span> <span class="kind k-lit">Messwerte</span></td><td>Atombilanz, kleinste ganze Zahlen (Gauß-Verfahren mit Brüchen), Atommassen, Waage, Kugelbild</td></tr>
             <tr><th scope="row"><a href="#s-energie">Energie der Reaktion</a></th><td><span class="kind k-rule">Regeln</span> <span class="kind k-lit">Messwerte</span></td><td>Energiediagramm als geglättete Kurve, Standard-Reaktionsenthalpien, Bilanz aus mittleren Bindungsenergien</td></tr>
+            <tr><th scope="row"><a href="#s-elektrolyse">Elektrolyse</a></th><td><span class="kind k-sim">Simulation</span> <span class="kind k-rule">Regeln</span> <span class="kind k-lit">Messwerte</span></td><td>Wärmebewegung und Wanderung der Ionen, Entladung nach Elektronenbilanz, Zersetzungsspannung aus Standardpotentialen</td></tr>
             <tr><th scope="row"><a href="#s-saeuren">Protonenübergang, Ammoniak, Neutralisation</a></th><td><span class="kind k-sim">Simulation</span> <span class="kind k-rule">Regeln</span></td><td>gemeinsame Teilchen-Engine, Protonensprünge nach Regeln</td></tr>
           </tbody>
         </table>
@@ -540,6 +543,16 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
           <li><b>Diagramm:</b> Die Kurve ist keine Rechnung zum Reaktionsweg, sondern eine glatte Verbindung der Niveaus von Edukten und Produkten (Stufe aus einer Glättungsfunktion) mit einem glockenförmigen Buckel, dessen Spitze Eₐ über dem höheren Niveau liegt. Beim Katalysator wird die Hürde auf 45 % gesetzt; ΔH ändert sich nicht. Die Hürden der sieben Reaktionen sind schematisch, nicht gemessen.</li>
           <li><b>ΔH:</b> Standard-Reaktionsenthalpien in kJ/mol bei 25 °C: Methanverbrennung −890 (Wasser flüssig), Knallgas −286, MgO-Bildung −602, NH₃-Bildung −46, Neutralisation −56, CaCO₃ → CaO + CO₂ +178, Lösen von NH₄NO₃ +26.</li>
           <li><b>Bindungsbilanz:</b> Summe der Bindungsenergien der gelösten Bindungen minus Summe der geknüpften (mittlere Werte in kJ/mol: H–H 436, O=O 498, O–H 463, N≡N 945, N–H 391, C–H 413, C=O in CO₂ 799). Ergebnis für die gezeigten Gleichungen (Gas): −482 (Tabelle −484), −802 (−802), −93 (−92). Die Atome werden je Element der Reihe nach den Produktatomen zugeordnet, die Bewegung ist eine geglättete Linie über den Zustand freier Atome.</li>
+        </ul>
+      </div>
+
+      <div class="page-entry" id="s-elektrolyse">
+        <h3><a href="elektrolyse.html">Elektrolyse</a></h3>
+        <ul>
+          <li><b>Ionen:</b> 10 Kationen und 20 Anionen als Kreise, Zufallsbewegung (Diffusion, 14 px je √s) plus eine Wanderung zum entgegengesetzt geladenen Pol, solange die Spannung über der Zersetzungsspannung liegt. Die Wanderung ist gegenüber der Wirklichkeit stark beschleunigt und überzeichnet; Wasser, Hydrathüllen und Konzentrationsunterschiede an den Elektroden fehlen. Das Tempo 3× lässt nur die Zeit schneller laufen.</li>
+          <li><b>Entladung nach Elektronenbilanz:</b> Ein Anion, das die Anode berührt, gibt ein Elektron ab (ein Punkt läuft durch den Draht zur Kathode, solange nicht mehr als vier Elektronen unterwegs oder wartend sind). Ein Kation an der Kathode wartet, bis zwei Elektronen angekommen sind, und wird dann zum Metallatom. Zwei Halogenatome an der Anode verbinden sich zu Cl₂ (Blase, steigt auf und entweicht) oder I₂ (bleibt gelöst, färbt die Lösung braun). Die Zahlen gehen immer auf: 10 Metallatome und 10 Cl₂ bzw. I₂.</li>
+          <li><b>Zersetzungsspannung:</b> Differenz der Standardpotentiale (V): CuCl₂ 1,36 − 0,34 = 1,02, gerundet 1,0 V; ZnI₂ 0,54 − (−0,76) = 1,30 V. Überspannungen an den Elektroden und der Einfluss des Wassers sind nicht berücksichtigt. „Strom“ ist nur eine Stufenangabe (aus, schwach, mittel, stark), keine Messung in Ampere.</li>
+          <li><b>Teilgleichungen:</b> Die Bilanz zählt Atome und Ladung links und rechts. „Ausgeglichen“ und „richtig für diesen Pol“ sind getrennt geprüft, weil z. B. 2 Cl⁻ → Cl₂ + 2 e⁻ auf der Kathodenseite ausgeglichen, aber falsch wäre.</li>
         </ul>
       </div>
 

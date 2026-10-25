@@ -1,4 +1,4 @@
-Offene Punkte (Stand 20.10.2026)
+Offene Punkte (Stand 25.10.2026)
 ================================
 
 Erledigt am 17.10.2026
@@ -136,3 +136,23 @@ Erledigt am 17.10.2026
    b) Hürden (Eₐ) sind schematisch; echte Werte nur, wenn eine Quelle gewünscht ist.
    c) Auf Handy und iPad testen; Teilchenbild ist nur im Headless-Browser gesehen.
    d) Lehrplan: Wird die Bindungsbilanz schon in Jgst. 8 verlangt oder erst später?
+
+12. elektrolyse.html (neu, 25.10.2026): Elektrolyse (Punkt 6 b), NTG 9 LB 3 und SG 9 LB 6
+   Fertig: Zelle mit Kupfer(II)-chlorid- und Zinkiodid-Lösung (Elektrolyte nach dem Schulbuch),
+   Spannung und Zersetzungsspannung, Ionenwanderung, Entladung mit Elektronenbilanz (Elektronen im
+   Draht), Metallabscheidung, Cl₂-Blasen bzw. gelöstes I₂, Teilgleichungen-Baukasten mit Bilanz
+   und Zuordnung (Kathode/Anode, Oxidation/Reduktion), Gesamtgleichung, Quiz, Menü, Karte, README,
+   Methoden, Quellen. Noch zu klären:
+   a) Zersetzungsspannungen (CuCl2 1,0 V, ZnI2 1,3 V) sind aus Standardpotentialen gerechnet;
+      kommen Potentiale in Jgst. 9 schon vor? Sonst Schwellenwert ausblenden oder umformulieren.
+   b) Zink aus wässriger ZnI2-Lösung: in Wirklichkeit konkurriert Wasserstoff; Seite folgt dem
+      Schulbuchbild (Abscheidung von Zink). Mit dem Schulbuch und dem Versuch im Unterricht abgleichen.
+   c) Schreibweise: "Kathode/Anode" und "Minuspol/Pluspol" gleichzeitig; "Elektronendonator/-akzeptor"
+      gegen den Lehrplantext (Donator-Akzeptor-Konzept) und Schulbuch prüfen.
+   d) Lehrplan-Zuordnung (NTG 9 LB 3, SG 9 LB 6) steht nur nach den eigenen Notizen (Punkt 6); noch
+      gegen LehrplanPLUS lesen. Beginn von LB 3 klären.
+   e) Auf Handy und iPad mit dem Finger testen (Plus/Minus-Knöpfe 34 px); Zeichnung nur im
+      Headless-Browser gesehen.
+   f) Nicht enthalten: Polung umkehren, Elektrolyse mit Kupferelektroden, Wasser, Schmelzelektrolyse.
+   g) Nächste Seiten aus Punkt 6: a) Salzbildung, c) Redox-Baukasten, d) Galvanische Zelle (Zn–I, Daniell),
+      e) Redoxreihe.
