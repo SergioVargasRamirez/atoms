@@ -658,7 +658,7 @@ function drawE(){
   c.strokeStyle = "#c9d3ea"; c.lineWidth = 2; c.beginPath(); c.moveTo(300, 270); c.lineTo(300, 34); c.stroke();
   c.fillStyle = "#c9d3ea"; c.beginPath(); c.moveTo(300, 28); c.lineTo(295, 38); c.lineTo(305, 38); c.closePath(); c.fill();
   c.font = "700 12px system-ui,sans-serif"; c.textAlign = "center"; c.textBaseline = "middle"; c.fillText("Energie", 300, 16);
-  c.font = "700 13px system-ui,sans-serif"; c.fillText("Kathode (Minuspol)", 160, 16); c.fillText("Anode (Pluspol)", 450, 16);
+  c.font = "700 13px system-ui,sans-serif"; c.fillText(showNames ? "Kathode (Minuspol)" : "Minuspol", 160, 16); c.fillText(showNames ? "Anode (Pluspol)" : "Pluspol", 450, 16);
   /* Draht */
   c.strokeStyle = "#7482a3"; c.lineWidth = 3; c.beginPath(); c.moveTo(EV.xfa, EV.yb); c.lineTo(EV.xl, EV.yb); c.lineTo(EV.xl, EV.yt); c.lineTo(EV.xfk, EV.yt); c.stroke();
   /* Rohre */
@@ -723,15 +723,15 @@ function drawE(){
   }
 }
 function eText(){
-  const ue = on ? U : 0, an = E.an.f, ca = E.cat.f;
+  const tA = showNames ? "Anoden-Trichter" : "Pluspol-Trichter", tK = showNames ? "Kathoden-Trichter" : "Minuspol-Trichter", ue = on ? U : 0, an = E.an.f, ca = E.cat.f;
   if (!on) return ["Die Spannungsquelle ist aus (0 V). Beide Trichter stehen gleich hoch. Das Elektron im " + an + " liegt tiefer als die Stelle am " + ca + ", an der ein Elektron aufgenommen wird: Die beiden reagieren von allein nicht.", ""];
-  if (ue <= UZ) return ["Spannung " + deV(ue) + " V: " + an + " und " + ca + " sind zu den Polen gewandert (Plus und Minus an den Trichtern). Aber der Anoden-Trichter liegt noch höher als das Elektron im " + an + ", es fällt nicht hinein. Der Kathoden-Trichter liegt noch tiefer als das " + ca + ": Das Elektron müsste hinaufklettern. Es fließt kein Strom. Das ändert sich, sobald die Spannung über " + deV(UZ) + " V liegt.", "same"];
-  return ["Spannung " + deV(ue) + " V: Der Anoden-Trichter liegt tiefer als das Elektron im " + an + ", es fällt hinein. Rohr und Draht sind voll mit Elektronen. Fällt am Kathoden-Trichter (er liegt höher als das " + ca + ") eines auf das " + ca + ", rückt die ganze Kette nach, getrieben von der Spannungsquelle, und am Anoden-Trichter wird Platz für das nächste Elektron. Zwei " + an + " geben zwei Elektronen ab und werden zu Atomen, die sich zu " + E.mol.f + " verbinden" + (E.gas ? " und als Gas entweichen." : " und gelöst bleiben (" + E.molName + " ist kein Gas): Die Lösung an der Anode färbt sich.") + " Aus " + ca + " wird " + E.metal.f + ", das sich abscheidet.", "new"];
+  if (ue <= UZ) return ["Spannung " + deV(ue) + " V: " + an + " und " + ca + " sind zu den Polen gewandert (Plus und Minus an den Trichtern). Aber der " + tA + " liegt noch höher als das Elektron im " + an + ", es fällt nicht hinein. Der " + tK + " liegt noch tiefer als das " + ca + ": Das Elektron müsste hinaufklettern. Es fließt kein Strom. Das ändert sich, sobald die Spannung über " + deV(UZ) + " V liegt.", "same"];
+  return ["Spannung " + deV(ue) + " V: Der " + tA + " liegt tiefer als das Elektron im " + an + ", es fällt hinein. Rohr und Draht sind voll mit Elektronen. Fällt am " + tK + " (er liegt höher als das " + ca + ") eines auf das " + ca + ", rückt die ganze Kette nach, getrieben von der Spannungsquelle, und am " + tA + " wird Platz für das nächste Elektron. Zwei " + an + " geben zwei Elektronen ab und werden zu Atomen, die sich zu " + E.mol.f + " verbinden" + (E.gas ? " und als Gas entweichen." : " und gelöst bleiben (" + E.molName + " ist kein Gas): Die Lösung an der Anode färbt sich.") + " Aus " + ca + " wird " + E.metal.f + ", das sich abscheidet.", "new"];
 }
 function eStatus(){
   const [t, cls] = eText(), s = $("estatus");
   if (s.dataset.k !== t){ s.dataset.k = t; s.textContent = t; s.className = "status" + (cls ? " " + cls : ""); }
-  $("ecap").textContent = "Höhe bedeutet Energie der Elektronen (senkrechte Achse in der Mitte). Gold gestrichelt: Energie des Elektrons im " + E.an.f + " (Anode) bzw. die Höhe, auf der das " + E.cat.f + " (Kathode) ein Elektron aufnimmt. Blau gestrichelt: Energie der Elektronen in der Elektrode (Trichter). Das Elektron im " + E.cat.f + " liegt höher als das im " + E.an.f + ": Von allein läuft nichts, die Spannungsquelle muss die Elektronenkette antreiben und dafür mehr als " + deV(UZ) + " V liefern.";
+  $("ecap").textContent = "Höhe bedeutet Energie der Elektronen (senkrechte Achse in der Mitte). Gold gestrichelt: Energie des Elektrons im " + E.an.f + (showNames ? " (Anode)" : "") + " bzw. die Höhe, auf der das " + E.cat.f + (showNames ? " (Kathode)" : "") + " ein Elektron aufnimmt. Blau gestrichelt: Energie der Elektronen in der Elektrode (Trichter). Das Elektron im " + E.cat.f + " liegt höher als das im " + E.an.f + ": Von allein läuft nichts, die Spannungsquelle muss die Elektronenkette antreiben und dafür mehr als " + deV(UZ) + " V liefern.";
 }
 
 /* ---------- Anzeige ---------- */
