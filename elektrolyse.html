@@ -636,7 +636,6 @@ function estep(dt){
 /* Elektron als kleiner Pac-Man: Mund zeigt in Laufrichtung, kaut während sich etwas bewegt */
 function pac(c, x, y, r, ang, open){
   c.beginPath(); c.moveTo(x, y); c.arc(x, y, r, ang + open, ang + 6.2832 - open); c.closePath(); c.fillStyle = "#ffd166"; c.fill();
-  c.beginPath(); c.arc(x + Math.cos(ang - 1.1) * r * 0.5, y + Math.sin(ang - 1.1) * r * 0.5, Math.max(0.9, r * 0.14), 0, 6.2832); c.fillStyle = "#0a0e18"; c.fill();
 }
 function eion(c, x, y, col, label, alpha, r = EV.r, tc = "#0a0e18"){
   c.globalAlpha = alpha; c.beginPath(); c.arc(x, y, r, 0, 6.2832); c.fillStyle = col; c.fill();
