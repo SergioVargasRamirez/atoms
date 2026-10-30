@@ -65,6 +65,7 @@
 .status{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;margin:14px 0 0;font-size:15px;color:var(--muted);min-height:1.5em}
 .status button{font:inherit;color:var(--accent);background:none;border:0;padding:0;cursor:pointer;text-decoration:underline}
 .status .sp{flex:1}
+.status .alle-zu{margin-right:6px}
 .ansicht{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
 .ansicht button{font:600 14px/1 var(--sans);color:var(--ink);text-decoration:none;background:var(--surface);border:0;border-right:1px solid var(--line);padding:7px 12px}
 .ansicht button:last-child{border-right:0}
@@ -76,6 +77,12 @@ button.jp{cursor:pointer;font-family:inherit}
 .cards.liste .card svg,.cards.liste .card p,.cards.liste .go{display:none}
 .cards.liste .card h3{font-size:19px;margin:0;flex:1}
 .cards.liste .pills{align-self:center;white-space:nowrap}
+.topic.zu{margin:22px 0 10px}
+.topic button{all:unset;box-sizing:border-box;display:flex;align-items:center;width:100%;cursor:pointer;padding:6px 4px;border-radius:8px}
+.topic button:hover{color:var(--ink)}
+.topic button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.topic .chev{display:inline-block;width:1.1em;transition:transform .15s}
+.topic button[aria-expanded="false"] .chev{transform:rotate(-90deg)}
 .topic .dot{display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--jc);margin-right:8px}
 .topic .n{font-weight:400;letter-spacing:0;text-transform:none;margin-left:8px}
 *{box-sizing:border-box}
@@ -263,7 +270,7 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
 <p class="lede">Interaktive Seiten für den Chemie- und NTG-Unterricht: vom Teilchenmodell über die Geschichte der Atommodelle über Elektronen und Energiestufen bis zu Säuren und Basen.</p>
 <div class="filter" id="fj" role="group" aria-label="Jahrgangsstufe"><span class="lbl">Jahrgang</span><button class="fp alle" type="button" data-v="" aria-pressed="true">Alle</button><button class="fp j8" type="button" data-v="8" aria-pressed="false">8</button><button class="fp j9" type="button" data-v="9" aria-pressed="false">9</button><button class="fp j10" type="button" data-v="10" aria-pressed="false">10</button></div>
 <div class="filter" id="ft" role="group" aria-label="Thema"><span class="lbl">Thema</span><button class="fp alle" type="button" data-v="" aria-pressed="true">Alle</button><button class="fp" type="button" data-v="Teilchenmodell" aria-pressed="false">Teilchenmodell</button><button class="fp" type="button" data-v="Atommodelle" aria-pressed="false">Atommodelle</button><button class="fp" type="button" data-v="Elektronen und Energiestufen" aria-pressed="false">Elektronen und Energiestufen</button><button class="fp" type="button" data-v="Molekülbau" aria-pressed="false">Molekülbau</button><button class="fp" type="button" data-v="Wechselwirkungen" aria-pressed="false">Wechselwirkungen</button><button class="fp" type="button" data-v="Chemische Reaktion" aria-pressed="false">Chemische Reaktion</button><button class="fp" type="button" data-v="Säuren und Basen" aria-pressed="false">Säuren und Basen</button><button class="fp" type="button" data-v="Elektrochemie" aria-pressed="false">Elektrochemie</button></div>
-<div class="status"><span id="status" aria-live="polite"></span><span class="sp"></span><span class="ansicht" id="ansicht" role="group" aria-label="Ansicht"><button type="button" data-v="liste" aria-pressed="true">Liste</button><button type="button" data-v="karten" aria-pressed="false">Karten</button></span></div>
+<div class="status"><span id="status" aria-live="polite"></span><span class="sp"></span><button type="button" id="alle-zu" class="alle-zu">Alle ein-/ausklappen</button><span class="ansicht" id="ansicht" role="group" aria-label="Ansicht"><button type="button" data-v="liste" aria-pressed="true">Liste</button><button type="button" data-v="karten" aria-pressed="false">Karten</button></span></div>
 <div id="liste">
 <h2 class="topic">Teilchenmodell</h2>
 <div class="cards">
@@ -420,11 +427,13 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
 <script>
 (() => {
   const liste = document.getElementById("liste");
+  const fj = document.getElementById("fj"), ft = document.getElementById("ft"), st = document.getElementById("status"), av = document.getElementById("ansicht");
   const cards = [...liste.querySelectorAll(".card")].map(c => ({el:c, j:c.dataset.j.split(" "), t:c.dataset.t}));
-  const topics = [...liste.querySelectorAll("h2.topic")].map(h => h.textContent);
+  const topics = [...liste.querySelectorAll("h2.topic")].map(h => h.textContent).sort((a, b) => a.localeCompare(b, "de"));
+  const zu = new Set();  // eingeklappte Bereiche (nur in dieser Sitzung)
+  [...ft.querySelectorAll(".fp[data-v]:not([data-v=\"\"])")].sort((a, b) => a.dataset.v.localeCompare(b.dataset.v, "de")).forEach(b => ft.appendChild(b));
   const YEARS = ["8","9","10"];
   const state = {j:[], t:"", v:"liste"};
-  const fj = document.getElementById("fj"), ft = document.getElementById("ft"), st = document.getElementById("status"), av = document.getElementById("ansicht");
   try { if (localStorage.getItem("ansicht") === "karten") state.v = "karten"; } catch (e) {}
   function load(){
     const q = new URLSearchParams(location.hash.slice(1));
@@ -440,12 +449,18 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
   function group(title, items, jc){
     const f = document.createDocumentFragment();
     const h = document.createElement("h2"); h.className = "topic";
-    if (jc){ const d = document.createElement("span"); d.className = "dot j" + jc; h.appendChild(d); }
-    h.appendChild(document.createTextNode(title));
+    const bt = document.createElement("button"); bt.type = "button";
+    const ch = document.createElement("span"); ch.className = "chev"; ch.textContent = "▾"; ch.setAttribute("aria-hidden", "true");
+    bt.appendChild(ch);
+    if (jc){ const d = document.createElement("span"); d.className = "dot j" + jc; bt.appendChild(d); }
+    bt.appendChild(document.createTextNode(title));
     const n = document.createElement("span"); n.className = "n"; n.textContent = items.length === 1 ? "1 Seite" : items.length + " Seiten";
-    h.appendChild(n);
+    bt.appendChild(n); h.appendChild(bt);
     const g = document.createElement("div"); g.className = "cards" + (state.v === "liste" ? " liste" : "");
     items.forEach(c => g.appendChild(c.el));
+    const apply = () => { const zuk = zu.has(title); g.hidden = zuk; bt.setAttribute("aria-expanded", String(!zuk)); };
+    bt.onclick = () => { zu.has(title) ? zu.delete(title) : zu.add(title); apply(); };
+    apply();
     f.append(h, g); return f;
   }
   function render(){
@@ -495,6 +510,12 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
     p.title = "Nur Jahrgang " + y + " zeigen";
     p.addEventListener("click", e => { e.preventDefault(); e.stopPropagation(); state.j = [y]; save(); render(); scrollTo({top:0, behavior:"smooth"}); });
   }));
+  const azu = document.getElementById("alle-zu");
+  azu.addEventListener("click", () => {
+    const heads = [...liste.querySelectorAll("h2.topic button")];
+    const alleZu = heads.every(b => b.getAttribute("aria-expanded") === "false");
+    heads.forEach(b => { if ((b.getAttribute("aria-expanded") === "false") === alleZu) b.click(); });
+  });
   addEventListener("hashchange", () => { load(); render(); });
   load(); render();
 })();
