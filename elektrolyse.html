@@ -119,7 +119,7 @@ details li{margin-bottom:6px}
 .modes .group > span{font-size:.8rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:700}
 .modes .seg button{padding:7px 12px;white-space:nowrap}
 #stage{aspect-ratio:3/2;touch-action:none}
-#estage{aspect-ratio:5/2}
+#estage{aspect-ratio:600/330}
 .leftcol{display:flex;flex-direction:column;gap:14px;min-width:0}
 .ecap{padding:8px 14px;border-top:1px solid #1b2338;color:var(--stage-dim);font-size:.9rem;line-height:1.45}
 @media (max-width:600px){#stage{aspect-ratio:4/3}}
@@ -417,7 +417,7 @@ function reset(){
   ereset();
 }
 const Uz = () => UZ;
-const flowing = () => on && U >= Uz();
+const flowing = () => on && U > Uz();
 function layers(side){ return Math.ceil(sim.faceN[side] / ROWS); }
 function thick(ex, side){ if (ex !== G.xc) return 0; const l = layers(side); return l ? 2 * G.rm + (l - 1) * 1.6 * G.rm : 0; }
 const inflight = () => sim.elec.length + sim.pool;
@@ -557,15 +557,17 @@ function draw(){
 /* ---------- Elektronensicht: zwei Trichter als Elektroden, durch Rohre und Draht verbunden ---------- */
 /* Höhe = Energie der Elektronen. Ohne Spannung stehen beide Trichter gleich hoch (F0). Die Spannungsquelle senkt den Anoden-Trichter und hebt den
    Kathoden-Trichter um je U/2. Das Elektron im Cu²⁺ liegt um Uz höher als das im Cl⁻ (die beiden reagieren von allein nicht). Bei U = Uz liegt der
-   Anoden-Trichter genau auf Höhe des Anions und der Kathoden-Trichter genau auf Höhe des Kations. Zwischen Ion und Trichter liegt je eine Rampe:
-   bergab, sobald die Spannung reicht, bergauf (gesperrt), solange sie nicht reicht. */
-const EV = {W:600, H:240, F0:112, k:16, xia:390, xik:225, xfa:505, xfk:95, fw:36, fh:22, r:17, yb:226, xl:14, yt:34, pileY:196};
+   Anoden-Trichter genau auf Höhe des Anions und der Kathoden-Trichter genau auf Höhe des Kations. Erst darüber (U > Uz) fließt etwas.
+   Rohre und Draht sind eine Elektronenkette: Fällt vorn eines auf das Kation, rückt die Kette nach, und hinten ist Platz für eines vom Anion. */
+const EV = {W:600, H:330, F0:160, k:64, xia:390, xik:225, xfa:505, xfk:95, fw:36, fh:22, r:17, yb:306, xl:14, yt:30, pileY:282, sp:20};
 EV.yia = EV.F0 + UZ / 2 * EV.k; EV.yik = EV.F0 - UZ / 2 * EV.k;
+/* Weg eines Trichters aus der Mittellage: 32 px je Volt bis 3 V, darüber nur 4 px je Volt (damit 6 V ins Bild passen) */
+const dOf = ue => ue <= 3 ? ue / 2 * EV.k : 1.5 * EV.k + (ue - 3) * 4;
 EV.wait = [EV.xia - 46, EV.yia - 40];
 let es;
 const pileSlot = i => { const row = Math.floor(i / 9), col = i % 9; return [EV.xik - 36 + col * 9 + (row % 2) * 4.5, EV.pileY - row * 8]; };
 function ereset(){
-  es = {d:(on ? U : 0) / 2 * EV.k, cool:0.3, el:[], puffs:[], pile:0, claimed:0,
+  es = {d:dOf(on ? U : 0), cool:0.3, off:0, ev:null, el:[], puffs:[], pile:0, claimed:0,
         an:{st:"ion", t:1, n:0, mst:0, w:false}, ca:{n:0, st:"ion", t:1, x:EV.xik, y:EV.yik, vy:0}};
 }
 const eflow = () => flowing();
@@ -578,20 +580,32 @@ function epos(path, s){
 function epaths(){
   const rim = EV.F0 + es.d, mouth = EV.F0 - es.d;
   return {rim, mouth,
-    a:mkpath([[EV.xia + EV.r, EV.yia], [EV.xfa - EV.fw, rim], [EV.xfa, rim + EV.fh * 0.4]]),
-    b:mkpath([[EV.xfa, rim + EV.fh * 0.4], [EV.xfa, EV.yb], [EV.xl, EV.yb], [EV.xl, EV.yt], [EV.xfk, EV.yt], [EV.xfk, mouth], [EV.xfk + EV.fw, mouth]]),
-    k:mkpath([[EV.xfk + EV.fw, mouth], [EV.xik - EV.r, EV.yik]])};
+    a:mkpath([[EV.xia + EV.r, EV.yia], [EV.xfa, rim + EV.fh * 0.4]]),
+    b:mkpath([[EV.xfa, rim + EV.fh * 0.4], [EV.xfa, EV.yb], [EV.xl, EV.yb], [EV.xl, EV.yt], [EV.xfk, EV.yt], [EV.xfk, mouth]]),
+    k:mkpath([[EV.xfk, mouth], [EV.xik - EV.r, EV.yik]])};
 }
 function estep(dt){
   const ue = on ? U : 0, an = es.an, ca = es.ca;
-  es.d += (ue / 2 * EV.k - es.d) * Math.min(1, dt * 6);
+  es.d += (dOf(ue) - es.d) * Math.min(1, dt * 6);
   es.cool -= dt;
   an.t += dt;
-  if (eflow() && es.cool <= 0 && an.st === "ion" && an.t > 0.4 && an.mst === 0 && an.n < 2 && ca.st === "ion" && es.claimed < 2){
-    es.el.push({ph:"a", t:0, s:0});
-    an.st = "atom"; an.t = 0; an.n++; es.claimed++;
-    an.mst = an.n === 2 ? 1 : 5;
-    es.cool = Math.max(0.6, 2 - Math.min(ue - UZ, 4) * 0.35);
+  const ps = epaths(), SP = EV.sp;
+  if (eflow() && !es.ev && es.cool <= 0 && an.st === "ion" && an.t > 0.4 && an.mst === 0 && an.n < 2 && ca.st === "ion" && es.claimed < 2){
+    es.ev = {t:0, dur:0.8 / (1 + Math.max(0, ue - UZ) * 0.4), k:false, a:false};
+    es.claimed++;
+  }
+  /* Elektronenkette in Rohr und Draht: Vorn fällt ein Elektron auf das Kation, die Kette rückt nach, hinten wird Platz für ein Elektron vom Anion. */
+  const ev = es.ev;
+  if (ev && !ev.a){
+    ev.t += dt / ev.dur; const f = Math.min(1, ev.t);
+    es.off = SP * f * f * (3 - 2 * f);
+    const rem = ps.b.L - Math.floor(ps.b.L / SP) * SP;
+    if (!ev.k && es.off >= rem - 1e-6){ ev.k = true; es.el.push({ph:"k", t:0, dur:ev.dur}); }
+    if (ev.t >= 1){
+      if (!ev.k){ ev.k = true; es.el.push({ph:"k", t:0, dur:ev.dur}); }
+      ev.a = true; es.el.push({ph:"a", t:0, dur:ev.dur});
+      an.st = "atom"; an.t = 0; an.n++; an.mst = an.n === 2 ? 1 : 5;
+    }
   }
   if (an.mst){
     if (an.mst === 1 && an.t > 0.6){ an.mst = 2; an.t = 0; }
@@ -612,12 +626,10 @@ function estep(dt){
     if (ca.y >= ty){ ca.y = ty; ca.x = tx; es.pile = Math.min(30, es.pile + 1); ca.st = "gone"; ca.t = 0; }
   }
   else if (ca.st === "gone" && (ca.t += dt) > 0.7){ ca.st = "ion"; ca.t = 0; ca.n = 0; es.claimed = 0; }
-  const ps = epaths();
   for (let i = es.el.length - 1; i >= 0; i--){
     const e = es.el[i];
-    if (e.ph === "a"){ e.t += dt / 0.8; if (e.t >= 1){ e.ph = "b"; e.s = 0; } }
-    else if (e.ph === "b"){ e.s += 260 * dt; if (e.s >= ps.b.L){ e.ph = "k"; e.t = 0; } }
-    else { e.t += dt / 0.8; if (e.t >= 1){ ca.n++; if (ca.n >= 2){ ca.st = "atom"; ca.t = 0; } es.el.splice(i, 1); } }
+    if (e.ph === "a"){ e.t += dt / e.dur; if (e.t >= 1){ es.off = 0; es.ev = null; es.cool = 0.1; es.el.splice(i, 1); } }
+    else { e.t += dt / e.dur; if (e.t >= 1){ ca.n++; if (ca.n >= 2){ ca.st = "atom"; ca.t = 0; } es.el.splice(i, 1); } }
   }
 }
 function eion(c, x, y, col, label, alpha, r = EV.r, tc = "#0a0e18"){
@@ -630,7 +642,7 @@ function drawE(){
   const symA = Object.keys(E.an.atoms)[0], symM = Object.keys(E.metal.atoms)[0], atc = E.gas ? "#0a0e18" : "#fff";
   c.lineJoin = "round"; c.lineCap = "butt";
   /* Energieachse in der Mitte */
-  c.strokeStyle = "#c9d3ea"; c.lineWidth = 2; c.beginPath(); c.moveTo(300, 196); c.lineTo(300, 34); c.stroke();
+  c.strokeStyle = "#c9d3ea"; c.lineWidth = 2; c.beginPath(); c.moveTo(300, 270); c.lineTo(300, 34); c.stroke();
   c.fillStyle = "#c9d3ea"; c.beginPath(); c.moveTo(300, 28); c.lineTo(295, 38); c.lineTo(305, 38); c.closePath(); c.fill();
   c.font = "700 12px system-ui,sans-serif"; c.textAlign = "center"; c.textBaseline = "middle"; c.fillText("Energie", 300, 16);
   c.font = "700 13px system-ui,sans-serif"; c.fillText("Kathode (Minuspol)", 160, 16); c.fillText("Anode (Pluspol)", 450, 16);
@@ -640,9 +652,6 @@ function drawE(){
   c.fillStyle = "#4a5060"; c.strokeStyle = "#8a93a6"; c.lineWidth = 1.5;
   c.beginPath(); c.rect(EV.xfa - 5, rim + EV.fh, 10, EV.yb - rim - EV.fh); c.fill(); c.stroke();
   c.beginPath(); c.rect(EV.xfk - 5, EV.yt, 10, mouth - EV.fh - EV.yt); c.fill(); c.stroke();
-  /* Rampen von den Ionen zu den Trichtern */
-  const ramp = (a, b) => { c.strokeStyle = "#8a93a6"; c.lineWidth = 8; c.lineCap = "round"; c.beginPath(); c.moveTo(a[0], a[1]); c.lineTo(b[0], b[1]); c.stroke(); c.strokeStyle = "#4a5060"; c.lineWidth = 5; c.stroke(); c.lineCap = "butt"; };
-  ramp(ps.a.P[0], ps.a.P[1]); ramp(ps.k.P[0], ps.k.P[1]);
   /* Energieniveaus (gestrichelt, bis zur Energieachse): blau = Trichter (Elektrode), gold = Elektron im Ion */
   const lvl = (col, x0, x1, y) => { c.strokeStyle = col; c.lineWidth = 1.8; c.setLineDash([5, 4]); c.beginPath(); c.moveTo(x0, y); c.lineTo(x1, y); c.stroke(); c.setLineDash([]); c.beginPath(); c.moveTo(296, y); c.lineTo(304, y); c.lineWidth = 2.5; c.stroke(); };
   lvl("#7d9bff", 300, EV.xfa - EV.fw, rim); lvl("#7d9bff", EV.xfk + EV.fw, 300, mouth);
@@ -651,10 +660,12 @@ function drawE(){
   c.fillStyle = "#4a5060"; c.strokeStyle = fl ? "#7d9bff" : "#8a93a6"; c.lineWidth = fl ? 2.5 : 2;
   c.beginPath(); c.moveTo(EV.xfa - EV.fw, rim); c.lineTo(EV.xfa + EV.fw, rim); c.lineTo(EV.xfa + 5, rim + EV.fh); c.lineTo(EV.xfa - 5, rim + EV.fh); c.closePath(); c.fill(); c.stroke();
   c.beginPath(); c.moveTo(EV.xfk - EV.fw, mouth); c.lineTo(EV.xfk + EV.fw, mouth); c.lineTo(EV.xfk + 5, mouth - EV.fh); c.lineTo(EV.xfk - 5, mouth - EV.fh); c.closePath(); c.fill(); c.stroke();
+  /* Elektronenkette in Rohr und Draht */
+  for (let q = es.off; q <= ps.b.L; q += EV.sp){ const [x, y] = epos(ps.b, q); disc(c, x, y, 4.5, "#ffd166"); }
   /* Spannungsquelle im Draht */
-  c.fillStyle = "#111a2c"; c.strokeStyle = "#7482a3"; c.lineWidth = 2; c.beginPath(); c.roundRect(258, EV.yb - 15, 84, 30, 8); c.fill(); c.stroke();
-  c.fillStyle = on ? "#c9d3ea" : "#7482a3"; c.font = "700 14px system-ui,sans-serif"; c.textAlign = "center"; c.textBaseline = "middle"; c.fillText(on ? "U = " + deV(U) + " V" : "aus", 300, EV.yb + 0.5);
-  c.font = "700 18px system-ui,sans-serif"; c.fillStyle = "#ff9f6b"; c.fillText("−", 246, EV.yb - 14); c.fillStyle = "#6ea8ff"; c.fillText("+", 354, EV.yb - 14);
+  c.fillStyle = "#111a2c"; c.strokeStyle = "#7482a3"; c.lineWidth = 2; c.beginPath(); c.roundRect(245, EV.yb - 15, 110, 30, 8); c.fill(); c.stroke();
+  c.fillStyle = on ? "#c9d3ea" : "#7482a3"; c.font = "700 14px system-ui,sans-serif"; c.textAlign = "center"; c.textBaseline = "middle"; c.fillText(on ? "↑ U = " + deV(U) + " V" : "aus", 300, EV.yb + 0.5);
+  c.font = "700 18px system-ui,sans-serif"; c.fillStyle = "#ff9f6b"; c.fillText("−", 233, EV.yb - 14); c.fillStyle = "#6ea8ff"; c.fillText("+", 367, EV.yb - 14);
   /* abgeschiedenes Metall */
   for (let i = 0; i < es.pile; i++){ const [x, y] = pileSlot(i); disc(c, x, y, 5, E.cMetal); }
   /* Anion, wartendes Atom, Molekül */
@@ -679,7 +690,6 @@ function drawE(){
   for (const e of es.el){
     let x, y;
     if (e.ph === "a") [x, y] = epos(ps.a, ps.a.L * e.t * e.t);
-    else if (e.ph === "b") [x, y] = epos(ps.b, e.s);
     else [x, y] = epos(ps.k, ps.k.L * e.t * e.t);
     disc(c, x, y, 5, "#ffd166", "−", "#0a0e18");
   }
@@ -687,13 +697,13 @@ function drawE(){
 function eText(){
   const ue = on ? U : 0, an = E.an.f, ca = E.cat.f;
   if (!on) return ["Die Spannungsquelle ist aus (0 V). Beide Trichter stehen gleich hoch. Das Elektron im " + an + " liegt tiefer als die Stelle am " + ca + ", an der ein Elektron aufgenommen wird: Die beiden reagieren von allein nicht.", ""];
-  if (ue < UZ) return ["Spannung " + deV(ue) + " V: Der Anoden-Trichter liegt noch höher als das Elektron im " + an + ": Die Rampe führt bergauf, es rollt nicht hinein. Der Kathoden-Trichter liegt noch tiefer als das " + ca + ": Das Elektron müsste hinaufklettern. Es fließt kein Strom. Ab " + deV(UZ) + " V ändert sich das.", "same"];
-  return ["Spannung " + deV(ue) + " V: Der Anoden-Trichter liegt tiefer als das Elektron im " + an + ", es fällt hinein. Es läuft durch das Rohr und den Draht (die Spannungsquelle pumpt es hinauf) zum Kathoden-Trichter, der höher liegt als das " + ca + ", und rollt die Rampe hinunter auf das " + ca + ". Zwei " + an + " geben zwei Elektronen ab und werden zu Atomen, die sich zu " + E.mol.f + " verbinden. Aus " + ca + " wird " + E.metal.f + ", das sich abscheidet.", "new"];
+  if (ue <= UZ) return ["Spannung " + deV(ue) + " V: Der Anoden-Trichter liegt noch höher als das Elektron im " + an + ", es fällt nicht hinein. Der Kathoden-Trichter liegt noch tiefer als das " + ca + ": Das Elektron müsste hinaufklettern. Es fließt kein Strom. Das ändert sich, sobald die Spannung über " + deV(UZ) + " V liegt.", "same"];
+  return ["Spannung " + deV(ue) + " V: Der Anoden-Trichter liegt tiefer als das Elektron im " + an + ", es fällt hinein. Rohr und Draht sind voll mit Elektronen. Fällt am Kathoden-Trichter (er liegt höher als das " + ca + ") eines auf das " + ca + ", rückt die ganze Kette nach, getrieben von der Spannungsquelle, und am Anoden-Trichter wird Platz für das nächste Elektron. Zwei " + an + " geben zwei Elektronen ab und werden zu Atomen, die sich zu " + E.mol.f + " verbinden. Aus " + ca + " wird " + E.metal.f + ", das sich abscheidet.", "new"];
 }
 function eStatus(){
   const [t, cls] = eText(), s = $("estatus");
   if (s.dataset.k !== t){ s.dataset.k = t; s.textContent = t; s.className = "status" + (cls ? " " + cls : ""); }
-  $("ecap").textContent = "Höhe bedeutet Energie der Elektronen (senkrechte Achse in der Mitte). Gold gestrichelt: Energie des Elektrons im " + E.an.f + " (Anode) bzw. die Höhe, auf der das " + E.cat.f + " (Kathode) ein Elektron aufnimmt. Blau gestrichelt: Energie der Elektronen in der Elektrode (Trichter). Die Rampen verbinden Ion und Elektrode: bergab, wenn die Spannung reicht, bergauf (gesperrt), wenn nicht. Ein Elektron rollt nur bergab; hinauf bringt es nur die Spannungsquelle.";
+  $("ecap").textContent = "Höhe bedeutet Energie der Elektronen (senkrechte Achse in der Mitte). Gold gestrichelt: Energie des Elektrons im " + E.an.f + " (Anode) bzw. die Höhe, auf der das " + E.cat.f + " (Kathode) ein Elektron aufnimmt. Blau gestrichelt: Energie der Elektronen in der Elektrode (Trichter). Das Elektron im " + E.cat.f + " liegt höher als das im " + E.an.f + ": Von allein läuft nichts, die Spannungsquelle muss die Elektronenkette antreiben und dafür mehr als " + deV(UZ) + " V liefern.";
 }
 
 /* ---------- Anzeige ---------- */
@@ -701,7 +711,7 @@ function stateText(){
   const left = sim.ions.length;
   const nCat = sim.ions.filter(p => p.t === "c").length;
   if (!on) return ["Die Spannungsquelle ist aus. Die Ionen bewegen sich nur zufällig durch die Wärmebewegung.", ""];
-  if (U < Uz()) return ["Die Spannung ist eingeschaltet, aber es fließt kein Strom. Die Ionen bewegen sich weiter nur zufällig. Erhöhe die Spannung.", "same"];
+  if (!flowing()) return ["Die Spannung ist eingeschaltet, aber es fließt kein Strom. Die Ionen bewegen sich weiter nur zufällig. Erhöhe die Spannung.", "same"];
   if (!left || (nCat === 0 && !sim.elec.length)) return ["Alle Ionen sind entladen: Die Lösung ist erschöpft, der Strom hört auf. Setze eine neue Lösung an.", "same"];
   const m = E.gas ? E.molName + "blasen steigen auf" : E.molName + " bleibt gelöst und färbt die Lösung";
   return [E.cat.f + "-Ionen wandern zum Minuspol, " + E.an.f + "-Ionen zum Pluspol. Am Minuspol scheidet sich " + E.metalName + " ab, am Pluspol entsteht " + E.molName + " (" + m + "). Im Draht fließen Elektronen.", "new"];
