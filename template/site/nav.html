@@ -1,7 +1,12 @@
+<div class="topbar">
+  <button class="tb-menu" id="tb-menu" type="button" aria-controls="sidenav" aria-expanded="false" aria-label="Menü ein-/ausblenden" title="Menü ein-/ausblenden">☰ <span>Menü</span></button>
+  <a class="tb-back" href="./"><span aria-hidden="true">←</span> Alle Seiten</a>
+  <span class="tb-sp"></span>
+  <button class="theme-btn" id="theme-btn" type="button"></button>
+</div>
 <nav class="sidenav" id="sidenav" aria-label="Seiten">
   <div class="sidenav-head">
     <a class="sidenav-brand" href="./">Chemie-Werkzeuge<span>für den Unterricht</span></a>
-    <button class="sidenav-toggle" type="button" aria-expanded="false" aria-controls="sidenav-list">Menü</button>
     <button class="sidenav-hide" type="button" aria-label="Menü ausblenden" title="Menü ausblenden">«</button>
   </div>
   <div class="sidenav-list" id="sidenav-list">
@@ -53,8 +58,6 @@
     <p class="sidenav-legal">© 2026 Dr. Sergio Vargas · <a href="impressum.html#lizenz">CC BY-NC-SA 4.0</a></p>
   </div>
 </nav>
-<button class="sidenav-tab" id="sidenav-tab" type="button" aria-label="Menü einblenden" title="Menü einblenden">»</button>
-<button class="theme-btn" id="theme-btn" type="button"></button>
 <script>
 (() => {
   // Nicht einbetten: In einem fremden Rahmen (iframe) nur einen Hinweis mit Link zeigen.
@@ -68,8 +71,7 @@
     };
     if (document.body) note(); else document.addEventListener("DOMContentLoaded", note);
   }
-  const nav = document.getElementById("sidenav"), btn = nav.querySelector(".sidenav-toggle");
-  btn.addEventListener("click", () => btn.setAttribute("aria-expanded", String(nav.classList.toggle("open"))));
+  const nav = document.getElementById("sidenav");
   // Darstellung: System (Standard), Tag oder Nacht; die Seiten lesen data-theme am <html>
   const themeBtns = [...nav.querySelectorAll("[data-theme-set]")];
   const applyTheme = m => {
@@ -89,11 +91,18 @@
   applyTheme(mode);
   themeBtns.forEach(b => b.addEventListener("click", () => setMode(b.dataset.themeSet)));
   document.getElementById("theme-btn").addEventListener("click", () => setMode({system:"light", light:"dark", dark:"system"}[mode]));
-  // Desktop: Menü ein-/ausblenden, Wahl wird gemerkt (Standard: ausgeblendet)
-  const root = document.documentElement, tab = document.getElementById("sidenav-tab");
+  // Menü ein-/ausblenden. Desktop: Seitenleiste, Wahl wird gemerkt (Standard: ausgeblendet). Schmal: Ausklappmenü.
+  const root = document.documentElement, mb = document.getElementById("tb-menu"), wide = matchMedia("(min-width:1000px)");
   try { if (localStorage.getItem("nav") === "1") root.classList.add("nav-open"); } catch (e) {}
-  const setOpen = on => { root.classList.toggle("nav-open", on); try { localStorage.setItem("nav", on ? "1" : "0"); } catch (e) {} };
-  tab.addEventListener("click", () => setOpen(true));
+  const sync = () => mb.setAttribute("aria-expanded", String(wide.matches ? root.classList.contains("nav-open") : nav.classList.contains("open")));
+  const setOpen = on => {
+    if (wide.matches){ root.classList.toggle("nav-open", on); try { localStorage.setItem("nav", on ? "1" : "0"); } catch (e) {} }
+    else nav.classList.toggle("open", on);
+    sync();
+  };
+  mb.addEventListener("click", () => setOpen(!(wide.matches ? root.classList.contains("nav-open") : nav.classList.contains("open"))));
   nav.querySelector(".sidenav-hide").addEventListener("click", () => setOpen(false));
+  wide.addEventListener("change", sync);
+  sync();
 })();
 </script>

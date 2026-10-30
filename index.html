@@ -78,13 +78,16 @@ button.jp{cursor:pointer;font-family:inherit}
 .cards.liste .card h3{font-size:19px;margin:0;flex:1}
 .cards.liste .pills{align-self:center;white-space:nowrap}
 .cards[hidden]{display:none}
-.topic button{all:unset;box-sizing:border-box;display:flex;align-items:center;width:100%;cursor:pointer;padding:6px 4px;border-radius:8px}
-.topic button:hover{color:var(--ink)}
+.topic.grp{margin:22px 0 0;font:600 clamp(21px,2.6vw,27px)/1.2 var(--serif);letter-spacing:0;text-transform:none;color:var(--ink)}
+.topic button{all:unset;box-sizing:border-box;display:flex;align-items:center;width:100%;cursor:pointer;padding:8px 4px;border-radius:8px}
+.topic button:hover{color:var(--accent)}
+.tdesc{margin:-2px 0 6px 30px;color:var(--muted);font-size:16px}
+.tdesc[hidden]{display:none}
 .topic button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
-.topic .chev{display:inline-block;width:1.1em;transition:transform .15s}
+.topic .chev{display:inline-block;width:1.1em;font-size:.8em;margin-right:6px;transition:transform .15s}
 .topic button[aria-expanded="false"] .chev{transform:rotate(-90deg)}
 .topic .dot{display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--jc);margin-right:8px}
-.topic .n{font-weight:400;letter-spacing:0;text-transform:none;margin-left:8px}
+.topic .n{font:400 15px/1 var(--sans);color:var(--muted);margin-left:12px}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.55 var(--sans);-webkit-font-smoothing:antialiased}
 h1,h2,h3{font-family:var(--serif);font-weight:600;line-height:1.15;margin:0}
@@ -120,25 +123,21 @@ footer{margin-top:34px;font-size:14px;color:var(--muted)}
 .sidenav-list a:hover{background:color-mix(in srgb,var(--accent) 13%,transparent)}
 .sidenav-list a[aria-current="page"]{background:var(--accent);color:var(--accent-fg,var(--accent-ink));font-weight:600}
 .sidenav a:focus-visible,.sidenav button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
-.sidenav-toggle{font:inherit;font-weight:700;font-size:.92rem;color:inherit;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:6px 14px;cursor:pointer}
-.sidenav-hide,.sidenav-tab{display:none}
+.sidenav-hide{display:none}
 @media (min-width:1000px){
   /* Am Rand eingeklappt (Standard); » öffnet, « schließt. Zustand merkt sich localStorage "nav". */
   body{padding-left:0;transition:padding-left .2s}
   html.nav-open body{padding-left:var(--navw)}
   .sidenav{position:fixed;top:0;bottom:0;left:0;width:var(--navw);overflow-y:auto;overflow-x:visible;border-right:1px solid var(--line);padding:22px 14px 28px;transform:translateX(-100%);visibility:hidden;transition:transform .2s,visibility 0s .2s}
   html.nav-open .sidenav{transform:none;visibility:visible;transition:transform .2s,visibility 0s}
-  .sidenav-toggle{display:none}
-  .sidenav-hide{display:block;font:inherit;font-weight:700;font-size:1.1rem;line-height:1;color:var(--muted);background:none;border:1px solid var(--line);border-radius:8px;padding:6px 10px;cursor:pointer}
+    .sidenav-hide{display:block;font:inherit;font-weight:700;font-size:1.1rem;line-height:1;color:var(--muted);background:none;border:1px solid var(--line);border-radius:8px;padding:6px 10px;cursor:pointer}
   .sidenav-hide:hover{color:var(--accent);border-color:var(--accent)}
-  .sidenav-tab{display:block;position:fixed;top:12px;left:0;visibility:visible;z-index:61;font:inherit;font-weight:700;font-size:1.1rem;line-height:1;color:var(--fg,var(--ink));background:var(--surface);border:1px solid var(--line);border-left:0;border-radius:0 8px 8px 0;padding:8px 12px;cursor:pointer;box-shadow:var(--shadow)}
-  .sidenav-tab:hover{color:var(--accent);border-color:var(--accent)}
-  html.nav-open .sidenav-tab{display:none}
 }
 @media (max-width:999.98px){
-  .sidenav{border-bottom:1px solid var(--line);padding:10px 16px}
-  .sidenav-list{display:none;padding:2px 0 10px}
-  .sidenav.open .sidenav-list{display:block}
+  .sidenav{display:none;border-bottom:1px solid var(--line);padding:6px 16px 12px}
+  .sidenav.open{display:block}
+  .sidenav-head{display:none}
+}
 }
 @media (prefers-reduced-motion:reduce){.sidenav-list a,body,.sidenav{transition:none!important}}
 @media print{.sidenav{display:none}body{padding-left:0}}
@@ -147,11 +146,17 @@ footer{margin-top:34px;font-size:14px;color:var(--muted)}
 .sidenav-theme button:last-child{border-right:0}
 .sidenav-theme button:hover{background:color-mix(in srgb,var(--accent) 13%,transparent)}
 .sidenav-theme button[aria-pressed="true"]{background:var(--accent);color:var(--accent-fg,var(--accent-ink))}
-.theme-btn{position:fixed;top:12px;right:12px;z-index:61;width:38px;height:38px;padding:0;font:inherit;font-size:1.2rem;line-height:1;color:var(--fg,var(--ink));background:var(--surface);border:1px solid var(--line);border-radius:50%;cursor:pointer;box-shadow:var(--shadow)}
+.theme-btn{width:36px;height:36px;padding:0;font:inherit;font-size:1.15rem;line-height:1;color:inherit;background:var(--surface);border:1px solid var(--line);border-radius:50%;cursor:pointer}
 .theme-btn:hover{color:var(--accent);border-color:var(--accent)}
 .theme-btn:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
-@media (max-width:999.98px){.theme-btn{top:6px;right:84px;width:34px;height:34px}}
-@media print{.theme-btn{display:none}}
+@media print{.topbar{display:none}}
+.topbar{display:flex;align-items:center;gap:10px;padding:8px 16px;background:var(--surface);border-bottom:1px solid var(--line);font-family:var(--font,var(--sans));color:var(--fg,var(--ink))}
+.topbar .tb-sp{flex:1}
+.tb-menu,.tb-back{font:inherit;font-weight:600;font-size:.95rem;line-height:1;color:inherit;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 12px;cursor:pointer;text-decoration:none;white-space:nowrap}
+.tb-menu:hover,.tb-back:hover,.theme-btn:hover{color:var(--accent);border-color:var(--accent)}
+.tb-back[aria-current="page"]{display:none}
+.topbar button:focus-visible,.topbar a:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+@media (max-width:420px){.tb-menu span{display:none}}
 .sidenav-legal{margin:14px 10px 0;font-size:.78rem;line-height:1.35;color:var(--muted)}
 .sidenav-legal a{display:inline;padding:0;margin:0;color:inherit;text-decoration:underline;font-size:inherit}
 .sidenav-legal a:hover{background:none}
@@ -161,16 +166,23 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
 .jd i{width:9px;height:9px;border-radius:50%;box-shadow:0 0 0 1.5px var(--surface)}
 .jd i.j8{background:var(--j8c)}.jd i.j9{background:var(--j9c)}.jd i.j10{background:var(--j10c)}
 .sidenav-list a[aria-current="page"] .jd i{box-shadow:0 0 0 1.5px var(--accent-fg,var(--accent-ink))}
-.kwds{list-style:none;display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 14px;padding:0}
+.kwds-end{margin:26px 0 8px;font-family:var(--font,var(--sans))}
+.kwds-h{margin:0 0 8px;font-size:.78rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.kwds{list-style:none;display:flex;flex-wrap:wrap;gap:6px;margin:0;padding:0}
 .kwds li{font:500 .78rem/1 var(--font,var(--sans));padding:4px 9px;border-radius:99px;background:var(--surface2,rgba(128,128,128,.15));color:var(--muted);border:1px solid var(--line)}
 </style>
 </head>
 <body>
 <!--SITENAV--><!--REPO-->
+<div class="topbar">
+  <button class="tb-menu" id="tb-menu" type="button" aria-controls="sidenav" aria-expanded="false" aria-label="Menü ein-/ausblenden" title="Menü ein-/ausblenden">☰ <span>Menü</span></button>
+  <a class="tb-back" href="./" aria-current="page"><span aria-hidden="true">←</span> Alle Seiten</a>
+  <span class="tb-sp"></span>
+  <button class="theme-btn" id="theme-btn" type="button"></button>
+</div>
 <nav class="sidenav" id="sidenav" aria-label="Seiten">
   <div class="sidenav-head">
-    <a class="sidenav-brand" href="./" aria-current="page">Chemie-Werkzeuge<span>für den Unterricht</span></a>
-    <button class="sidenav-toggle" type="button" aria-expanded="false" aria-controls="sidenav-list">Menü</button>
+    <a class="sidenav-brand" href="./">Chemie-Werkzeuge<span>für den Unterricht</span></a>
     <button class="sidenav-hide" type="button" aria-label="Menü ausblenden" title="Menü ausblenden">«</button>
   </div>
   <div class="sidenav-list" id="sidenav-list">
@@ -222,8 +234,6 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
     <p class="sidenav-legal">© 2026 Dr. Sergio Vargas · <a href="impressum.html#lizenz">CC BY-NC-SA 4.0</a></p>
   </div>
 </nav>
-<button class="sidenav-tab" id="sidenav-tab" type="button" aria-label="Menü einblenden" title="Menü einblenden">»</button>
-<button class="theme-btn" id="theme-btn" type="button"></button>
 <script>
 (() => {
   // Nicht einbetten: In einem fremden Rahmen (iframe) nur einen Hinweis mit Link zeigen.
@@ -237,8 +247,7 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
     };
     if (document.body) note(); else document.addEventListener("DOMContentLoaded", note);
   }
-  const nav = document.getElementById("sidenav"), btn = nav.querySelector(".sidenav-toggle");
-  btn.addEventListener("click", () => btn.setAttribute("aria-expanded", String(nav.classList.toggle("open"))));
+  const nav = document.getElementById("sidenav");
   // Darstellung: System (Standard), Tag oder Nacht; die Seiten lesen data-theme am <html>
   const themeBtns = [...nav.querySelectorAll("[data-theme-set]")];
   const applyTheme = m => {
@@ -258,12 +267,19 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
   applyTheme(mode);
   themeBtns.forEach(b => b.addEventListener("click", () => setMode(b.dataset.themeSet)));
   document.getElementById("theme-btn").addEventListener("click", () => setMode({system:"light", light:"dark", dark:"system"}[mode]));
-  // Desktop: Menü ein-/ausblenden, Wahl wird gemerkt (Standard: ausgeblendet)
-  const root = document.documentElement, tab = document.getElementById("sidenav-tab");
+  // Menü ein-/ausblenden. Desktop: Seitenleiste, Wahl wird gemerkt (Standard: ausgeblendet). Schmal: Ausklappmenü.
+  const root = document.documentElement, mb = document.getElementById("tb-menu"), wide = matchMedia("(min-width:1000px)");
   try { if (localStorage.getItem("nav") === "1") root.classList.add("nav-open"); } catch (e) {}
-  const setOpen = on => { root.classList.toggle("nav-open", on); try { localStorage.setItem("nav", on ? "1" : "0"); } catch (e) {} };
-  tab.addEventListener("click", () => setOpen(true));
+  const sync = () => mb.setAttribute("aria-expanded", String(wide.matches ? root.classList.contains("nav-open") : nav.classList.contains("open")));
+  const setOpen = on => {
+    if (wide.matches){ root.classList.toggle("nav-open", on); try { localStorage.setItem("nav", on ? "1" : "0"); } catch (e) {} }
+    else nav.classList.toggle("open", on);
+    sync();
+  };
+  mb.addEventListener("click", () => setOpen(!(wide.matches ? root.classList.contains("nav-open") : nav.classList.contains("open"))));
   nav.querySelector(".sidenav-hide").addEventListener("click", () => setOpen(false));
+  wide.addEventListener("change", sync);
+  sync();
 })();
 </script>
 <!--/REPO--><!--/SITENAV-->
@@ -274,7 +290,7 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
 <div class="filter" id="ft" role="group" aria-label="Thema"><span class="lbl">Thema</span><button class="fp alle" type="button" data-v="" aria-pressed="true">Alle</button><button class="fp" type="button" data-v="Teilchenmodell" aria-pressed="false">Teilchenmodell</button><button class="fp" type="button" data-v="Atommodelle" aria-pressed="false">Atommodelle</button><button class="fp" type="button" data-v="Elektronen und Energiestufen" aria-pressed="false">Elektronen und Energiestufen</button><button class="fp" type="button" data-v="Molekülbau" aria-pressed="false">Molekülbau</button><button class="fp" type="button" data-v="Wechselwirkungen" aria-pressed="false">Wechselwirkungen</button><button class="fp" type="button" data-v="Chemische Reaktion" aria-pressed="false">Chemische Reaktion</button><button class="fp" type="button" data-v="Säuren und Basen" aria-pressed="false">Säuren und Basen</button><button class="fp" type="button" data-v="Elektrochemie" aria-pressed="false">Elektrochemie</button></div>
 <div class="status"><span id="status" aria-live="polite"></span><span class="sp"></span><button type="button" id="alle-zu" class="alle-zu">Alle ein-/ausklappen</button><span class="ansicht" id="ansicht" role="group" aria-label="Ansicht"><button type="button" data-v="liste" aria-pressed="true">Liste</button><button type="button" data-v="karten" aria-pressed="false">Karten</button></span></div>
 <div id="liste">
-<h2 class="topic">Teilchenmodell</h2>
+<h2 class="topic" data-d="Stoffe bestehen aus bewegten Teilchen: Diffusion und Aggregatzustände.">Teilchenmodell</h2>
 <div class="cards">
 <a class="card" data-j="8" data-t="Teilchenmodell" href="diffusion.html">
 <svg viewBox="0 0 240 92" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><rect x="28" y="12" width="34" height="27" fill="currentColor" opacity=".7" stroke="none"/><rect x="28" y="39" width="34" height="14" fill="currentColor" opacity=".4" stroke="none"/><rect x="28" y="53" width="34" height="27" fill="currentColor" opacity=".15" stroke="none"/><path d="M28 6V80H62V6M20 84H70"/><path d="M66 40L120 20M66 52L120 72" opacity=".5"/><rect x="120" y="20" width="96" height="52" rx="4"/><g stroke="none" fill="currentColor"><circle cx="136" cy="32" r="5"/><circle cx="160" cy="44" r="5" opacity=".35"/><circle cx="182" cy="30" r="5"/><circle cx="200" cy="56" r="5" opacity=".35"/><circle cx="146" cy="58" r="5" opacity=".35"/><circle cx="174" cy="60" r="5"/></g></svg>
@@ -287,7 +303,7 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
 <p>Fest, flüssig, gasförmig: Temperatur und Druck mit Schiebereglern ändern und die Teilchen im Zylinder beobachten.</p>
 <span class="pills"><span class="jp j8">8</span></span><span class="go">Öffnen →</span></a>
 </div>
-<h2 class="topic">Atommodelle</h2>
+<h2 class="topic" data-d="Von Dalton bis Schrödinger: wie sich das Bild vom Atom mit dem Wissen der Zeit verändert hat.">Atommodelle</h2>
 <div class="cards">
 <a class="card" data-j="8 9 10" data-t="Atommodelle" href="timeline.html">
 <svg viewBox="0 0 240 92" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M10 52H230"/><circle cx="35" cy="52" r="7" fill="currentColor"/><circle cx="95" cy="52" r="7" fill="currentColor"/><circle cx="150" cy="52" r="7" fill="currentColor"/><circle cx="205" cy="52" r="7" fill="currentColor"/><path d="M35 45V24M95 59V78M150 45V30M205 59V72" opacity=".6"/></svg>
@@ -305,7 +321,7 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
 <p>Was sagt das Kern-Hülle-Modell voraus, was misst man in der Flamme? Vorhersage, Experiment, Erklärung für H, Na, Sr und Ba.</p>
 <span class="pills"><span class="jp j9">9</span><span class="jp ntg">NTG</span></span><span class="go">Öffnen →</span></a>
 </div>
-<h2 class="topic">Elektronen und Energiestufen</h2>
+<h2 class="topic" data-d="Elektronen auf Energiestufen verteilen, Ionisierungsenergie messen und das Periodensystem lesen.">Elektronen und Energiestufen</h2>
 <div class="cards">
 <a class="card" data-j="9" data-t="Elektronen und Energiestufen" href="fuellen.html">
 <svg viewBox="0 0 240 92" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><circle cx="120" cy="46" r="8" fill="currentColor" stroke="none"/><circle cx="120" cy="46" r="22" opacity=".5"/><circle cx="120" cy="46" r="38" opacity=".5"/><circle cx="142" cy="46" r="4" fill="currentColor" stroke="none"/><circle cx="98" cy="46" r="4" fill="currentColor" stroke="none"/><circle cx="120" cy="8" r="4" fill="currentColor" stroke="none"/></svg>
@@ -328,7 +344,7 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
 <p>Elemente von H bis Ar anklicken und die Elektronenkonfiguration erkunden, oder aus einer Konfiguration das Element bestimmen.</p>
 <span class="pills"><span class="jp j9">9</span><span class="jp ntg">NTG</span></span><span class="go">Öffnen →</span></a>
 </div>
-<h2 class="topic">Molekülbau</h2>
+<h2 class="topic" data-d="Wie Moleküle im Raum gebaut sind: Tetraeder, Bindungswinkel, Isomere und Drehbarkeit.">Molekülbau</h2>
 <div class="cards">
 <a class="card" data-j="9 10" data-t="Molekülbau" href="vanthoff.html">
 <svg viewBox="0 0 240 92" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><circle cx="50" cy="46" r="8" fill="currentColor" stroke="none"/><path d="M50 46L22 46M50 46L78 46M50 46L50 18M50 46L50 74" opacity=".7"/><circle cx="22" cy="46" r="7" opacity=".7"/><circle cx="78" cy="46" r="7" fill="currentColor" opacity=".45" stroke="none"/><circle cx="50" cy="18" r="7" fill="currentColor" opacity=".45" stroke="none"/><circle cx="50" cy="74" r="7" opacity=".7"/><text x="98" y="52" font-size="20" font-weight="700" fill="currentColor" stroke="none">?</text><circle cx="168" cy="50" r="8" fill="currentColor" stroke="none"/><path d="M168 50L168 18M168 50L142 66M168 50L196 66M168 50L180 58" opacity=".7"/><circle cx="168" cy="18" r="7" fill="currentColor" opacity=".45" stroke="none"/><circle cx="142" cy="66" r="7" opacity=".7"/><circle cx="196" cy="66" r="7" fill="currentColor" opacity=".45" stroke="none"/><circle cx="182" cy="60" r="5" opacity=".5"/></svg>
@@ -356,7 +372,7 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
 <p>Zum Namen das Molekül bauen, zum Molekül den Namen schreiben und alle Isomere einer Formel finden. 3D mit Achsenkreuz, Z/E-Isomerie, Strukturformel.</p>
 <span class="pills"><span class="jp j8">8</span><span class="jp j9">9</span><span class="jp j10">10</span></span><span class="go">Öffnen →</span></a>
 </div>
-<h2 class="topic">Wechselwirkungen</h2>
+<h2 class="topic" data-d="Polarität, London-Kräfte und Wasserstoffbrücken: warum Teilchen aneinander haften.">Wechselwirkungen</h2>
 <div class="cards">
 <a class="card" data-j="9 10" data-t="Wechselwirkungen" href="polaritaet.html">
 <svg viewBox="0 0 240 92" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><rect x="14" y="10" width="10" height="72" rx="3" fill="currentColor" opacity=".85" stroke="none"/><path d="M16 22h6M16 46h6M16 70h6" stroke="var(--surface,#fff)"/><rect x="216" y="10" width="10" height="72" rx="3" fill="currentColor" opacity=".35" stroke="none"/><path d="M218 22h6M221 19v6M218 46h6M221 43v6M218 70h6M221 67v6" stroke="var(--surface,#fff)" stroke-width="2"/><g stroke="none" fill="currentColor"><circle cx="78" cy="30" r="10" opacity=".8"/><circle cx="66" cy="22" r="5.5" opacity=".5"/><circle cx="66" cy="38" r="5.5" opacity=".5"/><circle cx="148" cy="30" r="10" opacity=".8"/><circle cx="136" cy="22" r="5.5" opacity=".5"/><circle cx="136" cy="38" r="5.5" opacity=".5"/><circle cx="112" cy="64" r="10" opacity=".8"/><circle cx="100" cy="56" r="5.5" opacity=".5"/><circle cx="100" cy="72" r="5.5" opacity=".5"/><circle cx="182" cy="64" r="10" opacity=".8"/><circle cx="170" cy="56" r="5.5" opacity=".5"/><circle cx="170" cy="72" r="5.5" opacity=".5"/></g></svg>
@@ -384,7 +400,7 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
 <p>Eiskristall mit Sechseck-Kanälen und flüssiges Wasser im gleichen Kasten drehen: Wasserstoffbrücken zählen und erklären, warum Eis schwimmt.</p>
 <span class="pills"><span class="jp j9">9</span><span class="jp j10">10</span></span><span class="go">Öffnen →</span></a>
 </div>
-<h2 class="topic">Chemische Reaktion</h2>
+<h2 class="topic" data-d="Reaktionsgleichungen ausgleichen und die Energie einer Reaktion im Diagramm verstehen.">Chemische Reaktion</h2>
 <div class="cards">
 <a class="card" data-j="8" data-t="Chemische Reaktion" href="gleichungen.html">
 <svg viewBox="0 0 240 92" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><circle cx="30" cy="30" r="10" fill="currentColor" stroke="none" opacity=".85"/><circle cx="52" cy="30" r="10" fill="currentColor" stroke="none" opacity=".85"/><circle cx="30" cy="62" r="13" fill="currentColor" stroke="none" opacity=".5"/><circle cx="56" cy="62" r="13" fill="currentColor" stroke="none" opacity=".5"/><path d="M92 46h34M118 38l8 8-8 8" opacity=".7"/><circle cx="168" cy="30" r="13" fill="currentColor" stroke="none" opacity=".5"/><circle cx="154" cy="62" r="10" fill="currentColor" stroke="none" opacity=".85"/><circle cx="182" cy="62" r="10" fill="currentColor" stroke="none" opacity=".85"/><path d="M200 78h30M215 78v-8M205 70h20" opacity=".4"/></svg>
@@ -397,7 +413,7 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
 <p>Energiediagramm selbst einstellen: exotherm, endotherm, Aktivierungsenergie und Katalysator. Dazu Bindungen lösen und knüpfen mit Energiebilanz und ein Quiz.</p>
 <span class="pills"><span class="jp j8">8</span></span><span class="go">Öffnen →</span></a>
 </div>
-<h2 class="topic">Säuren und Basen</h2>
+<h2 class="topic" data-d="Protonenübergänge zwischen Teilchen: Säuren, Basen, Ampholyte und Neutralisation.">Säuren und Basen</h2>
 <div class="cards">
 <a class="card" data-j="10" data-t="Säuren und Basen" href="protonen.html">
 <svg viewBox="0 0 240 92" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><circle cx="48" cy="50" r="15" fill="currentColor" opacity=".75" stroke="none"/><circle cx="30" cy="66" r="8" opacity=".6"/><circle cx="66" cy="66" r="8" opacity=".6"/><path d="M84 50h22M98 43l8 7-8 7"/><circle cx="122" cy="50" r="6" fill="currentColor" stroke="none"/><path d="M136 50h22M150 43l8 7-8 7"/><circle cx="192" cy="54" r="15" fill="currentColor" opacity=".75" stroke="none"/><circle cx="174" cy="70" r="8" opacity=".6"/><circle cx="210" cy="70" r="8" opacity=".6"/><circle cx="192" cy="28" r="8" opacity=".6"/></svg>
@@ -415,7 +431,7 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
 <p>Salzsäure trifft Natronlauge: HCl protolysiert, NaOH dissoziiert, H₃O⁺ und OH⁻ reagieren zu Wasser. Mit Universalindikator.</p>
 <span class="pills"><span class="jp j10">10</span></span><span class="go">Öffnen →</span></a>
 </div>
-<h2 class="topic">Elektrochemie</h2>
+<h2 class="topic" data-d="Elektrolyse von Salzlösungen: Ionenwanderung, Entladung an den Elektroden und Redoxvorgänge.">Elektrochemie</h2>
 <div class="cards">
 <a class="card" data-j="9" data-t="Elektrochemie" href="elektrolyse.html">
 <svg viewBox="0 0 240 92" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M70 10v40M170 10v40M70 10h30M140 10h30" opacity=".85"/><rect x="62" y="22" width="16" height="52" rx="3" fill="currentColor" stroke="none" opacity=".6"/><rect x="162" y="22" width="16" height="52" rx="3" fill="currentColor" stroke="none" opacity=".6"/><path d="M40 40v34a8 8 0 0 0 8 8h144a8 8 0 0 0 8-8V40" opacity=".7"/><circle cx="108" cy="58" r="6" fill="currentColor" stroke="none" opacity=".8"/><circle cx="130" cy="64" r="6" fill="currentColor" stroke="none" opacity=".5"/><path d="M100 50h-14M140 50h14" opacity=".5"/></svg>
@@ -432,7 +448,8 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
   const fj = document.getElementById("fj"), ft = document.getElementById("ft"), st = document.getElementById("status"), av = document.getElementById("ansicht");
   const cards = [...liste.querySelectorAll(".card")].map(c => ({el:c, j:c.dataset.j.split(" "), t:c.dataset.t}));
   const topics = [...liste.querySelectorAll("h2.topic")].map(h => h.textContent).sort((a, b) => a.localeCompare(b, "de"));
-  const zu = new Set();  // eingeklappte Bereiche (nur in dieser Sitzung)
+  const desc = {}; liste.querySelectorAll("h2.topic").forEach(h => desc[h.textContent] = h.dataset.d || "");
+  const offen = new Map();  // Handwahl je Bereich (nur in dieser Sitzung); ohne Wahl: zu, solange kein Filter aktiv ist
   [...ft.querySelectorAll(".fp[data-v]:not([data-v=\"\"])")].sort((a, b) => a.dataset.v.localeCompare(b.dataset.v, "de")).forEach(b => ft.appendChild(b));
   const YEARS = ["8","9","10"];
   const state = {j:[], t:"", v:"liste"};
@@ -450,7 +467,7 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
   }
   function group(title, items, jc){
     const f = document.createDocumentFragment();
-    const h = document.createElement("h2"); h.className = "topic";
+    const h = document.createElement("h2"); h.className = "topic grp";
     const bt = document.createElement("button"); bt.type = "button";
     const ch = document.createElement("span"); ch.className = "chev"; ch.textContent = "▾"; ch.setAttribute("aria-hidden", "true");
     bt.appendChild(ch);
@@ -460,10 +477,12 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
     bt.appendChild(n); h.appendChild(bt);
     const g = document.createElement("div"); g.className = "cards" + (state.v === "liste" ? " liste" : "");
     items.forEach(c => g.appendChild(c.el));
-    const apply = () => { const zuk = zu.has(title); g.hidden = zuk; bt.setAttribute("aria-expanded", String(!zuk)); };
-    bt.onclick = () => { zu.has(title) ? zu.delete(title) : zu.add(title); apply(); };
+    const dt = desc[title] ? document.createElement("p") : null;
+    if (dt){ dt.className = "tdesc"; dt.textContent = desc[title]; }
+    const apply = () => { const zuk = !(offen.has(title) ? offen.get(title) : !!(state.j.length || state.t)); g.hidden = zuk; if (dt) dt.hidden = !zuk; bt.setAttribute("aria-expanded", String(!zuk)); };
+    bt.onclick = () => { offen.set(title, bt.getAttribute("aria-expanded") !== "true"); apply(); };
     apply();
-    f.append(h, g); return f;
+    f.append(h); if (dt) f.append(dt); f.append(g); return f;
   }
   function render(){
     fj.querySelectorAll(".fp").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.v ? state.j.includes(b.dataset.v) : state.j.length === 0)));
@@ -485,7 +504,7 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
     }
     const filt = state.j.length || state.t;
     st.replaceChildren(document.createTextNode(hit.length === 0 ? "Keine Seite für diese Auswahl." : filt ? hit.length + (hit.length === 1 ? " Seite" : " Seiten") : cards.length + " Seiten"));
-    if (filt){ st.appendChild(document.createTextNode(" · ")); const r = document.createElement("button"); r.type = "button"; r.textContent = "Filter zurücksetzen"; r.onclick = () => { state.j = []; state.t = ""; save(); render(); }; st.appendChild(r); }
+    if (filt){ st.appendChild(document.createTextNode(" · ")); const r = document.createElement("button"); r.type = "button"; r.textContent = "Filter zurücksetzen"; r.onclick = () => { state.j = []; state.t = ""; offen.clear(); save(); render(); }; st.appendChild(r); }
   }
   function toggleYear(y){
     state.j = state.j.includes(y) ? state.j.filter(x => x !== y) : YEARS.filter(x => x === y || state.j.includes(x));
@@ -493,12 +512,12 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
   fj.addEventListener("click", e => {
     const b = e.target.closest(".fp"); if (!b) return;
     if (b.dataset.v) toggleYear(b.dataset.v); else state.j = [];
-    save(); render();
+    offen.clear(); save(); render();
   });
   ft.addEventListener("click", e => {
     const b = e.target.closest(".fp"); if (!b) return;
     state.t = (b.dataset.v === state.t) ? "" : b.dataset.v;
-    save(); render();
+    offen.clear(); save(); render();
   });
   av.addEventListener("click", e => {
     const b = e.target.closest("button"); if (!b) return;
@@ -510,7 +529,7 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
   cards.forEach(c => c.el.querySelectorAll(".jp.j8,.jp.j9,.jp.j10").forEach(p => {
     const y = p.textContent;
     p.title = "Nur Jahrgang " + y + " zeigen";
-    p.addEventListener("click", e => { e.preventDefault(); e.stopPropagation(); state.j = [y]; save(); render(); scrollTo({top:0, behavior:"smooth"}); });
+    p.addEventListener("click", e => { e.preventDefault(); e.stopPropagation(); state.j = [y]; offen.clear(); save(); render(); scrollTo({top:0, behavior:"smooth"}); });
   }));
   const azu = document.getElementById("alle-zu");
   azu.addEventListener("click", () => {
@@ -518,7 +537,7 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
     const alleZu = heads.every(b => b.getAttribute("aria-expanded") === "false");
     heads.forEach(b => { if ((b.getAttribute("aria-expanded") === "false") === alleZu) b.click(); });
   });
-  addEventListener("hashchange", () => { load(); render(); });
+  addEventListener("hashchange", () => { load(); offen.clear(); render(); });
   load(); render();
 })();
 </script>
