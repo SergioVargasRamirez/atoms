@@ -279,8 +279,8 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
     <div class="modes">
       <div class="group"><span>Ansicht</span>
         <div class="seg" role="radiogroup" aria-label="Ansicht" id="viewseg">
-          <button type="button" role="radio" aria-checked="true" data-view="e">Elektronen</button>
-          <button type="button" role="radio" aria-checked="false" data-view="z">Zelle</button>
+          <button type="button" role="radio" aria-checked="true" data-view="z">Zelle</button>
+          <button type="button" role="radio" aria-checked="false" data-view="e">Elektronen</button>
         </div>
       </div>
       <div class="group"><span>Aufgabenart</span>
@@ -294,14 +294,14 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
 
     <div class="lab">
       <div class="leftcol">
-      <div class="stagewrap" id="wrap-z" hidden>
+      <div class="stagewrap" id="wrap-z">
         <div class="status" id="status" aria-live="polite"></div>
         <canvas id="stage" aria-label="Elektrolysezelle mit Ionen, Elektroden, Spannungsquelle und Elektronen im Draht"></canvas>
         <div class="meter" id="meter"></div>
         <div class="readout" id="readout"></div>
       </div>
 
-      <div class="stagewrap" id="wrap-e">
+      <div class="stagewrap" id="wrap-e" hidden>
         <div class="status" id="estatus" aria-live="polite"></div>
         <canvas id="estage" aria-label="Elektronensicht: Trichter als Elektroden, die mit der Spannung höher und tiefer wandern; Elektronen fallen vom Anion in den Anodentrichter und aus dem Kathodentrichter auf das Kation"></canvas>
         <div class="ecap" id="ecap"></div>
@@ -600,13 +600,16 @@ function drawE(){
   const symA = Object.keys(E.an.atoms)[0];
   c.lineJoin = "round"; c.lineCap = "round";
   /* Trennlinie und Überschriften */
-  c.strokeStyle = "rgba(201,211,234,.15)"; c.lineWidth = 1; c.setLineDash([4, 4]); c.beginPath(); c.moveTo(300, 26); c.lineTo(300, 214); c.stroke(); c.setLineDash([]);
+  /* Energieachse in der Mitte */
+  c.strokeStyle = "#c9d3ea"; c.lineWidth = 2; c.beginPath(); c.moveTo(300, 212); c.lineTo(300, 34); c.stroke();
+  c.fillStyle = "#c9d3ea"; c.beginPath(); c.moveTo(300, 28); c.lineTo(295, 38); c.lineTo(305, 38); c.closePath(); c.fill();
+  c.font = "700 12px system-ui,sans-serif"; c.textAlign = "center"; c.textBaseline = "middle"; c.fillText("Energie", 300, 16);
   c.font = "700 13px system-ui,sans-serif"; c.fillStyle = "#c9d3ea"; c.textAlign = "center"; c.textBaseline = "middle";
   c.fillText("Kathode (Minuspol)", 160, 16); c.fillText("Anode (Pluspol)", 450, 16);
-  /* Energieniveau der Elektronen (gestrichelt) */
-  c.strokeStyle = "rgba(255,209,102,.4)"; c.lineWidth = 1.5; c.setLineDash([3, 5]);
-  c.beginPath(); c.moveTo(EV.xia + EV.r + 4, EV.yia); c.lineTo(EV.xfa - EV.fw - 6, EV.yia); c.stroke();
-  c.beginPath(); c.moveTo(EV.xfk + EV.fw + 6, EV.yik); c.lineTo(EV.xik - EV.r - 4, EV.yik); c.stroke(); c.setLineDash([]);
+  /* Energieniveaus (gestrichelt, bis zur Energieachse): blau = Trichter (Elektrode), gold = Elektron im Ion */
+  const lvl = (col, x0, x1, y) => { c.strokeStyle = col; c.lineWidth = 1.8; c.setLineDash([5, 4]); c.beginPath(); c.moveTo(x0, y); c.lineTo(x1, y); c.stroke(); c.setLineDash([]); c.beginPath(); c.moveTo(296, y); c.lineTo(304, y); c.lineWidth = 2.5; c.stroke(); };
+  lvl("#7d9bff", 300, EV.xfa - EV.fw, rim); lvl("#7d9bff", EV.xfk + EV.fw, 300, mouth);
+  lvl("#ffd166", 300, EV.xia - EV.r, EV.yia); lvl("#ffd166", EV.xik + EV.r, 300, EV.yik);
   /* Draht */
   c.strokeStyle = "#7482a3"; c.lineWidth = 3; c.beginPath(); c.moveTo(EV.xfa, EV.yb); c.lineTo(EV.xl, EV.yb); c.lineTo(EV.xl, EV.yt); c.lineTo(EV.xfk, EV.yt); c.stroke();
   /* Rohre */
@@ -647,7 +650,7 @@ function eText(){
 function eStatus(){
   const [t, cls] = eText(), s = $("estatus");
   if (s.dataset.k !== t){ s.dataset.k = t; s.textContent = t; s.className = "status" + (cls ? " " + cls : ""); }
-  $("ecap").textContent = "Höhe bedeutet Energie der Elektronen. Der Trichter ist die Elektrode; die gestrichelte Linie zeigt, auf welcher Höhe das Elektron im " + E.an.f + " (Anode) liegt und auf welcher Höhe das " + E.cat.f + " (Kathode) ein Elektron aufnimmt. Die Spannungsquelle hebt den Kathoden-Trichter und senkt den Anoden-Trichter.";
+  $("ecap").textContent = "Höhe bedeutet Energie der Elektronen. Der Trichter ist die Elektrode; die senkrechte Achse in der Mitte ist die Energie. Gold gestrichelt: Energie des Elektrons im " + E.an.f + " (Anode) bzw. des " + E.cat.f + " (Kathode), das ein Elektron aufnimmt. Blau gestrichelt: Energie der Elektronen in der Elektrode (Trichter). Ein Elektron fällt nur von einer höheren zu einer tieferen Linie. Die Spannungsquelle hebt den Kathoden-Trichter und senkt den Anoden-Trichter.";
 }
 
 /* ---------- Anzeige ---------- */
