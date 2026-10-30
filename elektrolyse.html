@@ -615,7 +615,7 @@ function estep(dt){
       an.mst = 4; an.t = 0; const mx = (an.ax + an.wx) / 2, my = EV.yia - 22;
       /* Gas (Cl₂): Wolke steigt auf und verschwindet. Brom, Iod: kein Gas, die Wolke breitet sich aus und färbt die Lösung an der Anode */
       for (let i = 0; i < 12; i++) es.puffs.push({x:mx + gauss() * 8, y:my + gauss() * 5, vx:gauss() * (E.gas ? 12 : 16), vy:E.gas ? -26 - Math.random() * 14 : gauss() * 10, life:1});
-      if (!E.gas) es.tint = Math.min(0.75, es.tint + 0.2);
+      if (!E.gas) es.tint = Math.min(0.8, es.tint + 0.35);
     }
     else if (an.mst === 4 && an.t > 0.9){ an.mst = 0; an.n = 0; an.w = false; an.st = "ion"; an.t = 0; an.x = EV.xia; }
     else if (an.mst === 5 && an.t > 1.0){ an.mst = 0; an.w = true; an.st = "ion"; an.t = 0; an.x = EV.xia; }
@@ -650,9 +650,9 @@ function drawE(){
   c.lineJoin = "round"; c.lineCap = "butt";
   /* Lösung an der Anode färbt sich (Brom, Iod bleiben gelöst) */
   if (!E.gas && es.tint > 0 && E.molTint){
-    const g = c.createRadialGradient(EV.xac, EV.yia - 20, 10, EV.xac, EV.yia - 20, 230);
-    g.addColorStop(0, "rgba(" + E.molTint.join(",") + "," + es.tint.toFixed(3) + ")"); g.addColorStop(1, "rgba(" + E.molTint.join(",") + ",0)");
-    c.fillStyle = g; c.fillRect(300, 30, 300, 300);
+    const g = c.createLinearGradient(300, 0, 600, 0), col = E.molTint.join(",");
+    g.addColorStop(0, "rgba(" + col + "," + (es.tint * 0.35).toFixed(3) + ")"); g.addColorStop(1, "rgba(" + col + "," + es.tint.toFixed(3) + ")");
+    c.fillStyle = g; c.fillRect(300, 30, 300, 296);
   }
   /* Energieachse in der Mitte */
   c.strokeStyle = "#c9d3ea"; c.lineWidth = 2; c.beginPath(); c.moveTo(300, 270); c.lineTo(300, 34); c.stroke();
