@@ -65,6 +65,12 @@
 .hint{text-align:center;margin:-6px 0 12px;font-size:15px;color:var(--muted)}
 .hint[hidden]{display:none}
 .hint button{font:inherit;font-weight:600;color:var(--accent);background:none;border:0;padding:0 2px;cursor:pointer;text-decoration:underline}
+.ac{position:absolute;left:0;right:0;top:calc(100% + 6px);z-index:30;margin:0;padding:6px;list-style:none;background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);text-align:left}
+.ac[hidden]{display:none}
+.ac li{display:flex;align-items:baseline;gap:10px;padding:8px 12px;border-radius:10px;cursor:pointer;font-size:16px}
+.ac li .k{margin-left:auto;font-size:13px;color:var(--muted);white-space:nowrap}
+.ac li[aria-selected="true"],.ac li:hover{background:color-mix(in srgb,var(--accent) 14%,transparent)}
+.ac mark{background:none;color:var(--accent);font-weight:700}
 .treffer{font-size:14px;font-style:italic;color:var(--muted);margin:0 0 6px}
 .cards.liste .treffer{margin:0;flex:1;white-space:normal}
 .cards.liste .card h3{flex:none}
@@ -318,7 +324,7 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
 <!--/REPO--><!--/SITENAV-->
 <div class="wrap">
 <h1 class="logo"><span>A</span><span>t</span><span>o</span><span>m</span><span>s</span></h1>
-<div class="suche"><input id="q" type="search" autocomplete="off" spellcheck="false" placeholder="Suchen: Thema oder Stichwort, z. B. pH, Elektron, Dipol" aria-label="Seiten suchen"><button class="x" id="qx" type="button" aria-label="Suche löschen" hidden>×</button></div>
+<div class="suche"><input id="q" type="search" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="ac" autocomplete="off" spellcheck="false" placeholder="Suchen: Thema oder Stichwort, z. B. pH, Elektron, Dipol" aria-label="Seiten suchen"><ul class="ac" id="ac" role="listbox" aria-label="Vorschläge" hidden></ul><button class="x" id="qx" type="button" aria-label="Suche löschen" hidden>×</button></div>
 <p class="hint" id="hint" aria-live="polite" hidden></p>
 <div class="filter" id="fj" role="group" aria-label="Jahrgangsstufe"><span class="lbl">Jahrgang</span><button class="fp alle" type="button" data-v="" aria-pressed="true">Alle</button><button class="fp j8" type="button" data-v="8" aria-pressed="false">8</button><button class="fp j9" type="button" data-v="9" aria-pressed="false">9</button><button class="fp j10" type="button" data-v="10" aria-pressed="false">10</button></div>
 <div class="filter" id="ft" role="group" aria-label="Thema"><span class="lbl">Thema</span><button class="fp alle" type="button" data-v="" aria-pressed="true">Alle</button><button class="fp" type="button" data-v="Teilchenmodell" aria-pressed="false">Teilchenmodell</button><button class="fp" type="button" data-v="Atommodelle" aria-pressed="false">Atommodelle</button><button class="fp" type="button" data-v="Elektronen und Energiestufen" aria-pressed="false">Elektronen und Energiestufen</button><button class="fp" type="button" data-v="Molekülbau" aria-pressed="false">Molekülbau</button><button class="fp" type="button" data-v="Wechselwirkungen" aria-pressed="false">Wechselwirkungen</button><button class="fp" type="button" data-v="Chemische Reaktion" aria-pressed="false">Chemische Reaktion</button><button class="fp" type="button" data-v="Säuren und Basen" aria-pressed="false">Säuren und Basen</button><button class="fp" type="button" data-v="Elektrochemie" aria-pressed="false">Elektrochemie</button></div>
@@ -543,6 +549,61 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
     if (state.q.trim()) q.set("q", state.q.trim());
     history.replaceState(null, "", location.pathname + location.search + (q.toString() ? "#" + q : ""));
   }
+  // Vorschlagsliste beim Tippen: Stichwörter, Seitentitel und Themen
+  const acEl = document.getElementById("ac");
+  const eintraege = [];
+  const gesehen = new Set();
+  const add = (label, art, href) => { const k = art + f1(label); if (gesehen.has(k)) return; gesehen.add(k); eintraege.push({label, art, href, n1:f1(label), n2:f2(label)}); };
+  topics.forEach(t => add(t, "Thema"));
+  cards.forEach(c => { add(c.el.querySelector("h3").textContent, "Seite", c.el.getAttribute("href")); c.kw.forEach(k => add(k, "Stichwort")); });
+  let acListe = [], acPos = -1;
+  function acSchliessen(){ acEl.hidden = true; acEl.replaceChildren(); acListe = []; acPos = -1; qi.setAttribute("aria-expanded", "false"); qi.removeAttribute("aria-activedescendant"); }
+  function acRang(e, t1, t2){
+    for (const [n, t] of [[e.n1, t1], [e.n2, t2]]){
+      if (n.trim().startsWith(t)) return 0;
+      if (n.includes(" " + t)) return 1;
+      if (t.length > 3 && n.includes(t)) return 2;
+    }
+    return -1;
+  }
+  function acZeigen(){
+    const roh = qi.value, teile = roh.split(/\s+/);
+    const letztes = teile[teile.length - 1] || "";
+    const t1 = f1(letztes).trim(), t2 = f2(letztes).trim();
+    if (t1.length < 2){ acSchliessen(); return; }
+    const voll = f1(roh).trim();
+    acListe = eintraege.map(e => [acRang(e, t1, t2), e]).filter(([r, e]) => r >= 0 && f1(e.label).trim() !== voll)
+      .sort((a, b) => a[0] - b[0] || (a[1].art === "Seite") - (b[1].art === "Seite") || a[1].label.length - b[1].label.length).slice(0, 6).map(([, e]) => e);
+    acEl.replaceChildren(); acPos = -1;
+    if (!acListe.length){ acSchliessen(); return; }
+    acListe.forEach((e, i) => {
+      const li = document.createElement("li"); li.id = "ac" + i; li.setAttribute("role", "option");
+      const i0 = f1(e.label).indexOf(t1);
+      if (i0 >= 0 && f1(e.label).length === e.label.length){
+        li.append(e.label.slice(0, i0));
+        const m = document.createElement("mark"); m.textContent = e.label.slice(i0, i0 + t1.length); li.append(m, e.label.slice(i0 + t1.length));
+      } else li.append(e.label);
+      const k = document.createElement("span"); k.className = "k";
+      const n = e.art === "Seite" ? 0 : cards.filter(c => e.art === "Thema" ? c.t === e.label : passt(c, e.label)).length;
+      k.textContent = e.art === "Seite" ? "Seite öffnen →" : e.art + " · " + n + (n === 1 ? " Seite" : " Seiten");
+      li.append(k);
+      li.addEventListener("mousedown", ev => { ev.preventDefault(); acWaehlen(e); });
+      acEl.appendChild(li);
+    });
+    acEl.hidden = false; qi.setAttribute("aria-expanded", "true");
+  }
+  function acWaehlen(e){
+    acSchliessen();
+    if (e.art === "Seite"){ location.href = e.href; return; }
+    if (e.art === "Thema"){ state.t = e.label; qi.value = state.q = ""; }
+    else { const teile = qi.value.split(/\s+/); teile[teile.length - 1] = e.label; qi.value = state.q = teile.join(" "); }
+    offen.clear(); save(); render();
+  }
+  function acMarkieren(i){
+    acPos = (i + acListe.length) % acListe.length;
+    [...acEl.children].forEach((li, n) => li.setAttribute("aria-selected", String(n === acPos)));
+    qi.setAttribute("aria-activedescendant", "ac" + acPos);
+  }
   function group(title, items, jc){
     const f = document.createDocumentFragment();
     const h = document.createElement("h2"); h.className = "topic grp";
@@ -635,9 +696,20 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
     p.title = "Nur Jahrgang " + y + " zeigen";
     p.addEventListener("click", e => { e.preventDefault(); e.stopPropagation(); state.j = [y]; offen.clear(); save(); render(); scrollTo({top:0, behavior:"smooth"}); });
   }));
-  qi.addEventListener("input", () => { state.q = qi.value; offen.clear(); save(); render(); });
-  qi.addEventListener("keydown", e => { if (e.key === "Escape" && qi.value){ qi.value = state.q = ""; offen.clear(); save(); render(); } });
-  qx.addEventListener("click", () => { qi.value = state.q = ""; offen.clear(); save(); render(); qi.focus(); });
+  qi.addEventListener("input", () => { state.q = qi.value; offen.clear(); save(); render(); acZeigen(); });
+  qi.addEventListener("keydown", e => {
+    const offenL = !acEl.hidden && acListe.length;
+    if (e.key === "ArrowDown" && offenL){ e.preventDefault(); acMarkieren(acPos + 1); }
+    else if (e.key === "ArrowUp" && offenL){ e.preventDefault(); acMarkieren(acPos - 1); }
+    else if (e.key === "Enter" && offenL && acPos >= 0){ e.preventDefault(); acWaehlen(acListe[acPos]); }
+    else if (e.key === "Escape"){
+      if (offenL) acSchliessen();
+      else if (qi.value){ qi.value = state.q = ""; offen.clear(); save(); render(); }
+    }
+  });
+  qi.addEventListener("blur", acSchliessen);
+  qi.addEventListener("focus", () => { if (qi.value) acZeigen(); });
+  qx.addEventListener("click", () => { acSchliessen(); qi.value = state.q = ""; offen.clear(); save(); render(); qi.focus(); });
   const azu = document.getElementById("alle-zu");
   azu.addEventListener("click", () => {
     const heads = [...liste.querySelectorAll("h2.topic button")];
