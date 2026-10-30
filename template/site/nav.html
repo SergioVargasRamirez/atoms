@@ -2,6 +2,7 @@
   <div class="sidenav-head">
     <a class="sidenav-brand" href="./">Chemie-Werkzeuge<span>für den Unterricht</span></a>
     <button class="sidenav-toggle" type="button" aria-expanded="false" aria-controls="sidenav-list">Menü</button>
+    <button class="sidenav-hide" type="button" aria-label="Menü ausblenden" title="Menü ausblenden">«</button>
   </div>
   <div class="sidenav-list" id="sidenav-list">
     <p class="sidenav-group">Teilchenmodell</p>
@@ -46,6 +47,7 @@
     <p class="sidenav-legal">© 2026 Dr. Sergio Vargas · <a href="impressum.html#lizenz">CC BY-NC-SA 4.0</a></p>
   </div>
 </nav>
+<button class="sidenav-tab" id="sidenav-tab" type="button" aria-label="Menü einblenden" title="Menü einblenden">»</button>
 <script>
 (() => {
   // Nicht einbetten: In einem fremden Rahmen (iframe) nur einen Hinweis mit Link zeigen.
@@ -61,5 +63,11 @@
   }
   const nav = document.getElementById("sidenav"), btn = nav.querySelector(".sidenav-toggle");
   btn.addEventListener("click", () => btn.setAttribute("aria-expanded", String(nav.classList.toggle("open"))));
+  // Desktop: Menü ein-/ausblenden, Wahl wird gemerkt (Standard: ausgeblendet)
+  const root = document.documentElement, tab = document.getElementById("sidenav-tab");
+  try { if (localStorage.getItem("nav") === "1") root.classList.add("nav-open"); } catch (e) {}
+  const setOpen = on => { root.classList.toggle("nav-open", on); try { localStorage.setItem("nav", on ? "1" : "0"); } catch (e) {} };
+  tab.addEventListener("click", () => setOpen(true));
+  nav.querySelector(".sidenav-hide").addEventListener("click", () => setOpen(false));
 })();
 </script>
