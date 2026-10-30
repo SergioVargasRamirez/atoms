@@ -53,7 +53,11 @@
 .j8{--jc:var(--j8c)}.j9{--jc:var(--j9c)}.j10{--jc:var(--j10c)}
 .jp.j8,.jp.j9,.jp.j10{background:var(--jc);border-color:var(--jc);color:var(--jfg)}
 .jp.ntg{background:var(--surface2);border-color:var(--line);color:var(--muted)}
-.logo{text-align:center;font:300 clamp(64px,12vw,112px)/1 var(--sans);letter-spacing:.04em;margin:clamp(24px,7vh,64px) 0 clamp(18px,3vh,30px);padding-left:.04em}
+.logo{text-align:center;font:800 clamp(64px,12vw,116px)/1 var(--sans);letter-spacing:.01em;margin:clamp(24px,7vh,64px) 0 clamp(18px,3vh,30px);}
+.logo span:nth-child(1),.logo span:nth-child(5){color:var(--accent)}
+.logo span:nth-child(2){color:var(--j8c)}
+.logo span:nth-child(3){color:var(--j9c)}
+.logo span:nth-child(4){color:var(--j10c)}
 .suche{position:relative;margin:0 auto 14px;max-width:580px}
 .suche input{width:100%;font:500 17px/1.2 var(--sans);color:var(--ink);background:var(--surface);border:1.5px solid var(--line);border-radius:99px;padding:11px 40px 11px 18px}
 .suche input::placeholder{color:var(--muted);font-weight:400}
@@ -298,7 +302,7 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
 </script>
 <!--/REPO--><!--/SITENAV-->
 <div class="wrap">
-<h1 class="logo">Atoms</h1>
+<h1 class="logo"><span>A</span><span>t</span><span>o</span><span>m</span><span>s</span></h1>
 <div class="suche"><input id="q" type="search" autocomplete="off" spellcheck="false" placeholder="Suchen: Thema oder Stichwort, z. B. pH, Elektron, Dipol" aria-label="Seiten suchen"><button class="x" id="qx" type="button" aria-label="Suche löschen" hidden>×</button></div>
 <p class="hint" id="hint" aria-live="polite" hidden></p>
 <div class="filter" id="fj" role="group" aria-label="Jahrgangsstufe"><span class="lbl">Jahrgang</span><button class="fp alle" type="button" data-v="" aria-pressed="true">Alle</button><button class="fp j8" type="button" data-v="8" aria-pressed="false">8</button><button class="fp j9" type="button" data-v="9" aria-pressed="false">9</button><button class="fp j10" type="button" data-v="10" aria-pressed="false">10</button></div>
