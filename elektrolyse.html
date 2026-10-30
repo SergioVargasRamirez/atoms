@@ -615,7 +615,7 @@ function estep(dt){
       an.mst = 4; an.t = 0; const mx = (an.ax + an.wx) / 2, my = EV.yia - 22;
       /* Gas (Cl₂): Wolke steigt auf und verschwindet. Brom, Iod: kein Gas, die Wolke breitet sich aus und färbt die Lösung an der Anode */
       for (let i = 0; i < 12; i++) es.puffs.push({x:mx + gauss() * 8, y:my + gauss() * 5, vx:gauss() * (E.gas ? 12 : 16), vy:E.gas ? -26 - Math.random() * 14 : gauss() * 10, life:1});
-      if (!E.gas) es.tint = Math.min(0.8, es.tint + 0.35);
+      if (!E.gas) es.tint = Math.min(0.7, es.tint + 0.1);
     }
     else if (an.mst === 4 && an.t > 0.9){ an.mst = 0; an.n = 0; an.w = false; an.st = "ion"; an.t = 0; an.x = EV.xia; }
     else if (an.mst === 5 && an.t > 1.0){ an.mst = 0; an.w = true; an.st = "ion"; an.t = 0; an.x = EV.xia; }
