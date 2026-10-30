@@ -559,16 +559,16 @@ function draw(){
    Kathoden-Trichter um je U/2. Das Elektron im Cu²⁺ liegt um Uz höher als das im Cl⁻ (die beiden reagieren von allein nicht). Bei U = Uz liegt der
    Anoden-Trichter genau auf Höhe des Anions und der Kathoden-Trichter genau auf Höhe des Kations. Erst darüber (U > Uz) fließt etwas.
    Rohre und Draht sind eine Elektronenkette: Fällt vorn eines auf das Kation, rückt die Kette nach, und hinten ist Platz für eines vom Anion. */
-const EV = {W:600, H:330, F0:160, k:64, xia:390, xik:225, xfa:505, xfk:95, fw:36, fh:22, r:17, yb:306, xl:14, yt:30, pileY:282, sp:20};
+const EV = {W:600, H:330, F0:160, k:64, xia:390, xik:225, xfa:505, xfk:95, fw:36, fh:22, r:17, yb:306, xl:14, yt:30, pileY:282, sp:11};
 EV.yia = EV.F0 + UZ / 2 * EV.k; EV.yik = EV.F0 - UZ / 2 * EV.k;
 /* Weg eines Trichters aus der Mittellage: 32 px je Volt bis 3 V, darüber nur 4 px je Volt (damit 6 V ins Bild passen) */
 const dOf = ue => ue <= 3 ? ue / 2 * EV.k : 1.5 * EV.k + (ue - 3) * 4;
-EV.wait = [EV.xia - 46, EV.yia - 40];
+EV.xac = EV.xfa - EV.fw - EV.r - 12; EV.xkc = EV.xfk + EV.fw + EV.r + 12; /* Ruhelage der Ionen am Trichter */
 let es;
 const pileSlot = i => { const row = Math.floor(i / 9), col = i % 9; return [EV.xik - 36 + col * 9 + (row % 2) * 4.5, EV.pileY - row * 8]; };
 function ereset(){
   es = {d:dOf(on ? U : 0), cool:0.3, off:0, ev:null, el:[], puffs:[], pile:0, claimed:0,
-        an:{st:"ion", t:1, n:0, mst:0, w:false}, ca:{n:0, st:"ion", t:1, x:EV.xik, y:EV.yik, vy:0}};
+        an:{st:"ion", t:1, n:0, mst:0, w:false, x:EV.xia, ax:EV.xia, wx:EV.xia}, ca:{n:0, st:"ion", t:1, x:EV.xik, y:EV.yik, vy:0}};
 }
 const eflow = () => flowing();
 function mkpath(P){ let L = 0; const seg = []; for (let i = 0; i < P.length - 1; i++){ const l = Math.hypot(P[i+1][0] - P[i][0], P[i+1][1] - P[i][1]); seg.push(l); L += l; } return {P, seg, L}; }
@@ -580,17 +580,18 @@ function epos(path, s){
 function epaths(){
   const rim = EV.F0 + es.d, mouth = EV.F0 - es.d;
   return {rim, mouth,
-    a:mkpath([[EV.xia + EV.r, EV.yia], [EV.xfa, rim + EV.fh * 0.4]]),
-    b:mkpath([[EV.xfa, rim + EV.fh * 0.4], [EV.xfa, EV.yb], [EV.xl, EV.yb], [EV.xl, EV.yt], [EV.xfk, EV.yt], [EV.xfk, mouth]]),
-    k:mkpath([[EV.xfk, mouth], [EV.xik - EV.r, EV.yik]])};
+    b:mkpath([[EV.xfa, rim + EV.fh * 0.4], [EV.xfa, EV.yb], [EV.xl, EV.yb], [EV.xl, EV.yt], [EV.xfk, EV.yt], [EV.xfk, mouth]]),};
 }
 function estep(dt){
   const ue = on ? U : 0, an = es.an, ca = es.ca;
   es.d += (dOf(ue) - es.d) * Math.min(1, dt * 6);
   es.cool -= dt;
   an.t += dt;
-  const ps = epaths(), SP = EV.sp;
-  if (eflow() && !es.ev && es.cool <= 0 && an.st === "ion" && an.t > 0.4 && an.mst === 0 && an.n < 2 && ca.st === "ion" && es.claimed < 2){
+  const ps = epaths(), SP = EV.sp, stp = 90 * dt;
+  /* Die Ionen wandern zum Pol, sobald der Stromkreis geschlossen ist (Anion zum Plus-, Kation zum Minuspol) */
+  if (an.st === "ion") an.x += Math.max(-stp, Math.min(stp, (on ? EV.xac : EV.xia) - an.x));
+  if (ca.st === "ion") ca.x += Math.max(-stp, Math.min(stp, (on ? EV.xkc : EV.xik) - ca.x));
+  if (eflow() && !es.ev && Math.abs(an.x - EV.xac) < 1 && Math.abs(ca.x - EV.xkc) < 1 && es.cool <= 0 && an.st === "ion" && an.t > 0.4 && an.mst === 0 && an.n < 2 && ca.st === "ion" && es.claimed < 2){
     es.ev = {t:0, dur:0.8 / (1 + Math.max(0, ue - UZ) * 0.4), k:false, a:false};
     es.claimed++;
   }
@@ -600,32 +601,32 @@ function estep(dt){
     ev.t += dt / ev.dur; const f = Math.min(1, ev.t);
     es.off = SP * f * f * (3 - 2 * f);
     const rem = ps.b.L - Math.floor(ps.b.L / SP) * SP;
-    if (!ev.k && es.off >= rem - 1e-6){ ev.k = true; es.el.push({ph:"k", t:0, dur:ev.dur}); }
+    if (!ev.k && es.off >= rem - 1e-6){ ev.k = true; es.el.push({ph:"k", t:0, dur:ev.dur, xe:ca.x - EV.r}); }
     if (ev.t >= 1){
-      if (!ev.k){ ev.k = true; es.el.push({ph:"k", t:0, dur:ev.dur}); }
-      ev.a = true; es.el.push({ph:"a", t:0, dur:ev.dur});
-      an.st = "atom"; an.t = 0; an.n++; an.mst = an.n === 2 ? 1 : 5;
+      if (!ev.k){ ev.k = true; es.el.push({ph:"k", t:0, dur:ev.dur, xe:ca.x - EV.r}); }
+      ev.a = true; es.el.push({ph:"a", t:0, dur:ev.dur, x0:an.x});
+      an.st = "atom"; an.t = 0; an.n++; an.mst = an.n === 2 ? 1 : 5; an.ax = an.x; if (an.n === 1) an.wx = an.x;
     }
   }
   if (an.mst){
     if (an.mst === 1 && an.t > 0.6){ an.mst = 2; an.t = 0; }
     else if (an.mst === 2 && an.t > 0.5){ an.mst = 3; an.t = 0; }
     else if (an.mst === 3 && an.t > 0.6){
-      an.mst = 4; an.t = 0; const mx = (EV.xia + EV.wait[0]) / 2, my = (EV.yia + EV.wait[1]) / 2;
+      an.mst = 4; an.t = 0; const mx = (an.ax + an.wx) / 2, my = EV.yia - 22;
       for (let i = 0; i < 12; i++) es.puffs.push({x:mx + gauss() * 8, y:my + gauss() * 5, vx:gauss() * 12, vy:(E.gas ? -26 : -8) - Math.random() * 14, life:1});
     }
-    else if (an.mst === 4 && an.t > 0.9){ an.mst = 0; an.n = 0; an.w = false; an.st = "ion"; an.t = 0; }
-    else if (an.mst === 5 && an.t > 1.0){ an.mst = 0; an.w = true; an.st = "ion"; an.t = 0; }
+    else if (an.mst === 4 && an.t > 0.9){ an.mst = 0; an.n = 0; an.w = false; an.st = "ion"; an.t = 0; an.x = EV.xia; }
+    else if (an.mst === 5 && an.t > 1.0){ an.mst = 0; an.w = true; an.st = "ion"; an.t = 0; an.x = EV.xia; }
   }
   for (let i = es.puffs.length - 1; i >= 0; i--){ const q = es.puffs[i]; q.x += q.vx * dt; q.y += q.vy * dt; q.life -= dt * 0.8; if (q.life <= 0) es.puffs.splice(i, 1); }
   if (ca.st === "ion") ca.t += dt;
-  else if (ca.st === "atom"){ if ((ca.t += dt) > 0.5){ ca.st = "fall"; ca.x = EV.xik; ca.y = EV.yik; ca.vy = 0; } }
+  else if (ca.st === "atom"){ if ((ca.t += dt) > 0.5){ ca.st = "fall"; ca.y = EV.yik; ca.vy = 0; } }
   else if (ca.st === "fall"){
     const [tx, ty] = pileSlot(Math.min(es.pile, 29));
     ca.vy += 500 * dt; ca.y += ca.vy * dt; ca.x += (tx - ca.x) * Math.min(1, dt * 3);
     if (ca.y >= ty){ ca.y = ty; ca.x = tx; es.pile = Math.min(30, es.pile + 1); ca.st = "gone"; ca.t = 0; }
   }
-  else if (ca.st === "gone" && (ca.t += dt) > 0.7){ ca.st = "ion"; ca.t = 0; ca.n = 0; es.claimed = 0; }
+  else if (ca.st === "gone" && (ca.t += dt) > 0.7){ ca.st = "ion"; ca.t = 0; ca.n = 0; es.claimed = 0; ca.x = EV.xik; }
   for (let i = es.el.length - 1; i >= 0; i--){
     const e = es.el[i];
     if (e.ph === "a"){ e.t += dt / e.dur; if (e.t >= 1){ es.off = 0; es.ev = null; es.cool = 0.1; es.el.splice(i, 1); } }
@@ -655,13 +656,15 @@ function drawE(){
   /* Energieniveaus (gestrichelt, bis zur Energieachse): blau = Trichter (Elektrode), gold = Elektron im Ion */
   const lvl = (col, x0, x1, y) => { c.strokeStyle = col; c.lineWidth = 1.8; c.setLineDash([5, 4]); c.beginPath(); c.moveTo(x0, y); c.lineTo(x1, y); c.stroke(); c.setLineDash([]); c.beginPath(); c.moveTo(296, y); c.lineTo(304, y); c.lineWidth = 2.5; c.stroke(); };
   lvl("#7d9bff", 300, EV.xfa - EV.fw, rim); lvl("#7d9bff", EV.xfk + EV.fw, 300, mouth);
-  lvl("#ffd166", 300, EV.xia - EV.r, EV.yia); lvl("#ffd166", EV.xik + EV.r, 300, EV.yik);
+  lvl("#ffd166", 300, an.x - EV.r, EV.yia); lvl("#ffd166", ca.x + EV.r, 300, EV.yik);
   /* Trichter */
   c.fillStyle = "#4a5060"; c.strokeStyle = fl ? "#7d9bff" : "#8a93a6"; c.lineWidth = fl ? 2.5 : 2;
   c.beginPath(); c.moveTo(EV.xfa - EV.fw, rim); c.lineTo(EV.xfa + EV.fw, rim); c.lineTo(EV.xfa + 5, rim + EV.fh); c.lineTo(EV.xfa - 5, rim + EV.fh); c.closePath(); c.fill(); c.stroke();
   c.beginPath(); c.moveTo(EV.xfk - EV.fw, mouth); c.lineTo(EV.xfk + EV.fw, mouth); c.lineTo(EV.xfk + 5, mouth - EV.fh); c.lineTo(EV.xfk - 5, mouth - EV.fh); c.closePath(); c.fill(); c.stroke();
   /* Elektronenkette in Rohr und Draht */
   for (let q = es.off; q <= ps.b.L; q += EV.sp){ const [x, y] = epos(ps.b, q); disc(c, x, y, 4.5, "#ffd166"); }
+  /* großes + und − an den Trichtern, sobald der Stromkreis geschlossen ist */
+  if (on){ c.fillStyle = "#fff"; c.font = "700 34px system-ui,sans-serif"; c.textAlign = "center"; c.textBaseline = "middle"; c.fillText("+", EV.xfa, rim - 22); c.fillText("−", EV.xfk, mouth + 24); }
   /* Spannungsquelle im Draht */
   c.fillStyle = "#111a2c"; c.strokeStyle = "#7482a3"; c.lineWidth = 2; c.beginPath(); c.roundRect(245, EV.yb - 15, 110, 30, 8); c.fill(); c.stroke();
   c.fillStyle = on ? "#c9d3ea" : "#7482a3"; c.font = "700 14px system-ui,sans-serif"; c.textAlign = "center"; c.textBaseline = "middle"; c.fillText(on ? "↑ U = " + deV(U) + " V" : "aus", 300, EV.yb + 0.5);
@@ -669,35 +672,35 @@ function drawE(){
   /* abgeschiedenes Metall */
   for (let i = 0; i < es.pile; i++){ const [x, y] = pileSlot(i); disc(c, x, y, 5, E.cMetal); }
   /* Anion, wartendes Atom, Molekül */
-  const [wx, wy] = EV.wait, mx = (EV.xia + wx) / 2, my = (EV.yia + wy) / 2;
+  const wx = an.wx, wy = EV.yia - 44, mx = (an.ax + wx) / 2, my = (EV.yia + wy) / 2;
   if (an.mst === 3) molecule(c, mx, my, 0.5, E.cMol, 9);
   else if (an.mst !== 4){
-    if (an.mst === 2){ const f = Math.min(1, an.t / 0.5); eion(c, EV.xia + (mx - EV.xia) * f, EV.yia + (my - EV.yia) * f, E.cMol, symA, 1, 13, atc); eion(c, wx + (mx - wx) * f, wy + (my - wy) * f, E.cMol, symA, 1, 13, atc); }
+    if (an.mst === 2){ const f = Math.min(1, an.t / 0.5); eion(c, an.ax + (mx - an.ax) * f, EV.yia + (my - EV.yia) * f, E.cMol, symA, 1, 13, atc); eion(c, wx + (mx - wx) * f, wy + (my - wy) * f, E.cMol, symA, 1, 13, atc); }
     else {
       if (an.w) eion(c, wx, wy, E.cMol, symA, 1, 13, atc);
-      if (an.mst === 5){ const f = Math.max(0, Math.min(1, (an.t - 0.4) / 0.6)); eion(c, EV.xia + (wx - EV.xia) * f, EV.yia + (wy - EV.yia) * f, E.cMol, symA, 1, 13, atc); }
-      else if (an.mst === 1) eion(c, EV.xia, EV.yia, E.cMol, symA, 1, 13, atc);
-      else eion(c, EV.xia, EV.yia, E.cAn, E.an.f, Math.min(1, an.t / 0.4));
+      if (an.mst === 5){ const f = Math.max(0, Math.min(1, (an.t - 0.4) / 0.6)); eion(c, an.ax + (wx - an.ax) * f, EV.yia + (wy - EV.yia) * f, E.cMol, symA, 1, 13, atc); }
+      else if (an.mst === 1) eion(c, an.ax, EV.yia, E.cMol, symA, 1, 13, atc);
+      else eion(c, an.x, EV.yia, E.cAn, E.an.f, Math.min(1, an.t / 0.4));
     }
   }
   /* Kation, Atom, Niederschlag */
-  if (ca.st === "ion") eion(c, EV.xik, EV.yik, E.cCat, ca.n === 0 ? E.cat.f : symM + "⁺", Math.min(1, ca.t / 0.4));
-  else if (ca.st === "atom") eion(c, EV.xik, EV.yik, E.cMetal, E.metal.f, 1, 13);
+  if (ca.st === "ion") eion(c, ca.x, EV.yik, E.cCat, ca.n === 0 ? E.cat.f : symM + "⁺", Math.min(1, ca.t / 0.4));
+  else if (ca.st === "atom") eion(c, ca.x, EV.yik, E.cMetal, E.metal.f, 1, 13);
   else if (ca.st === "fall") disc(c, ca.x, ca.y, 5, E.cMetal);
   /* Gaswolke */
   for (const q of es.puffs){ c.globalAlpha = Math.max(0, q.life) * 0.55; disc(c, q.x, q.y, 8 + (1 - q.life) * 14, E.cMol); } c.globalAlpha = 1;
   /* Elektronen */
   for (const e of es.el){
     let x, y;
-    if (e.ph === "a") [x, y] = epos(ps.a, ps.a.L * e.t * e.t);
-    else [x, y] = epos(ps.k, ps.k.L * e.t * e.t);
+    if (e.ph === "a"){ const x0 = e.x0 + EV.r, y0 = EV.yia, x1 = EV.xfa, y1 = rim + EV.fh * 0.4; x = x0 + (x1 - x0) * e.t; y = y0 + (y1 - y0) * e.t * e.t; }
+    else { const x0 = EV.xfk, y0 = mouth, x1 = e.xe, y1 = EV.yik; x = x0 + (x1 - x0) * e.t; y = y0 + (y1 - y0) * e.t * e.t; }
     disc(c, x, y, 5, "#ffd166", "−", "#0a0e18");
   }
 }
 function eText(){
   const ue = on ? U : 0, an = E.an.f, ca = E.cat.f;
   if (!on) return ["Die Spannungsquelle ist aus (0 V). Beide Trichter stehen gleich hoch. Das Elektron im " + an + " liegt tiefer als die Stelle am " + ca + ", an der ein Elektron aufgenommen wird: Die beiden reagieren von allein nicht.", ""];
-  if (ue <= UZ) return ["Spannung " + deV(ue) + " V: Der Anoden-Trichter liegt noch höher als das Elektron im " + an + ", es fällt nicht hinein. Der Kathoden-Trichter liegt noch tiefer als das " + ca + ": Das Elektron müsste hinaufklettern. Es fließt kein Strom. Das ändert sich, sobald die Spannung über " + deV(UZ) + " V liegt.", "same"];
+  if (ue <= UZ) return ["Spannung " + deV(ue) + " V: " + an + " und " + ca + " sind zu den Polen gewandert (Plus und Minus an den Trichtern). Aber der Anoden-Trichter liegt noch höher als das Elektron im " + an + ", es fällt nicht hinein. Der Kathoden-Trichter liegt noch tiefer als das " + ca + ": Das Elektron müsste hinaufklettern. Es fließt kein Strom. Das ändert sich, sobald die Spannung über " + deV(UZ) + " V liegt.", "same"];
   return ["Spannung " + deV(ue) + " V: Der Anoden-Trichter liegt tiefer als das Elektron im " + an + ", es fällt hinein. Rohr und Draht sind voll mit Elektronen. Fällt am Kathoden-Trichter (er liegt höher als das " + ca + ") eines auf das " + ca + ", rückt die ganze Kette nach, getrieben von der Spannungsquelle, und am Anoden-Trichter wird Platz für das nächste Elektron. Zwei " + an + " geben zwei Elektronen ab und werden zu Atomen, die sich zu " + E.mol.f + " verbinden. Aus " + ca + " wird " + E.metal.f + ", das sich abscheidet.", "new"];
 }
 function eStatus(){
