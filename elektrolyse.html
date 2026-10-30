@@ -218,7 +218,10 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
 .kwds-end{margin:26px 0 8px;font-family:var(--font,var(--sans))}
 .kwds-h{margin:0 0 8px;font-size:.78rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
 .kwds{list-style:none;display:flex;flex-wrap:wrap;gap:6px;margin:0;padding:0}
-.kwds li{font:500 .78rem/1 var(--font,var(--sans));padding:4px 9px;border-radius:99px;background:var(--surface2,rgba(128,128,128,.15));color:var(--muted);border:1px solid var(--line)}
+.kwds a{display:block;font:500 .78rem/1 var(--font,var(--sans));padding:4px 9px;border-radius:99px;background:var(--surface2,rgba(128,128,128,.15));color:var(--muted);border:1px solid var(--line);text-decoration:none}
+.kwds a:hover{color:var(--accent);border-color:var(--accent)}
+.kwds a:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.kwds a.hit{background:var(--accent);border-color:var(--accent);color:var(--accent-fg,var(--accent-ink));font-weight:700}
 </style>
 </head>
 <body>
@@ -316,6 +319,18 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
   applyTheme(mode);
   themeBtns.forEach(b => b.addEventListener("click", () => setMode(b.dataset.themeSet)));
   document.getElementById("theme-btn").addEventListener("click", () => setMode({system:"light", light:"dark", dark:"system"}[mode]));
+  // Stichwörter am Seitenende: Treffer der letzten Suche (Startseite) farbig hervorheben
+  const norm = t => t.toLowerCase().replace(/ß/g, "ss").replace(/ä/g, "ae").replace(/ö/g, "oe").replace(/ü/g, "ue").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9+]+/g, " ").trim();
+  const markKw = () => {
+    let q = ""; try { q = localStorage.getItem("suche") || ""; } catch (e) {}
+    const toks = norm(q).split(" ").filter(Boolean);
+    if (!toks.length) return;
+    document.querySelectorAll(".kwds a").forEach(a => {
+      const w = " " + norm(a.textContent) + " ";
+      if (toks.some(t => w.includes(t.length > 3 ? t : " " + t))) { a.classList.add("hit"); a.title += " (Treffer deiner letzten Suche: " + q + ")"; }
+    });
+  };
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", markKw); else markKw();
   // Menü ein-/ausblenden. Desktop: Seitenleiste, Wahl wird gemerkt (Standard: ausgeblendet). Schmal: Ausklappmenü.
   const root = document.documentElement, mb = document.getElementById("tb-menu"), wide = matchMedia("(min-width:1000px)");
   try { if (localStorage.getItem("nav") === "1") root.classList.add("nav-open"); } catch (e) {}
@@ -416,7 +431,7 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
       <div id="btotal" class="btotal" hidden></div>
     </section>
   </main>
-<!--KEYWORDS--><div class="kwds-end"><p class="kwds-h">Stichwörter</p><ul class="kwds"><li>Redox</li><li>Redoxreaktion</li><li>Elektron</li><li>Oxidation</li><li>Reduktion</li><li>Kathode</li><li>Anode</li><li>Elektroden</li><li>Kupferchlorid</li><li>Zinkbromid</li><li>Ionenwanderung</li><li>Halbgleichungen</li><li>Zersetzung</li></ul></div><!--/KEYWORDS-->
+<!--KEYWORDS--><div class="kwds-end"><p class="kwds-h">Stichwörter</p><ul class="kwds"><li><a href="./#q=Redox" title="Alle Seiten mit Redox suchen">Redox</a></li><li><a href="./#q=Redoxreaktion" title="Alle Seiten mit Redoxreaktion suchen">Redoxreaktion</a></li><li><a href="./#q=Elektron" title="Alle Seiten mit Elektron suchen">Elektron</a></li><li><a href="./#q=Oxidation" title="Alle Seiten mit Oxidation suchen">Oxidation</a></li><li><a href="./#q=Reduktion" title="Alle Seiten mit Reduktion suchen">Reduktion</a></li><li><a href="./#q=Kathode" title="Alle Seiten mit Kathode suchen">Kathode</a></li><li><a href="./#q=Anode" title="Alle Seiten mit Anode suchen">Anode</a></li><li><a href="./#q=Elektroden" title="Alle Seiten mit Elektroden suchen">Elektroden</a></li><li><a href="./#q=Kupferchlorid" title="Alle Seiten mit Kupferchlorid suchen">Kupferchlorid</a></li><li><a href="./#q=Zinkbromid" title="Alle Seiten mit Zinkbromid suchen">Zinkbromid</a></li><li><a href="./#q=Ionenwanderung" title="Alle Seiten mit Ionenwanderung suchen">Ionenwanderung</a></li><li><a href="./#q=Halbgleichungen" title="Alle Seiten mit Halbgleichungen suchen">Halbgleichungen</a></li><li><a href="./#q=Zersetzung" title="Alle Seiten mit Zersetzung suchen">Zersetzung</a></li></ul></div><!--/KEYWORDS-->
   <details>
     <summary>Regeln, Modell und Grenzen</summary>
     <ul>

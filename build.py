@@ -485,7 +485,8 @@ def sync_keywords():
             sys.exit(1)
         html = read_file(path)
         base = KW_BLOCK_RE.sub("", html)
-        pills = "".join(f"<li>{_html.escape(w)}</li>" for w in words)
+        from urllib.parse import quote
+        pills = "".join(f'<li><a href="./#q={quote(w, safe="")}" title="Alle Seiten mit {_html.escape(w, quote=True)} suchen">{_html.escape(w)}</a></li>' for w in words)
         block = f'<!--KEYWORDS--><div class="kwds-end"><p class="kwds-h">Stichwörter</p><ul class="kwds">{pills}</ul></div><!--/KEYWORDS-->\n'
         if page == "timeline.html":  # </main> liegt hier außerhalb des zentrierten Rahmens
             block = block.replace('<div class="kwds-end">', '<div class="wrap"><div class="kwds-end">').replace('</ul></div>', '</ul></div></div>')

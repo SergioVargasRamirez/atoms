@@ -155,7 +155,10 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
 .kwds-end{margin:26px 0 8px;font-family:var(--font,var(--sans))}
 .kwds-h{margin:0 0 8px;font-size:.78rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
 .kwds{list-style:none;display:flex;flex-wrap:wrap;gap:6px;margin:0;padding:0}
-.kwds li{font:500 .78rem/1 var(--font,var(--sans));padding:4px 9px;border-radius:99px;background:var(--surface2,rgba(128,128,128,.15));color:var(--muted);border:1px solid var(--line)}
+.kwds a{display:block;font:500 .78rem/1 var(--font,var(--sans));padding:4px 9px;border-radius:99px;background:var(--surface2,rgba(128,128,128,.15));color:var(--muted);border:1px solid var(--line);text-decoration:none}
+.kwds a:hover{color:var(--accent);border-color:var(--accent)}
+.kwds a:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.kwds a.hit{background:var(--accent);border-color:var(--accent);color:var(--accent-fg,var(--accent-ink));font-weight:700}
 </style>
 </head>
 <body>
@@ -253,6 +256,18 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
   applyTheme(mode);
   themeBtns.forEach(b => b.addEventListener("click", () => setMode(b.dataset.themeSet)));
   document.getElementById("theme-btn").addEventListener("click", () => setMode({system:"light", light:"dark", dark:"system"}[mode]));
+  // Stichwörter am Seitenende: Treffer der letzten Suche (Startseite) farbig hervorheben
+  const norm = t => t.toLowerCase().replace(/ß/g, "ss").replace(/ä/g, "ae").replace(/ö/g, "oe").replace(/ü/g, "ue").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9+]+/g, " ").trim();
+  const markKw = () => {
+    let q = ""; try { q = localStorage.getItem("suche") || ""; } catch (e) {}
+    const toks = norm(q).split(" ").filter(Boolean);
+    if (!toks.length) return;
+    document.querySelectorAll(".kwds a").forEach(a => {
+      const w = " " + norm(a.textContent) + " ";
+      if (toks.some(t => w.includes(t.length > 3 ? t : " " + t))) { a.classList.add("hit"); a.title += " (Treffer deiner letzten Suche: " + q + ")"; }
+    });
+  };
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", markKw); else markKw();
   // Menü ein-/ausblenden. Desktop: Seitenleiste, Wahl wird gemerkt (Standard: ausgeblendet). Schmal: Ausklappmenü.
   const root = document.documentElement, mb = document.getElementById("tb-menu"), wide = matchMedia("(min-width:1000px)");
   try { if (localStorage.getItem("nav") === "1") root.classList.add("nav-open"); } catch (e) {}
@@ -338,7 +353,7 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
     </div>
 
   </main>
-<!--KEYWORDS--><div class="kwds-end"><p class="kwds-h">Stichwörter</p><ul class="kwds"><li>Ampholyt</li><li>Base</li><li>schwache Base</li><li>Gleichgewicht</li><li>Protolyse</li><li>Ammonium</li><li>Hydroxid</li><li>Basenkonstante</li></ul></div><!--/KEYWORDS-->
+<!--KEYWORDS--><div class="kwds-end"><p class="kwds-h">Stichwörter</p><ul class="kwds"><li><a href="./#q=Ampholyt" title="Alle Seiten mit Ampholyt suchen">Ampholyt</a></li><li><a href="./#q=Base" title="Alle Seiten mit Base suchen">Base</a></li><li><a href="./#q=schwache%20Base" title="Alle Seiten mit schwache Base suchen">schwache Base</a></li><li><a href="./#q=Gleichgewicht" title="Alle Seiten mit Gleichgewicht suchen">Gleichgewicht</a></li><li><a href="./#q=Protolyse" title="Alle Seiten mit Protolyse suchen">Protolyse</a></li><li><a href="./#q=Ammonium" title="Alle Seiten mit Ammonium suchen">Ammonium</a></li><li><a href="./#q=Hydroxid" title="Alle Seiten mit Hydroxid suchen">Hydroxid</a></li><li><a href="./#q=Basenkonstante" title="Alle Seiten mit Basenkonstante suchen">Basenkonstante</a></li></ul></div><!--/KEYWORDS-->
   <details>
     <summary>Zahlen im Hintergrund und Grenzen des Modells</summary>
     <ul>

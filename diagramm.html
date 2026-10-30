@@ -191,7 +191,10 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
 .kwds-end{margin:26px 0 8px;font-family:var(--font,var(--sans))}
 .kwds-h{margin:0 0 8px;font-size:.78rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
 .kwds{list-style:none;display:flex;flex-wrap:wrap;gap:6px;margin:0;padding:0}
-.kwds li{font:500 .78rem/1 var(--font,var(--sans));padding:4px 9px;border-radius:99px;background:var(--surface2,rgba(128,128,128,.15));color:var(--muted);border:1px solid var(--line)}
+.kwds a{display:block;font:500 .78rem/1 var(--font,var(--sans));padding:4px 9px;border-radius:99px;background:var(--surface2,rgba(128,128,128,.15));color:var(--muted);border:1px solid var(--line);text-decoration:none}
+.kwds a:hover{color:var(--accent);border-color:var(--accent)}
+.kwds a:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.kwds a.hit{background:var(--accent);border-color:var(--accent);color:var(--accent-fg,var(--accent-ink));font-weight:700}
 </style>
 </head>
 <body>
@@ -289,6 +292,18 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
   applyTheme(mode);
   themeBtns.forEach(b => b.addEventListener("click", () => setMode(b.dataset.themeSet)));
   document.getElementById("theme-btn").addEventListener("click", () => setMode({system:"light", light:"dark", dark:"system"}[mode]));
+  // Stichwörter am Seitenende: Treffer der letzten Suche (Startseite) farbig hervorheben
+  const norm = t => t.toLowerCase().replace(/ß/g, "ss").replace(/ä/g, "ae").replace(/ö/g, "oe").replace(/ü/g, "ue").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9+]+/g, " ").trim();
+  const markKw = () => {
+    let q = ""; try { q = localStorage.getItem("suche") || ""; } catch (e) {}
+    const toks = norm(q).split(" ").filter(Boolean);
+    if (!toks.length) return;
+    document.querySelectorAll(".kwds a").forEach(a => {
+      const w = " " + norm(a.textContent) + " ";
+      if (toks.some(t => w.includes(t.length > 3 ? t : " " + t))) { a.classList.add("hit"); a.title += " (Treffer deiner letzten Suche: " + q + ")"; }
+    });
+  };
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", markKw); else markKw();
   // Menü ein-/ausblenden. Desktop: Seitenleiste, Wahl wird gemerkt (Standard: ausgeblendet). Schmal: Ausklappmenü.
   const root = document.documentElement, mb = document.getElementById("tb-menu"), wide = matchMedia("(min-width:1000px)");
   try { if (localStorage.getItem("nav") === "1") root.classList.add("nav-open"); } catch (e) {}
@@ -337,7 +352,7 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
     </div>
     <!--REPO--><p class="crosslink" style="margin-top:16px">Danach: Welches Element ist es? <a href="pse.html">Klickbares Periodensystem &rarr;</a></p><!--/REPO-->
   </main>
-<!--KEYWORDS--><div class="kwds-end"><p class="kwds-h">Stichwörter</p><ul class="kwds"><li>Kästchenschreibweise</li><li>Energieniveaus</li><li>Hundsche Regel</li><li>Pauli-Prinzip</li><li>s</li><li>p</li><li>d</li><li>Orbitaldiagramm</li><li>Kurzschreibweise</li><li>Elektron</li><li>Energiestufenmodell</li><li>Energiestufe</li></ul></div><!--/KEYWORDS-->
+<!--KEYWORDS--><div class="kwds-end"><p class="kwds-h">Stichwörter</p><ul class="kwds"><li><a href="./#q=K%C3%A4stchenschreibweise" title="Alle Seiten mit Kästchenschreibweise suchen">Kästchenschreibweise</a></li><li><a href="./#q=Energieniveaus" title="Alle Seiten mit Energieniveaus suchen">Energieniveaus</a></li><li><a href="./#q=Hundsche%20Regel" title="Alle Seiten mit Hundsche Regel suchen">Hundsche Regel</a></li><li><a href="./#q=Pauli-Prinzip" title="Alle Seiten mit Pauli-Prinzip suchen">Pauli-Prinzip</a></li><li><a href="./#q=s" title="Alle Seiten mit s suchen">s</a></li><li><a href="./#q=p" title="Alle Seiten mit p suchen">p</a></li><li><a href="./#q=d" title="Alle Seiten mit d suchen">d</a></li><li><a href="./#q=Orbitaldiagramm" title="Alle Seiten mit Orbitaldiagramm suchen">Orbitaldiagramm</a></li><li><a href="./#q=Kurzschreibweise" title="Alle Seiten mit Kurzschreibweise suchen">Kurzschreibweise</a></li><li><a href="./#q=Elektron" title="Alle Seiten mit Elektron suchen">Elektron</a></li><li><a href="./#q=Energiestufenmodell" title="Alle Seiten mit Energiestufenmodell suchen">Energiestufenmodell</a></li><li><a href="./#q=Energiestufe" title="Alle Seiten mit Energiestufe suchen">Energiestufe</a></li></ul></div><!--/KEYWORDS-->
   <details>
     <summary>Hinweise zur Seite</summary>
     <ul>
