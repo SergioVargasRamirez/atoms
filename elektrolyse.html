@@ -277,6 +277,12 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
     </div>
 
     <div class="modes">
+      <div class="group"><span>Ansicht</span>
+        <div class="seg" role="radiogroup" aria-label="Ansicht" id="viewseg">
+          <button type="button" role="radio" aria-checked="true" data-view="e">Elektronen</button>
+          <button type="button" role="radio" aria-checked="false" data-view="z">Zelle</button>
+        </div>
+      </div>
       <div class="group"><span>Aufgabenart</span>
         <div class="seg" role="radiogroup" aria-label="Aufgabenart" id="modeseg">
           <button type="button" role="radio" aria-checked="true" data-mode="lab">Beobachten</button>
@@ -288,14 +294,14 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
 
     <div class="lab">
       <div class="leftcol">
-      <div class="stagewrap">
+      <div class="stagewrap" id="wrap-z" hidden>
         <div class="status" id="status" aria-live="polite"></div>
         <canvas id="stage" aria-label="Elektrolysezelle mit Ionen, Elektroden, Spannungsquelle und Elektronen im Draht"></canvas>
         <div class="meter" id="meter"></div>
         <div class="readout" id="readout"></div>
       </div>
 
-      <div class="stagewrap">
+      <div class="stagewrap" id="wrap-e">
         <div class="status" id="estatus" aria-live="polite"></div>
         <canvas id="estage" aria-label="Elektronensicht: Trichter als Elektroden, die mit der Spannung höher und tiefer wandern; Elektronen fallen vom Anion in den Anodentrichter und aus dem Kathodentrichter auf das Kation"></canvas>
         <div class="ecap" id="ecap"></div>
@@ -496,6 +502,8 @@ function molecule(c, x, y, a, col, r){
   disc(c, x - dx, y - dy, r, col); disc(c, x + dx, y + dy, r, col);
 }
 function draw(){
+  drawE();
+  if (!cv.clientWidth) return;
   const c = fit();
   c.font = "600 12px system-ui,sans-serif";
   const fl = flowing();
@@ -544,7 +552,6 @@ function draw(){
   const items = [[E.cCat, E.cat.f], [E.cAn, E.an.f], [E.cMetal, E.metal.f], [E.cMol, E.mol.f]];
   c.font = "600 12px system-ui,sans-serif"; c.textBaseline = "middle"; c.textAlign = "left";
   items.forEach((it, i) => { const x = 130 + i * 90; disc(c, x, 385, 6, it[0]); c.fillStyle = "#c9d3ea"; c.fillText(it[1], x + 11, 385); });
-  drawE();
 }
 
 /* ---------- Elektronensicht: zwei Trichter als Elektroden ---------- */
@@ -587,6 +594,7 @@ function eion(c, x, y, col, label, alpha){
   c.fillStyle = "#0a0e18"; c.font = "700 13px system-ui,sans-serif"; c.textAlign = "center"; c.textBaseline = "middle"; c.fillText(label, x, y + 0.5); c.globalAlpha = 1;
 }
 function drawE(){
+  if (!$("estage").clientWidth) return;
   const c = fit($("estage"), EV.W, EV.H), fl = eflow(), ue = on ? U : 0;
   const rim = EV.yia + es.d, mouth = EV.yik - es.d, path = epath();
   const symA = Object.keys(E.an.atoms)[0];
@@ -675,6 +683,11 @@ Object.values(ELS).forEach(e => { const o = document.createElement("option"); o.
 $("esel").addEventListener("change", () => { E = ELS[$("esel").value]; reset(); resetBuilder(); newQ(true); });
 $("onchk").addEventListener("change", e => { on = e.target.checked; });
 $("s-u").addEventListener("input", e => { U = +e.target.value; });
+$("viewseg").addEventListener("click", e => {
+  const b = e.target.closest("button"); if (!b) return;
+  [...$("viewseg").children].forEach(x => x.setAttribute("aria-checked", String(x === b)));
+  $("wrap-e").hidden = b.dataset.view !== "e"; $("wrap-z").hidden = b.dataset.view !== "z"; draw();
+});
 $("namechk").addEventListener("change", e => { showNames = e.target.checked; });
 $("b-new").addEventListener("click", () => { reset(); });
 $("speedseg").addEventListener("click", e => { const b = e.target.closest("button"); if (!b) return; speed = +b.dataset.v; [...$("speedseg").children].forEach(x => x.setAttribute("aria-checked", String(x === b))); });
