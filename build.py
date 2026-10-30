@@ -461,6 +461,44 @@ def sync_site_nav():
 
 
 # ---------------------------------------------------------------------------
+# Stichwörter unter dem Einleitungstext
+# ---------------------------------------------------------------------------
+# Quelle: template/site/keywords.json (Seite -> Liste von Stichwörtern, von Hand
+# pflegbar). Jede Seite bekommt hinter ihrem <p class="lede"> einen Block
+# <!--KEYWORDS-->…<!--/KEYWORDS--> mit grauen Pillen. timeline.html wird über
+# das Template befüllt.
+
+KW_BLOCK_RE = re.compile(r'[ \t]*<!--KEYWORDS-->.*?<!--/KEYWORDS-->\n?', re.S)
+KW_LEDE_RE = re.compile(r'(<p class="lede">.*?</p>\n?)', re.S)
+
+
+def sync_keywords():
+    import html as _html
+    import json
+    with open(os.path.join(SITE, "keywords.json"), encoding="utf-8") as f:
+        kw = json.load(f)
+    changed = []
+    for page, words in kw.items():
+        path = TEMPLATE if page == "timeline.html" else os.path.join(ROOT, page)
+        if not os.path.exists(path):
+            print(f"FEHLER: keywords.json: {page} existiert nicht", file=sys.stderr)
+            sys.exit(1)
+        html = read_file(path)
+        base = KW_BLOCK_RE.sub("", html)
+        pills = "".join(f"<li>{_html.escape(w)}</li>" for w in words)
+        block = f'  <!--KEYWORDS--><ul class="kwds" aria-label="Stichwörter">{pills}</ul><!--/KEYWORDS-->\n'
+        new, n = KW_LEDE_RE.subn(lambda m: m.group(1) + block, base, count=1)
+        if not n:
+            print(f"FEHLER: {page}: kein <p class=\"lede\"> für die Stichwörter", file=sys.stderr)
+            sys.exit(1)
+        if new != html:
+            with open(path, "w", encoding="utf-8") as f:
+                f.write(new)
+            changed.append(page)
+    print(f"Stichwörter: {len(kw)} Seiten geprüft, aktualisiert: {', '.join(changed) if changed else 'keine'}.")
+
+
+# ---------------------------------------------------------------------------
 # Gemeinsame Skripte und Daten
 # ---------------------------------------------------------------------------
 # Seiten, die zwischen /*__MARKE__*/ und /*__/MARKE__*/ stehen haben, bekommen
@@ -499,6 +537,7 @@ def main():
     for tag, source, label in SNIPPETS:
         sync_snippet(tag, source, label)
     sync_site_nav()
+    sync_keywords()
     if not os.path.isdir(CONTENT):
         print(f"FEHLER: content/-Ordner fehlt unter {CONTENT}", file=sys.stderr)
         sys.exit(1)
