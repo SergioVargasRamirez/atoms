@@ -487,6 +487,8 @@ def sync_keywords():
         base = KW_BLOCK_RE.sub("", html)
         pills = "".join(f"<li>{_html.escape(w)}</li>" for w in words)
         block = f'<!--KEYWORDS--><div class="kwds-end"><p class="kwds-h">Stichwörter</p><ul class="kwds">{pills}</ul></div><!--/KEYWORDS-->\n'
+        if page == "timeline.html":  # </main> liegt hier außerhalb des zentrierten Rahmens
+            block = block.replace('<div class="kwds-end">', '<div class="wrap"><div class="kwds-end">').replace('</ul></div>', '</ul></div></div>')
         new, n = KW_END_RE.subn(lambda m: m.group(1) + block, base, count=1)
         if not n:
             print(f"FEHLER: {page}: kein </main> für die Stichwörter", file=sys.stderr)
