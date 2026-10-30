@@ -497,6 +497,22 @@ def sync_keywords():
             with open(path, "w", encoding="utf-8") as f:
                 f.write(new)
             changed.append(page)
+    # Startseite: Stichwörter als data-k an die Karten (für die Suche)
+    ipath = os.path.join(ROOT, "index.html")
+    ihtml = read_file(ipath)
+    def card_kw(m):
+        href = m.group(2)
+        words = kw.get(href)
+        if words is None:
+            print(f"FEHLER: index.html: {href} fehlt in keywords.json", file=sys.stderr)
+            sys.exit(1)
+        head = re.sub(r' data-k="[^"]*"', "", m.group(1))
+        return f'{head} data-k="{_html.escape("; ".join(words), quote=True)}" href="{href}"'
+    inew = re.sub(r'(<a class="card"[^>]*?) href="([^"]*)"', card_kw, ihtml)
+    if inew != ihtml:
+        with open(ipath, "w", encoding="utf-8") as f:
+            f.write(inew)
+        changed.append("index.html")
     print(f"Stichwörter: {len(kw)} Seiten geprüft, aktualisiert: {', '.join(changed) if changed else 'keine'}.")
 
 
