@@ -667,7 +667,7 @@ function drawE(){
   c.beginPath(); c.moveTo(EV.xfa - EV.fw, rim); c.lineTo(EV.xfa + EV.fw, rim); c.lineTo(EV.xfa + 5, rim + EV.fh); c.lineTo(EV.xfa - 5, rim + EV.fh); c.closePath(); c.fill(); c.stroke();
   c.beginPath(); c.moveTo(EV.xfk - EV.fw, mouth); c.lineTo(EV.xfk + EV.fw, mouth); c.lineTo(EV.xfk + 5, mouth - EV.fh); c.lineTo(EV.xfk - 5, mouth - EV.fh); c.closePath(); c.fill(); c.stroke();
   /* Elektronenkette in Rohr und Draht */
-  const chomp = fl ? 0.1 + 0.7 * Math.abs(Math.sin(sim.t * 9)) : 0.55;
+  const chomp = fl ? 0.25 + 0.95 * Math.abs(Math.sin(sim.t * 9)) : 0.8;
   for (let q = es.off; q <= ps.b.L; q += EV.sp){
     const [x, y] = epos(ps.b, q), [x2, y2] = q + 2 <= ps.b.L ? epos(ps.b, q + 2) : epos(ps.b, q - 2);
     pac(c, x, y, 6, Math.atan2(y2 - y, x2 - x) + (q + 2 <= ps.b.L ? 0 : Math.PI), chomp);
@@ -704,7 +704,7 @@ function drawE(){
     const at = t => e.ph === "a" ? [e.x0 + EV.r + (EV.xfa - e.x0 - EV.r) * t, EV.yia + (rim + EV.fh * 0.4 - EV.yia) * t * t]
                                  : [EV.xfk + (e.xe - EV.xfk) * t, mouth + (EV.yik - mouth) * t * t];
     [x, y] = at(e.t); const [x2, y2] = at(Math.min(1, e.t + 0.03));
-    pac(c, x, y, 6.5, Math.atan2(y2 - y || 0.001, x2 - x || 0.001), 0.1 + 0.7 * Math.abs(Math.sin(sim.t * 9)));
+    pac(c, x, y, 6.5, Math.atan2(y2 - y || 0.001, x2 - x || 0.001), 0.25 + 0.95 * Math.abs(Math.sin(sim.t * 9)));
   }
 }
 function eText(){
