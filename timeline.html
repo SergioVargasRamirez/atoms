@@ -417,11 +417,11 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
   };
   const setMode = m => {
     mode = m; applyTheme(m);
-    try { if (m === "system") localStorage.removeItem("theme"); else localStorage.setItem("theme", m); } catch (e) {}
+    try { localStorage.setItem("theme", m); } catch (e) {}
     window.dispatchEvent(new Event("resize"));  // Zeichnungen neu aufbauen
   };
-  let mode = "system";
-  try { mode = localStorage.getItem("theme") || "system"; } catch (e) {}
+  let mode = "light";  // Standard: Tag
+  try { mode = localStorage.getItem("theme") || "light"; } catch (e) {}
   applyTheme(mode);
   themeBtns.forEach(b => b.addEventListener("click", () => setMode(b.dataset.themeSet)));
   document.getElementById("theme-btn").addEventListener("click", () => setMode({system:"light", light:"dark", dark:"system"}[mode]));

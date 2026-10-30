@@ -53,11 +53,12 @@
 .j8{--jc:var(--j8c)}.j9{--jc:var(--j9c)}.j10{--jc:var(--j10c)}
 .jp.j8,.jp.j9,.jp.j10{background:var(--jc);border-color:var(--jc);color:var(--jfg)}
 .jp.ntg{background:var(--surface2);border-color:var(--line);color:var(--muted)}
-.suche{position:relative;margin:0 0 14px;max-width:560px}
+.logo{text-align:center;font:300 clamp(64px,12vw,112px)/1 var(--sans);letter-spacing:.04em;margin:clamp(24px,7vh,64px) 0 clamp(18px,3vh,30px);padding-left:.04em}
+.suche{position:relative;margin:0 auto 14px;max-width:580px}
 .suche input{width:100%;font:500 17px/1.2 var(--sans);color:var(--ink);background:var(--surface);border:1.5px solid var(--line);border-radius:99px;padding:11px 40px 11px 18px}
 .suche input::placeholder{color:var(--muted);font-weight:400}
 .suche input:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-color:var(--accent)}
-.hint{margin:-6px 0 12px 18px;font-size:15px;color:var(--muted)}
+.hint{text-align:center;margin:-6px 0 12px;font-size:15px;color:var(--muted)}
 .hint[hidden]{display:none}
 .hint button{font:inherit;font-weight:600;color:var(--accent);background:none;border:0;padding:0 2px;cursor:pointer;text-decoration:underline}
 .treffer{font-size:14px;font-style:italic;color:var(--muted);margin:0 0 6px}
@@ -66,9 +67,9 @@
 .suche .x{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:30px;height:30px;border:0;border-radius:50%;background:none;color:var(--muted);font-size:20px;line-height:1;cursor:pointer}
 .suche .x:hover{color:var(--accent)}
 .suche .x[hidden]{display:none}
-.filter{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:0 0 10px}
-.filter .lbl{font:700 13px/1 var(--sans);letter-spacing:.09em;text-transform:uppercase;color:var(--muted);min-width:84px}
-.fp{font:600 15px/1 var(--sans);padding:8px 14px;border-radius:99px;border:1.5px solid var(--surface2);background:var(--surface2);color:var(--ink);cursor:pointer;transition:background .15s,border-color .15s}
+.filter{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:6px;margin:0 0 8px}
+.filter .lbl{font:700 12px/1 var(--sans);letter-spacing:.09em;text-transform:uppercase;color:var(--muted);min-width:76px}
+.fp{font:600 13.5px/1 var(--sans);padding:6px 11px;border-radius:99px;border:1.5px solid var(--surface2);background:var(--surface2);color:var(--ink);cursor:pointer;transition:background .15s,border-color .15s}
 .fp:hover{border-color:var(--accent)}
 .fp:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 .fp[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
@@ -272,11 +273,11 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
   };
   const setMode = m => {
     mode = m; applyTheme(m);
-    try { if (m === "system") localStorage.removeItem("theme"); else localStorage.setItem("theme", m); } catch (e) {}
+    try { localStorage.setItem("theme", m); } catch (e) {}
     window.dispatchEvent(new Event("resize"));  // Zeichnungen neu aufbauen
   };
-  let mode = "system";
-  try { mode = localStorage.getItem("theme") || "system"; } catch (e) {}
+  let mode = "light";  // Standard: Tag
+  try { mode = localStorage.getItem("theme") || "light"; } catch (e) {}
   applyTheme(mode);
   themeBtns.forEach(b => b.addEventListener("click", () => setMode(b.dataset.themeSet)));
   document.getElementById("theme-btn").addEventListener("click", () => setMode({system:"light", light:"dark", dark:"system"}[mode]));
@@ -297,8 +298,7 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
 </script>
 <!--/REPO--><!--/SITENAV-->
 <div class="wrap">
-<h1>Chemie-Werkzeuge für den Unterricht</h1>
-<p class="lede">Interaktive Seiten für den Chemie- und NTG-Unterricht: vom Teilchenmodell über die Geschichte der Atommodelle über Elektronen und Energiestufen bis zu Säuren und Basen.</p>
+<h1 class="logo">Atoms</h1>
 <div class="suche"><input id="q" type="search" autocomplete="off" spellcheck="false" placeholder="Suchen: Thema oder Stichwort, z. B. pH, Elektron, Dipol" aria-label="Seiten suchen"><button class="x" id="qx" type="button" aria-label="Suche löschen" hidden>×</button></div>
 <p class="hint" id="hint" aria-live="polite" hidden></p>
 <div class="filter" id="fj" role="group" aria-label="Jahrgangsstufe"><span class="lbl">Jahrgang</span><button class="fp alle" type="button" data-v="" aria-pressed="true">Alle</button><button class="fp j8" type="button" data-v="8" aria-pressed="false">8</button><button class="fp j9" type="button" data-v="9" aria-pressed="false">9</button><button class="fp j10" type="button" data-v="10" aria-pressed="false">10</button></div>
