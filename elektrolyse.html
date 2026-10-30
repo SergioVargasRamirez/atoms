@@ -633,6 +633,10 @@ function estep(dt){
     else { e.t += dt / e.dur; if (e.t >= 1){ ca.n++; if (ca.n >= 2){ ca.st = "atom"; ca.t = 0; } es.el.splice(i, 1); } }
   }
 }
+/* Elektron als kleiner Pac-Man: Mund zeigt in Laufrichtung, kaut während sich etwas bewegt */
+function pac(c, x, y, r, ang, open){
+  c.beginPath(); c.moveTo(x, y); c.arc(x, y, r, ang + open, ang + 6.2832 - open); c.closePath(); c.fillStyle = "#ffd166"; c.fill();
+}
 function eion(c, x, y, col, label, alpha, r = EV.r, tc = "#0a0e18"){
   c.globalAlpha = alpha; c.beginPath(); c.arc(x, y, r, 0, 6.2832); c.fillStyle = col; c.fill();
   c.fillStyle = tc; c.font = "700 " + Math.round(r * 0.78) + "px system-ui,sans-serif"; c.textAlign = "center"; c.textBaseline = "middle"; c.fillText(label, x, y + 0.5); c.globalAlpha = 1;
@@ -662,7 +666,11 @@ function drawE(){
   c.beginPath(); c.moveTo(EV.xfa - EV.fw, rim); c.lineTo(EV.xfa + EV.fw, rim); c.lineTo(EV.xfa + 5, rim + EV.fh); c.lineTo(EV.xfa - 5, rim + EV.fh); c.closePath(); c.fill(); c.stroke();
   c.beginPath(); c.moveTo(EV.xfk - EV.fw, mouth); c.lineTo(EV.xfk + EV.fw, mouth); c.lineTo(EV.xfk + 5, mouth - EV.fh); c.lineTo(EV.xfk - 5, mouth - EV.fh); c.closePath(); c.fill(); c.stroke();
   /* Elektronenkette in Rohr und Draht */
-  for (let q = es.off; q <= ps.b.L; q += EV.sp){ const [x, y] = epos(ps.b, q); disc(c, x, y, 4.5, "#ffd166"); }
+  const chomp = es.ev && !es.ev.a ? 0.1 + 0.5 * Math.abs(Math.sin(sim.t * 14)) : 0.3;
+  for (let q = es.off; q <= ps.b.L; q += EV.sp){
+    const [x, y] = epos(ps.b, q), [x2, y2] = q + 2 <= ps.b.L ? epos(ps.b, q + 2) : epos(ps.b, q - 2);
+    pac(c, x, y, 5.2, Math.atan2(y2 - y, x2 - x) + (q + 2 <= ps.b.L ? 0 : Math.PI), chomp);
+  }
   /* großes + und − an den Trichtern, sobald der Stromkreis geschlossen ist */
   if (on){ c.fillStyle = "#fff"; c.font = "700 34px system-ui,sans-serif"; c.textAlign = "center"; c.textBaseline = "middle"; c.fillText("+", EV.xfa, rim - 22); c.fillText("−", EV.xfk, mouth + 24); }
   /* Spannungsquelle im Draht */
@@ -692,9 +700,10 @@ function drawE(){
   /* Elektronen */
   for (const e of es.el){
     let x, y;
-    if (e.ph === "a"){ const x0 = e.x0 + EV.r, y0 = EV.yia, x1 = EV.xfa, y1 = rim + EV.fh * 0.4; x = x0 + (x1 - x0) * e.t; y = y0 + (y1 - y0) * e.t * e.t; }
-    else { const x0 = EV.xfk, y0 = mouth, x1 = e.xe, y1 = EV.yik; x = x0 + (x1 - x0) * e.t; y = y0 + (y1 - y0) * e.t * e.t; }
-    disc(c, x, y, 5, "#ffd166", "−", "#0a0e18");
+    const at = t => e.ph === "a" ? [e.x0 + EV.r + (EV.xfa - e.x0 - EV.r) * t, EV.yia + (rim + EV.fh * 0.4 - EV.yia) * t * t]
+                                 : [EV.xfk + (e.xe - EV.xfk) * t, mouth + (EV.yik - mouth) * t * t];
+    [x, y] = at(e.t); const [x2, y2] = at(Math.min(1, e.t + 0.03));
+    pac(c, x, y, 6.5, Math.atan2(y2 - y || 0.001, x2 - x || 0.001), 0.15 + 0.45 * Math.abs(Math.sin(sim.t * 14)));
   }
 }
 function eText(){
