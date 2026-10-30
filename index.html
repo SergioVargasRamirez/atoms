@@ -57,6 +57,12 @@
 .suche input{width:100%;font:500 17px/1.2 var(--sans);color:var(--ink);background:var(--surface);border:1.5px solid var(--line);border-radius:99px;padding:11px 40px 11px 18px}
 .suche input::placeholder{color:var(--muted);font-weight:400}
 .suche input:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-color:var(--accent)}
+.hint{margin:-6px 0 12px 18px;font-size:15px;color:var(--muted)}
+.hint[hidden]{display:none}
+.hint button{font:inherit;font-weight:600;color:var(--accent);background:none;border:0;padding:0 2px;cursor:pointer;text-decoration:underline}
+.treffer{font-size:14px;font-style:italic;color:var(--muted);margin:0 0 6px}
+.cards.liste .treffer{margin:0;flex:1;white-space:normal}
+.cards.liste .card h3{flex:none}
 .suche .x{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:30px;height:30px;border:0;border-radius:50%;background:none;color:var(--muted);font-size:20px;line-height:1;cursor:pointer}
 .suche .x:hover{color:var(--accent)}
 .suche .x[hidden]{display:none}
@@ -294,6 +300,7 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
 <h1>Chemie-Werkzeuge für den Unterricht</h1>
 <p class="lede">Interaktive Seiten für den Chemie- und NTG-Unterricht: vom Teilchenmodell über die Geschichte der Atommodelle über Elektronen und Energiestufen bis zu Säuren und Basen.</p>
 <div class="suche"><input id="q" type="search" autocomplete="off" spellcheck="false" placeholder="Suchen: Thema oder Stichwort, z. B. pH, Elektron, Dipol" aria-label="Seiten suchen"><button class="x" id="qx" type="button" aria-label="Suche löschen" hidden>×</button></div>
+<p class="hint" id="hint" aria-live="polite" hidden></p>
 <div class="filter" id="fj" role="group" aria-label="Jahrgangsstufe"><span class="lbl">Jahrgang</span><button class="fp alle" type="button" data-v="" aria-pressed="true">Alle</button><button class="fp j8" type="button" data-v="8" aria-pressed="false">8</button><button class="fp j9" type="button" data-v="9" aria-pressed="false">9</button><button class="fp j10" type="button" data-v="10" aria-pressed="false">10</button></div>
 <div class="filter" id="ft" role="group" aria-label="Thema"><span class="lbl">Thema</span><button class="fp alle" type="button" data-v="" aria-pressed="true">Alle</button><button class="fp" type="button" data-v="Teilchenmodell" aria-pressed="false">Teilchenmodell</button><button class="fp" type="button" data-v="Atommodelle" aria-pressed="false">Atommodelle</button><button class="fp" type="button" data-v="Elektronen und Energiestufen" aria-pressed="false">Elektronen und Energiestufen</button><button class="fp" type="button" data-v="Molekülbau" aria-pressed="false">Molekülbau</button><button class="fp" type="button" data-v="Wechselwirkungen" aria-pressed="false">Wechselwirkungen</button><button class="fp" type="button" data-v="Chemische Reaktion" aria-pressed="false">Chemische Reaktion</button><button class="fp" type="button" data-v="Säuren und Basen" aria-pressed="false">Säuren und Basen</button><button class="fp" type="button" data-v="Elektrochemie" aria-pressed="false">Elektrochemie</button></div>
 <div class="status"><span id="status" aria-live="polite"></span><span class="sp"></span><button type="button" id="alle-zu" class="alle-zu">Alle ein-/ausklappen</button><span class="ansicht" id="ansicht" role="group" aria-label="Ansicht"><button type="button" data-v="liste" aria-pressed="true">Liste</button><button type="button" data-v="karten" aria-pressed="false">Karten</button></span></div>
@@ -453,7 +460,7 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
 <script>
 (() => {
   const liste = document.getElementById("liste");
-  const fj = document.getElementById("fj"), ft = document.getElementById("ft"), st = document.getElementById("status"), av = document.getElementById("ansicht"), qi = document.getElementById("q"), qx = document.getElementById("qx");
+  const fj = document.getElementById("fj"), ft = document.getElementById("ft"), st = document.getElementById("status"), av = document.getElementById("ansicht"), qi = document.getElementById("q"), qx = document.getElementById("qx"), hintEl = document.getElementById("hint");
   // Suche: Kleinschreibung, ä/ö/ü auch als ae/oe/ue, ß als ss, tiefgestellte Ziffern normal
   const SUB = {"₀":"0","₁":"1","₂":"2","₃":"3","₄":"4","₅":"5","₆":"6","₇":"7","₈":"8","₉":"9","⁺":"+","⁻":"-"};
   const base = s => s.toLowerCase().replace(/ß/g, "ss").replace(/[₀-₉⁺⁻]/g, c => SUB[c]);
@@ -461,9 +468,38 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
   const f1 = s => wort(base(s).normalize("NFD").replace(/[\u0300-\u036f]/g, ""));
   const f2 = s => wort(base(s).replace(/ä/g, "ae").replace(/ö/g, "oe").replace(/ü/g, "ue").normalize("NFD").replace(/[\u0300-\u036f]/g, ""));
   const cards = [...liste.querySelectorAll(".card")].map(c => {
-    const txt = c.querySelector("h3").textContent + " " + c.querySelector("p").textContent + " " + c.dataset.t + " " + (c.dataset.k || "").replace(/;/g, " ");
-    return {el:c, j:c.dataset.j.split(" "), t:c.dataset.t, h1:f1(txt), h2:f2(txt)};
+    const own = c.querySelector("h3").textContent + " " + c.querySelector("p").textContent + " " + c.dataset.t;
+    const kw = (c.dataset.k || "").split(";").map(x => x.trim()).filter(Boolean);
+    const txt = own + " " + kw.join(" ");
+    return {el:c, j:c.dataset.j.split(" "), t:c.dataset.t, kw, h1:f1(txt), h2:f2(txt), o1:f1(own), o2:f2(own)};
   });
+  // Wortschatz für "Meintest du": Wörter aus Titeln, Beschreibungen und Stichwörtern
+  const vocab = new Map();
+  cards.forEach(c => (c.el.querySelector("h3").textContent + " " + c.el.querySelector("p").textContent + " " + c.kw.join(" ")).split(/[^A-Za-zÄÖÜäöüß0-9]+/).forEach(w => {
+    const k = f1(w).trim(); if (k.length >= 4 && !vocab.has(k)) vocab.set(k, w);
+  }));
+  const dist = (a, b) => {  // Editierabstand mit Vertauschung benachbarter Buchstaben
+    const d = Array.from({length:a.length + 1}, (_, i) => [i, ...Array(b.length).fill(0)]);
+    for (let j = 1; j <= b.length; j++) d[0][j] = j;
+    for (let i = 1; i <= a.length; i++) for (let j = 1; j <= b.length; j++){
+      d[i][j] = Math.min(d[i-1][j] + 1, d[i][j-1] + 1, d[i-1][j-1] + (a[i-1] === b[j-1] ? 0 : 1));
+      if (i > 1 && j > 1 && a[i-1] === b[j-2] && a[i-2] === b[j-1]) d[i][j] = Math.min(d[i][j], d[i-2][j-2] + 1);
+    }
+    return d[a.length][b.length];
+  };
+  function vorschlaege(q){
+    const toks = q.trim().split(/\s+/).filter(Boolean);
+    const out = [];
+    toks.forEach((t, i) => {
+      const k = f1(t).trim();
+      if (k.length < 4 || cards.some(c => hat(c.h1, k))) return;
+      const max = k.length >= 8 ? 2 : 1;
+      [...vocab].map(([w, orig]) => [dist(k, w), orig, w])
+        .filter(([d]) => d <= max).sort((x, y) => x[0] - y[0]).slice(0, 3)
+        .forEach(([, orig]) => out.push(toks.map((x, n) => n === i ? orig : x).join(" ")));
+    });
+    return [...new Set(out)].filter(v => cards.some(c => passt(c, v))).slice(0, 3);
+  }
   // Wörter ab 4 Zeichen: irgendwo im Text (Zusammensetzungen: "Säure" in "Salzsäure"); kürzere nur am Wortanfang (pH, Ion, Eis)
   const hat = (h, w) => h.includes(w.length > 3 ? w : " " + w);
   const passt = (c, q) => { const a = f1(q).trim().split(" ").filter(Boolean), b = f2(q).trim().split(" ").filter(Boolean); return a.every(w => hat(c.h1, w)) || b.every(w => hat(c.h2, w)); };
@@ -512,6 +548,16 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
     ft.querySelectorAll(".fp").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.v === state.t)));
     av.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.v === state.v)));
     const hit = cards.filter(c => (!state.j.length || state.j.some(y => c.j.includes(y))) && (!state.t || c.t === state.t) && (!state.q.trim() || passt(c, state.q)));
+    cards.forEach(c => c.el.querySelector(".treffer")?.remove());
+    const qs = state.q.trim();
+    if (qs) hit.forEach(c => {
+      const toks = f1(qs).trim().split(" ").filter(Boolean), toks2 = f2(qs).trim().split(" ").filter(Boolean);
+      if (toks.every(w => hat(c.o1, w)) || toks2.every(w => hat(c.o2, w))) return;  // steht schon im sichtbaren Text
+      const m = c.kw.filter(k => { const a = f1(k), b = f2(k); return toks.some(w => hat(a, w)) || toks2.some(w => hat(b, w)); });
+      if (!m.length) return;
+      const sp = document.createElement("p"); sp.className = "treffer"; sp.textContent = "Stichwort: " + m.join(", ");
+      c.el.insertBefore(sp, c.el.querySelector(".pills"));
+    });
     liste.replaceChildren();
     // Nur Thema gewählt: nach Jahrgang gliedern. Sonst: nach Thema gliedern.
     if (state.t && !state.j.length){
@@ -527,6 +573,20 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
     }
     const filt = state.j.length || state.t || state.q.trim();
     qx.hidden = !state.q;
+    hintEl.replaceChildren(); hintEl.hidden = true;
+    if (qs && hit.length === 0){
+      const v = vorschlaege(qs);
+      if (v.length){
+        hintEl.hidden = false; hintEl.append("Keine genauen Treffer. Meintest du: ");
+        v.forEach((x, i) => {
+          if (i) hintEl.append(", ");
+          const b = document.createElement("button"); b.type = "button"; b.textContent = x;
+          b.onclick = () => { qi.value = state.q = x; offen.clear(); save(); render(); };
+          hintEl.appendChild(b);
+        });
+        hintEl.append("?");
+      }
+    }
     st.replaceChildren(document.createTextNode(hit.length === 0 ? "Keine Seite für diese Auswahl." : filt ? hit.length + (hit.length === 1 ? " Seite" : " Seiten") : cards.length + " Seiten"));
     if (filt){ st.appendChild(document.createTextNode(" · ")); const r = document.createElement("button"); r.type = "button"; r.textContent = "Filter zurücksetzen"; r.onclick = () => { state.j = []; state.t = ""; state.q = ""; qi.value = ""; offen.clear(); save(); render(); }; st.appendChild(r); }
   }
