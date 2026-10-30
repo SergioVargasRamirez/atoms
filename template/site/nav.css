@@ -32,6 +32,11 @@
 }
 @media (prefers-reduced-motion:reduce){.sidenav-list a,body,.sidenav{transition:none!important}}
 @media print{.sidenav{display:none}body{padding-left:0}}
+.sidenav-theme{display:flex;margin:0 10px;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.sidenav-theme button{flex:1;font:inherit;font-size:.88rem;font-weight:600;color:inherit;background:none;border:0;border-right:1px solid var(--line);padding:7px 4px;cursor:pointer}
+.sidenav-theme button:last-child{border-right:0}
+.sidenav-theme button:hover{background:color-mix(in srgb,var(--accent) 13%,transparent)}
+.sidenav-theme button[aria-pressed="true"]{background:var(--accent);color:var(--accent-fg,var(--accent-ink))}
 .sidenav-legal{margin:14px 10px 0;font-size:.78rem;line-height:1.35;color:var(--muted)}
 .sidenav-legal a{display:inline;padding:0;margin:0;color:inherit;text-decoration:underline;font-size:inherit}
 .sidenav-legal a:hover{background:none}

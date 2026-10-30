@@ -147,6 +147,11 @@ details li{margin-bottom:6px}
 }
 @media (prefers-reduced-motion:reduce){.sidenav-list a,body,.sidenav{transition:none!important}}
 @media print{.sidenav{display:none}body{padding-left:0}}
+.sidenav-theme{display:flex;margin:0 10px;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.sidenav-theme button{flex:1;font:inherit;font-size:.88rem;font-weight:600;color:inherit;background:none;border:0;border-right:1px solid var(--line);padding:7px 4px;cursor:pointer}
+.sidenav-theme button:last-child{border-right:0}
+.sidenav-theme button:hover{background:color-mix(in srgb,var(--accent) 13%,transparent)}
+.sidenav-theme button[aria-pressed="true"]{background:var(--accent);color:var(--accent-fg,var(--accent-ink))}
 .sidenav-legal{margin:14px 10px 0;font-size:.78rem;line-height:1.35;color:var(--muted)}
 .sidenav-legal a{display:inline;padding:0;margin:0;color:inherit;text-decoration:underline;font-size:inherit}
 .sidenav-legal a:hover{background:none}
@@ -202,6 +207,12 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
     <a href="quellen.html#mitmachen">Mitmachen</a>
     <a href="impressum.html">Impressum</a>
     <a href="datenschutz.html">Datenschutz</a>
+    <p class="sidenav-group">Darstellung</p>
+    <div class="sidenav-theme" role="group" aria-label="Darstellung">
+      <button type="button" data-theme-set="system" aria-pressed="true">System</button>
+      <button type="button" data-theme-set="light" aria-pressed="false">Tag</button>
+      <button type="button" data-theme-set="dark" aria-pressed="false">Nacht</button>
+    </div>
     <p class="sidenav-legal">© 2026 Dr. Sergio Vargas · <a href="impressum.html#lizenz">CC BY-NC-SA 4.0</a></p>
   </div>
 </nav>
@@ -221,6 +232,21 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
   }
   const nav = document.getElementById("sidenav"), btn = nav.querySelector(".sidenav-toggle");
   btn.addEventListener("click", () => btn.setAttribute("aria-expanded", String(nav.classList.toggle("open"))));
+  // Darstellung: System (Standard), Tag oder Nacht; die Seiten lesen data-theme am <html>
+  const themeBtns = [...nav.querySelectorAll("[data-theme-set]")];
+  const applyTheme = m => {
+    if (m === "light" || m === "dark") document.documentElement.setAttribute("data-theme", m);
+    else document.documentElement.removeAttribute("data-theme");
+    themeBtns.forEach(b => b.setAttribute("aria-pressed", String(b.dataset.themeSet === m)));
+  };
+  let mode = "system";
+  try { mode = localStorage.getItem("theme") || "system"; } catch (e) {}
+  applyTheme(mode);
+  themeBtns.forEach(b => b.addEventListener("click", () => {
+    mode = b.dataset.themeSet; applyTheme(mode);
+    try { if (mode === "system") localStorage.removeItem("theme"); else localStorage.setItem("theme", mode); } catch (e) {}
+    window.dispatchEvent(new Event("resize"));  // Zeichnungen neu aufbauen
+  }));
   // Desktop: Menü ein-/ausblenden, Wahl wird gemerkt (Standard: ausgeblendet)
   const root = document.documentElement, tab = document.getElementById("sidenav-tab");
   try { if (localStorage.getItem("nav") === "1") root.classList.add("nav-open"); } catch (e) {}
