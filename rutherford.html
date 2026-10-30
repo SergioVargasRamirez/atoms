@@ -106,14 +106,16 @@ input[type=range]{accent-color:var(--accent)}
 </style>
 <style id="sitenav-css">
 /* Seitenmenü: wird von build.py in alle Seiten kopiert (Quelle: template/site/nav.css) */
-:root{--navw:252px}
+:root{--navw:252px;--j8c:#0e7490;--j9c:#b45309;--j10c:#7e3fb5}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--j8c:#4cc4d6;--j9c:#f2b24c;--j10c:#b99cff}}
+:root[data-theme="dark"]{--j8c:#4cc4d6;--j9c:#f2b24c;--j10c:#b99cff}
 .sidenav{font-family:var(--font,var(--sans));color:var(--fg,var(--ink));background:var(--surface);z-index:60}
 .sidenav-head{display:flex;align-items:center;justify-content:space-between;gap:12px}
 .sidenav-brand{display:block;text-decoration:none;color:inherit;font-weight:700;font-size:1.12rem;line-height:1.2;letter-spacing:-.005em;padding:4px 10px}
 .sidenav-brand span{display:block;font-weight:400;font-size:.88rem;color:var(--muted);margin-top:2px}
 .sidenav-brand[aria-current="page"]{color:var(--accent)}
 .sidenav-group{margin:20px 0 6px;padding:0 10px;font-size:.72rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
-.sidenav-list a{display:block;padding:7px 10px;margin:1px 0;border-radius:8px;color:inherit;text-decoration:none;font-size:.95rem;line-height:1.3;transition:background .15s}
+.sidenav-list a{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:7px 10px;margin:1px 0;border-radius:8px;color:inherit;text-decoration:none;font-size:.95rem;line-height:1.3;transition:background .15s}
 .sidenav-list a:hover{background:color-mix(in srgb,var(--accent) 13%,transparent)}
 .sidenav-list a[aria-current="page"]{background:var(--accent);color:var(--accent-fg,var(--accent-ink));font-weight:600}
 .sidenav a:focus-visible,.sidenav button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
@@ -154,6 +156,10 @@ input[type=range]{accent-color:var(--accent)}
 .sidenav-legal a:hover{background:none}
 html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
 .eingebettet-hinweis{font:600 18px/1.5 system-ui,sans-serif;padding:32px 20px;text-align:center}
+.jd{display:inline-flex;gap:4px;flex:none}
+.jd i{width:9px;height:9px;border-radius:50%;box-shadow:0 0 0 1.5px var(--surface)}
+.jd i.j8{background:var(--j8c)}.jd i.j9{background:var(--j9c)}.jd i.j10{background:var(--j10c)}
+.sidenav-list a[aria-current="page"] .jd i{box-shadow:0 0 0 1.5px var(--accent-fg,var(--accent-ink))}
 </style>
 </head>
 <body>
@@ -166,38 +172,38 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
   </div>
   <div class="sidenav-list" id="sidenav-list">
     <p class="sidenav-group">Teilchenmodell</p>
-    <a href="diffusion.html">Diffusion</a>
-    <a href="aggregatzustaende.html">Aggregatzustände</a>
+    <a href="diffusion.html">Diffusion<span class="jd" title="Jahrgang 8" aria-hidden="true"><i class="j8"></i></span></a>
+    <a href="aggregatzustaende.html">Aggregatzustände<span class="jd" title="Jahrgang 8" aria-hidden="true"><i class="j8"></i></span></a>
     <p class="sidenav-group">Atommodelle</p>
-    <a href="timeline.html">Zeitleiste</a>
-    <a href="modelle.html">Atommodelle im Vergleich</a>
-    <a href="rutherford.html" aria-current="page">Rutherford gegen das Spektrum</a>
+    <a href="timeline.html">Zeitleiste<span class="jd" title="Jahrgang 8/9/10" aria-hidden="true"><i class="j8"></i><i class="j9"></i><i class="j10"></i></span></a>
+    <a href="modelle.html">Atommodelle im Vergleich<span class="jd" title="Jahrgang 9/10" aria-hidden="true"><i class="j9"></i><i class="j10"></i></span></a>
+    <a href="rutherford.html" aria-current="page">Rutherford gegen das Spektrum<span class="jd" title="Jahrgang 9" aria-hidden="true"><i class="j9"></i></span></a>
     <p class="sidenav-group">Elektronen und Energiestufen</p>
-    <a href="fuellen.html">Elektronen einfüllen</a>
-    <a href="diagramm.html">Energiestufendiagramm</a>
-    <a href="ionisierung.html">Ionisierungsenergie</a>
-    <a href="pse.html">Periodensystem</a>
+    <a href="fuellen.html">Elektronen einfüllen<span class="jd" title="Jahrgang 9" aria-hidden="true"><i class="j9"></i></span></a>
+    <a href="diagramm.html">Energiestufendiagramm<span class="jd" title="Jahrgang 9" aria-hidden="true"><i class="j9"></i></span></a>
+    <a href="ionisierung.html">Ionisierungsenergie<span class="jd" title="Jahrgang 9" aria-hidden="true"><i class="j9"></i></span></a>
+    <a href="pse.html">Periodensystem<span class="jd" title="Jahrgang 9" aria-hidden="true"><i class="j9"></i></span></a>
     <p class="sidenav-group">Molekülbau</p>
-    <a href="vanthoff.html">Van ’t Hoff: Isomere zählen</a>
-    <a href="vsepr.html">Elektronenpaarabstoßung</a>
-    <a href="zucker.html">Zucker im Polarimeter</a>
-    <a href="drehung.html">Drehen um C–C-Bindungen</a>
-    <a href="kohlenwasserstoffe.html">Alkane, Alkene, Alkine</a>
+    <a href="vanthoff.html">Van ’t Hoff: Isomere zählen<span class="jd" title="Jahrgang 9/10" aria-hidden="true"><i class="j9"></i><i class="j10"></i></span></a>
+    <a href="vsepr.html">Elektronenpaarabstoßung<span class="jd" title="Jahrgang 9/10" aria-hidden="true"><i class="j9"></i><i class="j10"></i></span></a>
+    <a href="zucker.html">Zucker im Polarimeter<span class="jd" title="Jahrgang 10" aria-hidden="true"><i class="j10"></i></span></a>
+    <a href="drehung.html">Drehen um C–C-Bindungen<span class="jd" title="Jahrgang 10" aria-hidden="true"><i class="j10"></i></span></a>
+    <a href="kohlenwasserstoffe.html">Alkane, Alkene, Alkine<span class="jd" title="Jahrgang 8/9/10" aria-hidden="true"><i class="j8"></i><i class="j9"></i><i class="j10"></i></span></a>
     <p class="sidenav-group">Wechselwirkungen</p>
-    <a href="polaritaet.html">Moleküle im elektrischen Feld</a>
-    <a href="elektronenwolken.html">Elektronenwolken</a>
-    <a href="london.html">London-Kräfte</a>
-    <a href="wasser.html">Wasser: Tropfen und Eis</a>
-    <a href="eis.html">Eis und Wasser in 3D</a>
+    <a href="polaritaet.html">Moleküle im elektrischen Feld<span class="jd" title="Jahrgang 9/10" aria-hidden="true"><i class="j9"></i><i class="j10"></i></span></a>
+    <a href="elektronenwolken.html">Elektronenwolken<span class="jd" title="Jahrgang 9/10" aria-hidden="true"><i class="j9"></i><i class="j10"></i></span></a>
+    <a href="london.html">London-Kräfte<span class="jd" title="Jahrgang 9/10" aria-hidden="true"><i class="j9"></i><i class="j10"></i></span></a>
+    <a href="wasser.html">Wasser: Tropfen und Eis<span class="jd" title="Jahrgang 9/10" aria-hidden="true"><i class="j9"></i><i class="j10"></i></span></a>
+    <a href="eis.html">Eis und Wasser in 3D<span class="jd" title="Jahrgang 9/10" aria-hidden="true"><i class="j9"></i><i class="j10"></i></span></a>
     <p class="sidenav-group">Chemische Reaktion</p>
-    <a href="gleichungen.html">Gleichungen ausgleichen</a>
-    <a href="energie.html">Energie der Reaktion</a>
+    <a href="gleichungen.html">Gleichungen ausgleichen<span class="jd" title="Jahrgang 8" aria-hidden="true"><i class="j8"></i></span></a>
+    <a href="energie.html">Energie der Reaktion<span class="jd" title="Jahrgang 8" aria-hidden="true"><i class="j8"></i></span></a>
     <p class="sidenav-group">Säuren und Basen</p>
-    <a href="protonen.html">Protonenübergang</a>
-    <a href="ammoniak.html">Ammoniak in Wasser</a>
-    <a href="neutralisation.html">Neutralisation</a>
+    <a href="protonen.html">Protonenübergang<span class="jd" title="Jahrgang 10" aria-hidden="true"><i class="j10"></i></span></a>
+    <a href="ammoniak.html">Ammoniak in Wasser<span class="jd" title="Jahrgang 10" aria-hidden="true"><i class="j10"></i></span></a>
+    <a href="neutralisation.html">Neutralisation<span class="jd" title="Jahrgang 10" aria-hidden="true"><i class="j10"></i></span></a>
     <p class="sidenav-group">Elektrochemie</p>
-    <a href="elektrolyse.html">Elektrolyse</a>
+    <a href="elektrolyse.html">Elektrolyse<span class="jd" title="Jahrgang 9" aria-hidden="true"><i class="j9"></i></span></a>
     <p class="sidenav-group">Über die Seiten</p>
     <a href="methoden.html">Methoden: wie gerechnet wurde</a>
     <a href="quellen.html">Quellen und Danksagung</a>

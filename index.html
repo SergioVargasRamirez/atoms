@@ -62,8 +62,20 @@
 .fp.j8,.fp.j9,.fp.j10{border-color:var(--jc)}
 .fp.j8[aria-pressed="true"],.fp.j9[aria-pressed="true"],.fp.j10[aria-pressed="true"]{background:var(--jc);color:#fff}
 .fp.alle{border-style:dashed}
-.status{margin:14px 0 0;font-size:15px;color:var(--muted);min-height:1.5em}
-.status button{font:inherit;color:var(--accent);background:none;border:0;padding:0 0 0 8px;cursor:pointer;text-decoration:underline}
+.status{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;margin:14px 0 0;font-size:15px;color:var(--muted);min-height:1.5em}
+.status button{font:inherit;color:var(--accent);background:none;border:0;padding:0;cursor:pointer;text-decoration:underline}
+.status .sp{flex:1}
+.ansicht{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.ansicht button{font:600 14px/1 var(--sans);color:var(--ink);text-decoration:none;background:var(--surface);border:0;border-right:1px solid var(--line);padding:7px 12px}
+.ansicht button:last-child{border-right:0}
+.ansicht button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+button.jp{cursor:pointer;font-family:inherit}
+.jp[title]:hover{filter:brightness(1.15);border-width:1.5px}
+.cards.liste{grid-template-columns:1fr;gap:8px}
+.cards.liste .card{flex-direction:row;align-items:center;gap:14px;padding:10px 16px}
+.cards.liste .card svg,.cards.liste .card p,.cards.liste .go{display:none}
+.cards.liste .card h3{font-size:19px;margin:0;flex:1}
+.cards.liste .pills{align-self:center;white-space:nowrap}
 .topic .dot{display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--jc);margin-right:8px}
 .topic .n{font-weight:400;letter-spacing:0;text-transform:none;margin-left:8px}
 *{box-sizing:border-box}
@@ -88,14 +100,16 @@ footer{margin-top:34px;font-size:14px;color:var(--muted)}
 </style>
 <style id="sitenav-css">
 /* Seitenmenü: wird von build.py in alle Seiten kopiert (Quelle: template/site/nav.css) */
-:root{--navw:252px}
+:root{--navw:252px;--j8c:#0e7490;--j9c:#b45309;--j10c:#7e3fb5}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--j8c:#4cc4d6;--j9c:#f2b24c;--j10c:#b99cff}}
+:root[data-theme="dark"]{--j8c:#4cc4d6;--j9c:#f2b24c;--j10c:#b99cff}
 .sidenav{font-family:var(--font,var(--sans));color:var(--fg,var(--ink));background:var(--surface);z-index:60}
 .sidenav-head{display:flex;align-items:center;justify-content:space-between;gap:12px}
 .sidenav-brand{display:block;text-decoration:none;color:inherit;font-weight:700;font-size:1.12rem;line-height:1.2;letter-spacing:-.005em;padding:4px 10px}
 .sidenav-brand span{display:block;font-weight:400;font-size:.88rem;color:var(--muted);margin-top:2px}
 .sidenav-brand[aria-current="page"]{color:var(--accent)}
 .sidenav-group{margin:20px 0 6px;padding:0 10px;font-size:.72rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
-.sidenav-list a{display:block;padding:7px 10px;margin:1px 0;border-radius:8px;color:inherit;text-decoration:none;font-size:.95rem;line-height:1.3;transition:background .15s}
+.sidenav-list a{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:7px 10px;margin:1px 0;border-radius:8px;color:inherit;text-decoration:none;font-size:.95rem;line-height:1.3;transition:background .15s}
 .sidenav-list a:hover{background:color-mix(in srgb,var(--accent) 13%,transparent)}
 .sidenav-list a[aria-current="page"]{background:var(--accent);color:var(--accent-fg,var(--accent-ink));font-weight:600}
 .sidenav a:focus-visible,.sidenav button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
@@ -136,6 +150,10 @@ footer{margin-top:34px;font-size:14px;color:var(--muted)}
 .sidenav-legal a:hover{background:none}
 html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
 .eingebettet-hinweis{font:600 18px/1.5 system-ui,sans-serif;padding:32px 20px;text-align:center}
+.jd{display:inline-flex;gap:4px;flex:none}
+.jd i{width:9px;height:9px;border-radius:50%;box-shadow:0 0 0 1.5px var(--surface)}
+.jd i.j8{background:var(--j8c)}.jd i.j9{background:var(--j9c)}.jd i.j10{background:var(--j10c)}
+.sidenav-list a[aria-current="page"] .jd i{box-shadow:0 0 0 1.5px var(--accent-fg,var(--accent-ink))}
 </style>
 </head>
 <body>
@@ -148,38 +166,38 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
   </div>
   <div class="sidenav-list" id="sidenav-list">
     <p class="sidenav-group">Teilchenmodell</p>
-    <a href="diffusion.html">Diffusion</a>
-    <a href="aggregatzustaende.html">Aggregatzustände</a>
+    <a href="diffusion.html">Diffusion<span class="jd" title="Jahrgang 8" aria-hidden="true"><i class="j8"></i></span></a>
+    <a href="aggregatzustaende.html">Aggregatzustände<span class="jd" title="Jahrgang 8" aria-hidden="true"><i class="j8"></i></span></a>
     <p class="sidenav-group">Atommodelle</p>
-    <a href="timeline.html">Zeitleiste</a>
-    <a href="modelle.html">Atommodelle im Vergleich</a>
-    <a href="rutherford.html">Rutherford gegen das Spektrum</a>
+    <a href="timeline.html">Zeitleiste<span class="jd" title="Jahrgang 8/9/10" aria-hidden="true"><i class="j8"></i><i class="j9"></i><i class="j10"></i></span></a>
+    <a href="modelle.html">Atommodelle im Vergleich<span class="jd" title="Jahrgang 9/10" aria-hidden="true"><i class="j9"></i><i class="j10"></i></span></a>
+    <a href="rutherford.html">Rutherford gegen das Spektrum<span class="jd" title="Jahrgang 9" aria-hidden="true"><i class="j9"></i></span></a>
     <p class="sidenav-group">Elektronen und Energiestufen</p>
-    <a href="fuellen.html">Elektronen einfüllen</a>
-    <a href="diagramm.html">Energiestufendiagramm</a>
-    <a href="ionisierung.html">Ionisierungsenergie</a>
-    <a href="pse.html">Periodensystem</a>
+    <a href="fuellen.html">Elektronen einfüllen<span class="jd" title="Jahrgang 9" aria-hidden="true"><i class="j9"></i></span></a>
+    <a href="diagramm.html">Energiestufendiagramm<span class="jd" title="Jahrgang 9" aria-hidden="true"><i class="j9"></i></span></a>
+    <a href="ionisierung.html">Ionisierungsenergie<span class="jd" title="Jahrgang 9" aria-hidden="true"><i class="j9"></i></span></a>
+    <a href="pse.html">Periodensystem<span class="jd" title="Jahrgang 9" aria-hidden="true"><i class="j9"></i></span></a>
     <p class="sidenav-group">Molekülbau</p>
-    <a href="vanthoff.html">Van ’t Hoff: Isomere zählen</a>
-    <a href="vsepr.html">Elektronenpaarabstoßung</a>
-    <a href="zucker.html">Zucker im Polarimeter</a>
-    <a href="drehung.html">Drehen um C–C-Bindungen</a>
-    <a href="kohlenwasserstoffe.html">Alkane, Alkene, Alkine</a>
+    <a href="vanthoff.html">Van ’t Hoff: Isomere zählen<span class="jd" title="Jahrgang 9/10" aria-hidden="true"><i class="j9"></i><i class="j10"></i></span></a>
+    <a href="vsepr.html">Elektronenpaarabstoßung<span class="jd" title="Jahrgang 9/10" aria-hidden="true"><i class="j9"></i><i class="j10"></i></span></a>
+    <a href="zucker.html">Zucker im Polarimeter<span class="jd" title="Jahrgang 10" aria-hidden="true"><i class="j10"></i></span></a>
+    <a href="drehung.html">Drehen um C–C-Bindungen<span class="jd" title="Jahrgang 10" aria-hidden="true"><i class="j10"></i></span></a>
+    <a href="kohlenwasserstoffe.html">Alkane, Alkene, Alkine<span class="jd" title="Jahrgang 8/9/10" aria-hidden="true"><i class="j8"></i><i class="j9"></i><i class="j10"></i></span></a>
     <p class="sidenav-group">Wechselwirkungen</p>
-    <a href="polaritaet.html">Moleküle im elektrischen Feld</a>
-    <a href="elektronenwolken.html">Elektronenwolken</a>
-    <a href="london.html">London-Kräfte</a>
-    <a href="wasser.html">Wasser: Tropfen und Eis</a>
-    <a href="eis.html">Eis und Wasser in 3D</a>
+    <a href="polaritaet.html">Moleküle im elektrischen Feld<span class="jd" title="Jahrgang 9/10" aria-hidden="true"><i class="j9"></i><i class="j10"></i></span></a>
+    <a href="elektronenwolken.html">Elektronenwolken<span class="jd" title="Jahrgang 9/10" aria-hidden="true"><i class="j9"></i><i class="j10"></i></span></a>
+    <a href="london.html">London-Kräfte<span class="jd" title="Jahrgang 9/10" aria-hidden="true"><i class="j9"></i><i class="j10"></i></span></a>
+    <a href="wasser.html">Wasser: Tropfen und Eis<span class="jd" title="Jahrgang 9/10" aria-hidden="true"><i class="j9"></i><i class="j10"></i></span></a>
+    <a href="eis.html">Eis und Wasser in 3D<span class="jd" title="Jahrgang 9/10" aria-hidden="true"><i class="j9"></i><i class="j10"></i></span></a>
     <p class="sidenav-group">Chemische Reaktion</p>
-    <a href="gleichungen.html">Gleichungen ausgleichen</a>
-    <a href="energie.html">Energie der Reaktion</a>
+    <a href="gleichungen.html">Gleichungen ausgleichen<span class="jd" title="Jahrgang 8" aria-hidden="true"><i class="j8"></i></span></a>
+    <a href="energie.html">Energie der Reaktion<span class="jd" title="Jahrgang 8" aria-hidden="true"><i class="j8"></i></span></a>
     <p class="sidenav-group">Säuren und Basen</p>
-    <a href="protonen.html">Protonenübergang</a>
-    <a href="ammoniak.html">Ammoniak in Wasser</a>
-    <a href="neutralisation.html">Neutralisation</a>
+    <a href="protonen.html">Protonenübergang<span class="jd" title="Jahrgang 10" aria-hidden="true"><i class="j10"></i></span></a>
+    <a href="ammoniak.html">Ammoniak in Wasser<span class="jd" title="Jahrgang 10" aria-hidden="true"><i class="j10"></i></span></a>
+    <a href="neutralisation.html">Neutralisation<span class="jd" title="Jahrgang 10" aria-hidden="true"><i class="j10"></i></span></a>
     <p class="sidenav-group">Elektrochemie</p>
-    <a href="elektrolyse.html">Elektrolyse</a>
+    <a href="elektrolyse.html">Elektrolyse<span class="jd" title="Jahrgang 9" aria-hidden="true"><i class="j9"></i></span></a>
     <p class="sidenav-group">Über die Seiten</p>
     <a href="methoden.html">Methoden: wie gerechnet wurde</a>
     <a href="quellen.html">Quellen und Danksagung</a>
@@ -245,7 +263,7 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
 <p class="lede">Interaktive Seiten für den Chemie- und NTG-Unterricht: vom Teilchenmodell über die Geschichte der Atommodelle über Elektronen und Energiestufen bis zu Säuren und Basen.</p>
 <div class="filter" id="fj" role="group" aria-label="Jahrgangsstufe"><span class="lbl">Jahrgang</span><button class="fp alle" type="button" data-v="" aria-pressed="true">Alle</button><button class="fp j8" type="button" data-v="8" aria-pressed="false">8</button><button class="fp j9" type="button" data-v="9" aria-pressed="false">9</button><button class="fp j10" type="button" data-v="10" aria-pressed="false">10</button></div>
 <div class="filter" id="ft" role="group" aria-label="Thema"><span class="lbl">Thema</span><button class="fp alle" type="button" data-v="" aria-pressed="true">Alle</button><button class="fp" type="button" data-v="Teilchenmodell" aria-pressed="false">Teilchenmodell</button><button class="fp" type="button" data-v="Atommodelle" aria-pressed="false">Atommodelle</button><button class="fp" type="button" data-v="Elektronen und Energiestufen" aria-pressed="false">Elektronen und Energiestufen</button><button class="fp" type="button" data-v="Molekülbau" aria-pressed="false">Molekülbau</button><button class="fp" type="button" data-v="Wechselwirkungen" aria-pressed="false">Wechselwirkungen</button><button class="fp" type="button" data-v="Chemische Reaktion" aria-pressed="false">Chemische Reaktion</button><button class="fp" type="button" data-v="Säuren und Basen" aria-pressed="false">Säuren und Basen</button><button class="fp" type="button" data-v="Elektrochemie" aria-pressed="false">Elektrochemie</button></div>
-<p class="status" id="status" aria-live="polite"></p>
+<div class="status"><span id="status" aria-live="polite"></span><span class="sp"></span><span class="ansicht" id="ansicht" role="group" aria-label="Ansicht"><button type="button" data-v="karten" aria-pressed="true">Karten</button><button type="button" data-v="liste" aria-pressed="false">Liste</button></span></div>
 <div id="liste">
 <h2 class="topic">Teilchenmodell</h2>
 <div class="cards">
@@ -404,16 +422,18 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
   const liste = document.getElementById("liste");
   const cards = [...liste.querySelectorAll(".card")].map(c => ({el:c, j:c.dataset.j.split(" "), t:c.dataset.t}));
   const topics = [...liste.querySelectorAll("h2.topic")].map(h => h.textContent);
-  const state = {j:"", t:""};
-  const fj = document.getElementById("fj"), ft = document.getElementById("ft"), st = document.getElementById("status");
+  const YEARS = ["8","9","10"];
+  const state = {j:[], t:"", v:"karten"};
+  const fj = document.getElementById("fj"), ft = document.getElementById("ft"), st = document.getElementById("status"), av = document.getElementById("ansicht");
+  try { if (localStorage.getItem("ansicht") === "liste") state.v = "liste"; } catch (e) {}
   function load(){
     const q = new URLSearchParams(location.hash.slice(1));
-    state.j = ["8","9","10"].includes(q.get("j")) ? q.get("j") : "";
+    state.j = (q.get("j") || "").split(",").filter(y => YEARS.includes(y));
     state.t = topics.includes(q.get("t")) ? q.get("t") : "";
   }
   function save(){
     const q = new URLSearchParams();
-    if (state.j) q.set("j", state.j);
+    if (state.j.length) q.set("j", state.j.join(","));
     if (state.t) q.set("t", state.t);
     history.replaceState(null, "", location.pathname + location.search + (q.toString() ? "#" + q : ""));
   }
@@ -424,39 +444,57 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
     h.appendChild(document.createTextNode(title));
     const n = document.createElement("span"); n.className = "n"; n.textContent = items.length === 1 ? "1 Seite" : items.length + " Seiten";
     h.appendChild(n);
-    const g = document.createElement("div"); g.className = "cards";
+    const g = document.createElement("div"); g.className = "cards" + (state.v === "liste" ? " liste" : "");
     items.forEach(c => g.appendChild(c.el));
     f.append(h, g); return f;
   }
   function render(){
-    for (const [box, v] of [[fj, state.j], [ft, state.t]])
-      box.querySelectorAll(".fp").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.v === v)));
-    const hit = cards.filter(c => (!state.j || c.j.includes(state.j)) && (!state.t || c.t === state.t));
+    fj.querySelectorAll(".fp").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.v ? state.j.includes(b.dataset.v) : state.j.length === 0)));
+    ft.querySelectorAll(".fp").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.v === state.t)));
+    av.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.v === state.v)));
+    const hit = cards.filter(c => (!state.j.length || state.j.some(y => c.j.includes(y))) && (!state.t || c.t === state.t));
     liste.replaceChildren();
     // Nur Thema gewählt: nach Jahrgang gliedern. Sonst: nach Thema gliedern.
-    if (state.t && !state.j){
-      for (const y of ["8","9","10"]){
+    if (state.t && !state.j.length){
+      for (const y of YEARS){
         const g = hit.filter(c => c.j.includes(y));
         if (g.length) liste.appendChild(group("Jahrgangsstufe " + y, g, y));
       }
     } else {
       for (const t of topics){
         const g = hit.filter(c => c.t === t);
-        if (g.length) liste.appendChild(group(t, g, state.j));
+        if (g.length) liste.appendChild(group(t, g, state.j.length === 1 ? state.j[0] : ""));
       }
     }
-    const filt = state.j || state.t;
-    st.replaceChildren(document.createTextNode(hit.length === 0 ? "Keine Seite für diese Auswahl." : filt ? hit.length + (hit.length === 1 ? " Seite" : " Seiten") : ""));
-    if (filt){ const r = document.createElement("button"); r.type = "button"; r.textContent = "Filter zurücksetzen"; r.onclick = () => { state.j = state.t = ""; save(); render(); }; st.appendChild(r); }
+    const filt = state.j.length || state.t;
+    st.replaceChildren(document.createTextNode(hit.length === 0 ? "Keine Seite für diese Auswahl." : filt ? hit.length + (hit.length === 1 ? " Seite" : " Seiten") : cards.length + " Seiten"));
+    if (filt){ st.appendChild(document.createTextNode(" · ")); const r = document.createElement("button"); r.type = "button"; r.textContent = "Filter zurücksetzen"; r.onclick = () => { state.j = []; state.t = ""; save(); render(); }; st.appendChild(r); }
   }
-  function wire(box, key){
-    box.addEventListener("click", e => {
-      const b = e.target.closest(".fp"); if (!b) return;
-      state[key] = (b.dataset.v === state[key]) ? "" : b.dataset.v;
-      save(); render();
-    });
+  function toggleYear(y){
+    state.j = state.j.includes(y) ? state.j.filter(x => x !== y) : YEARS.filter(x => x === y || state.j.includes(x));
   }
-  wire(fj, "j"); wire(ft, "t");
+  fj.addEventListener("click", e => {
+    const b = e.target.closest(".fp"); if (!b) return;
+    if (b.dataset.v) toggleYear(b.dataset.v); else state.j = [];
+    save(); render();
+  });
+  ft.addEventListener("click", e => {
+    const b = e.target.closest(".fp"); if (!b) return;
+    state.t = (b.dataset.v === state.t) ? "" : b.dataset.v;
+    save(); render();
+  });
+  av.addEventListener("click", e => {
+    const b = e.target.closest("button"); if (!b) return;
+    state.v = b.dataset.v;
+    try { localStorage.setItem("ansicht", state.v); } catch (e) {}
+    render();
+  });
+  // Jahrgangs-Pills auf den Karten filtern, statt die Seite zu öffnen
+  cards.forEach(c => c.el.querySelectorAll(".jp.j8,.jp.j9,.jp.j10").forEach(p => {
+    const y = p.textContent;
+    p.title = "Nur Jahrgang " + y + " zeigen";
+    p.addEventListener("click", e => { e.preventDefault(); e.stopPropagation(); state.j = [y]; save(); render(); scrollTo({top:0, behavior:"smooth"}); });
+  }));
   addEventListener("hashchange", () => { load(); render(); });
   load(); render();
 })();
