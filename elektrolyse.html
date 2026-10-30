@@ -567,7 +567,7 @@ EV.xac = EV.xfa - EV.fw - EV.r - 12; EV.xkc = EV.xfk + EV.fw + EV.r + 12; /* Ruh
 let es;
 const pileSlot = i => { const row = Math.floor(i / 9), col = i % 9; return [EV.xik - 36 + col * 9 + (row % 2) * 4.5, EV.pileY - row * 8]; };
 function ereset(){
-  es = {d:dOf(on ? U : 0), cool:0.3, off:0, ev:null, el:[], puffs:[], pile:0, claimed:0,
+  es = {d:dOf(on ? U : 0), cool:0.3, off:0, ev:null, el:[], puffs:[], tint:0, pile:0, claimed:0,
         an:{st:"ion", t:1, n:0, mst:0, w:false, x:EV.xia, ax:EV.xia, wx:EV.xia}, ca:{n:0, st:"ion", t:1, x:EV.xik, y:EV.yik, vy:0}};
 }
 const eflow = () => flowing();
@@ -613,7 +613,9 @@ function estep(dt){
     else if (an.mst === 2 && an.t > 0.5){ an.mst = 3; an.t = 0; }
     else if (an.mst === 3 && an.t > 0.6){
       an.mst = 4; an.t = 0; const mx = (an.ax + an.wx) / 2, my = EV.yia - 22;
-      for (let i = 0; i < 12; i++) es.puffs.push({x:mx + gauss() * 8, y:my + gauss() * 5, vx:gauss() * 12, vy:(E.gas ? -26 : -8) - Math.random() * 14, life:1});
+      /* Gas (Cl₂): Wolke steigt auf und verschwindet. Brom, Iod: kein Gas, die Wolke breitet sich aus und färbt die Lösung an der Anode */
+      for (let i = 0; i < 12; i++) es.puffs.push({x:mx + gauss() * 8, y:my + gauss() * 5, vx:gauss() * (E.gas ? 12 : 16), vy:E.gas ? -26 - Math.random() * 14 : gauss() * 10, life:1});
+      if (!E.gas) es.tint = Math.min(0.75, es.tint + 0.2);
     }
     else if (an.mst === 4 && an.t > 0.9){ an.mst = 0; an.n = 0; an.w = false; an.st = "ion"; an.t = 0; an.x = EV.xia; }
     else if (an.mst === 5 && an.t > 1.0){ an.mst = 0; an.w = true; an.st = "ion"; an.t = 0; an.x = EV.xia; }
@@ -646,6 +648,12 @@ function drawE(){
   const c = fit($("estage"), EV.W, EV.H), fl = eflow(), ps = epaths(), rim = ps.rim, mouth = ps.mouth, an = es.an, ca = es.ca;
   const symA = Object.keys(E.an.atoms)[0], symM = Object.keys(E.metal.atoms)[0], atc = E.gas ? "#0a0e18" : "#fff";
   c.lineJoin = "round"; c.lineCap = "butt";
+  /* Lösung an der Anode färbt sich (Brom, Iod bleiben gelöst) */
+  if (!E.gas && es.tint > 0 && E.molTint){
+    const g = c.createRadialGradient(EV.xac, EV.yia - 20, 10, EV.xac, EV.yia - 20, 230);
+    g.addColorStop(0, "rgba(" + E.molTint.join(",") + "," + es.tint.toFixed(3) + ")"); g.addColorStop(1, "rgba(" + E.molTint.join(",") + ",0)");
+    c.fillStyle = g; c.fillRect(300, 30, 300, 300);
+  }
   /* Energieachse in der Mitte */
   c.strokeStyle = "#c9d3ea"; c.lineWidth = 2; c.beginPath(); c.moveTo(300, 270); c.lineTo(300, 34); c.stroke();
   c.fillStyle = "#c9d3ea"; c.beginPath(); c.moveTo(300, 28); c.lineTo(295, 38); c.lineTo(305, 38); c.closePath(); c.fill();
@@ -718,7 +726,7 @@ function eText(){
   const ue = on ? U : 0, an = E.an.f, ca = E.cat.f;
   if (!on) return ["Die Spannungsquelle ist aus (0 V). Beide Trichter stehen gleich hoch. Das Elektron im " + an + " liegt tiefer als die Stelle am " + ca + ", an der ein Elektron aufgenommen wird: Die beiden reagieren von allein nicht.", ""];
   if (ue <= UZ) return ["Spannung " + deV(ue) + " V: " + an + " und " + ca + " sind zu den Polen gewandert (Plus und Minus an den Trichtern). Aber der Anoden-Trichter liegt noch höher als das Elektron im " + an + ", es fällt nicht hinein. Der Kathoden-Trichter liegt noch tiefer als das " + ca + ": Das Elektron müsste hinaufklettern. Es fließt kein Strom. Das ändert sich, sobald die Spannung über " + deV(UZ) + " V liegt.", "same"];
-  return ["Spannung " + deV(ue) + " V: Der Anoden-Trichter liegt tiefer als das Elektron im " + an + ", es fällt hinein. Rohr und Draht sind voll mit Elektronen. Fällt am Kathoden-Trichter (er liegt höher als das " + ca + ") eines auf das " + ca + ", rückt die ganze Kette nach, getrieben von der Spannungsquelle, und am Anoden-Trichter wird Platz für das nächste Elektron. Zwei " + an + " geben zwei Elektronen ab und werden zu Atomen, die sich zu " + E.mol.f + " verbinden. Aus " + ca + " wird " + E.metal.f + ", das sich abscheidet.", "new"];
+  return ["Spannung " + deV(ue) + " V: Der Anoden-Trichter liegt tiefer als das Elektron im " + an + ", es fällt hinein. Rohr und Draht sind voll mit Elektronen. Fällt am Kathoden-Trichter (er liegt höher als das " + ca + ") eines auf das " + ca + ", rückt die ganze Kette nach, getrieben von der Spannungsquelle, und am Anoden-Trichter wird Platz für das nächste Elektron. Zwei " + an + " geben zwei Elektronen ab und werden zu Atomen, die sich zu " + E.mol.f + " verbinden" + (E.gas ? " und als Gas entweichen." : " und gelöst bleiben (" + E.molName + " ist kein Gas): Die Lösung an der Anode färbt sich.") + " Aus " + ca + " wird " + E.metal.f + ", das sich abscheidet.", "new"];
 }
 function eStatus(){
   const [t, cls] = eText(), s = $("estatus");
