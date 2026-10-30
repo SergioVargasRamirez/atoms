@@ -559,7 +559,7 @@ function draw(){
    Kathoden-Trichter um je U/2. Das Elektron im Cu²⁺ liegt um Uz höher als das im Cl⁻ (die beiden reagieren von allein nicht). Bei U = Uz liegt der
    Anoden-Trichter genau auf Höhe des Anions und der Kathoden-Trichter genau auf Höhe des Kations. Erst darüber (U > Uz) fließt etwas.
    Rohre und Draht sind eine Elektronenkette: Fällt vorn eines auf das Kation, rückt die Kette nach, und hinten ist Platz für eines vom Anion. */
-const EV = {W:600, H:330, F0:160, k:64, xia:390, xik:225, xfa:505, xfk:95, fw:36, fh:22, r:17, yb:306, xl:14, yt:30, pileY:282, sp:11};
+const EV = {W:600, H:330, F0:160, k:64, xia:390, xik:225, xfa:505, xfk:95, fw:36, fh:22, r:17, yb:306, xl:14, yt:30, pileY:282, sp:13};
 EV.yia = EV.F0 + UZ / 2 * EV.k; EV.yik = EV.F0 - UZ / 2 * EV.k;
 /* Weg eines Trichters aus der Mittellage: 32 px je Volt bis 3 V, darüber nur 4 px je Volt (damit 6 V ins Bild passen) */
 const dOf = ue => ue <= 3 ? ue / 2 * EV.k : 1.5 * EV.k + (ue - 3) * 4;
@@ -636,6 +636,7 @@ function estep(dt){
 /* Elektron als kleiner Pac-Man: Mund zeigt in Laufrichtung, kaut während sich etwas bewegt */
 function pac(c, x, y, r, ang, open){
   c.beginPath(); c.moveTo(x, y); c.arc(x, y, r, ang + open, ang + 6.2832 - open); c.closePath(); c.fillStyle = "#ffd166"; c.fill();
+  c.beginPath(); c.arc(x + Math.cos(ang - 1.1) * r * 0.5, y + Math.sin(ang - 1.1) * r * 0.5, Math.max(0.9, r * 0.14), 0, 6.2832); c.fillStyle = "#0a0e18"; c.fill();
 }
 function eion(c, x, y, col, label, alpha, r = EV.r, tc = "#0a0e18"){
   c.globalAlpha = alpha; c.beginPath(); c.arc(x, y, r, 0, 6.2832); c.fillStyle = col; c.fill();
@@ -666,10 +667,10 @@ function drawE(){
   c.beginPath(); c.moveTo(EV.xfa - EV.fw, rim); c.lineTo(EV.xfa + EV.fw, rim); c.lineTo(EV.xfa + 5, rim + EV.fh); c.lineTo(EV.xfa - 5, rim + EV.fh); c.closePath(); c.fill(); c.stroke();
   c.beginPath(); c.moveTo(EV.xfk - EV.fw, mouth); c.lineTo(EV.xfk + EV.fw, mouth); c.lineTo(EV.xfk + 5, mouth - EV.fh); c.lineTo(EV.xfk - 5, mouth - EV.fh); c.closePath(); c.fill(); c.stroke();
   /* Elektronenkette in Rohr und Draht */
-  const chomp = es.ev && !es.ev.a ? 0.1 + 0.5 * Math.abs(Math.sin(sim.t * 14)) : 0.3;
+  const chomp = fl ? 0.1 + 0.7 * Math.abs(Math.sin(sim.t * 9)) : 0.55;
   for (let q = es.off; q <= ps.b.L; q += EV.sp){
     const [x, y] = epos(ps.b, q), [x2, y2] = q + 2 <= ps.b.L ? epos(ps.b, q + 2) : epos(ps.b, q - 2);
-    pac(c, x, y, 5.2, Math.atan2(y2 - y, x2 - x) + (q + 2 <= ps.b.L ? 0 : Math.PI), chomp);
+    pac(c, x, y, 6, Math.atan2(y2 - y, x2 - x) + (q + 2 <= ps.b.L ? 0 : Math.PI), chomp);
   }
   /* großes + und − an den Trichtern, sobald der Stromkreis geschlossen ist */
   if (on){ c.fillStyle = "#fff"; c.font = "700 34px system-ui,sans-serif"; c.textAlign = "center"; c.textBaseline = "middle"; c.fillText("+", EV.xfa, rim - 22); c.fillText("−", EV.xfk, mouth + 24); }
@@ -703,7 +704,7 @@ function drawE(){
     const at = t => e.ph === "a" ? [e.x0 + EV.r + (EV.xfa - e.x0 - EV.r) * t, EV.yia + (rim + EV.fh * 0.4 - EV.yia) * t * t]
                                  : [EV.xfk + (e.xe - EV.xfk) * t, mouth + (EV.yik - mouth) * t * t];
     [x, y] = at(e.t); const [x2, y2] = at(Math.min(1, e.t + 0.03));
-    pac(c, x, y, 6.5, Math.atan2(y2 - y || 0.001, x2 - x || 0.001), 0.15 + 0.45 * Math.abs(Math.sin(sim.t * 14)));
+    pac(c, x, y, 6.5, Math.atan2(y2 - y || 0.001, x2 - x || 0.001), 0.1 + 0.7 * Math.abs(Math.sin(sim.t * 9)));
   }
 }
 function eText(){
