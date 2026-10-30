@@ -54,6 +54,7 @@
   </div>
 </nav>
 <button class="sidenav-tab" id="sidenav-tab" type="button" aria-label="Menü einblenden" title="Menü einblenden">»</button>
+<button class="theme-btn" id="theme-btn" type="button"></button>
 <script>
 (() => {
   // Nicht einbetten: In einem fremden Rahmen (iframe) nur einen Hinweis mit Link zeigen.
@@ -75,15 +76,19 @@
     if (m === "light" || m === "dark") document.documentElement.setAttribute("data-theme", m);
     else document.documentElement.removeAttribute("data-theme");
     themeBtns.forEach(b => b.setAttribute("aria-pressed", String(b.dataset.themeSet === m)));
+    const tb = document.getElementById("theme-btn"), L = {system:["◐","System"], light:["☀","Tag"], dark:["☾","Nacht"]}[m];
+    tb.textContent = L[0]; tb.title = tb.ariaLabel = "Darstellung: " + L[1] + " (klicken zum Wechseln)";
+  };
+  const setMode = m => {
+    mode = m; applyTheme(m);
+    try { if (m === "system") localStorage.removeItem("theme"); else localStorage.setItem("theme", m); } catch (e) {}
+    window.dispatchEvent(new Event("resize"));  // Zeichnungen neu aufbauen
   };
   let mode = "system";
   try { mode = localStorage.getItem("theme") || "system"; } catch (e) {}
   applyTheme(mode);
-  themeBtns.forEach(b => b.addEventListener("click", () => {
-    mode = b.dataset.themeSet; applyTheme(mode);
-    try { if (mode === "system") localStorage.removeItem("theme"); else localStorage.setItem("theme", mode); } catch (e) {}
-    window.dispatchEvent(new Event("resize"));  // Zeichnungen neu aufbauen
-  }));
+  themeBtns.forEach(b => b.addEventListener("click", () => setMode(b.dataset.themeSet)));
+  document.getElementById("theme-btn").addEventListener("click", () => setMode({system:"light", light:"dark", dark:"system"}[mode]));
   // Desktop: Menü ein-/ausblenden, Wahl wird gemerkt (Standard: ausgeblendet)
   const root = document.documentElement, tab = document.getElementById("sidenav-tab");
   try { if (localStorage.getItem("nav") === "1") root.classList.add("nav-open"); } catch (e) {}
