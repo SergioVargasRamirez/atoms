@@ -542,7 +542,7 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
     items.forEach(c => g.appendChild(c.el));
     const dt = desc[title] ? document.createElement("p") : null;
     if (dt){ dt.className = "tdesc"; dt.textContent = desc[title]; }
-    const apply = () => { const zuk = !(offen.has(title) ? offen.get(title) : true); g.hidden = zuk; if (dt) dt.hidden = !zuk; bt.setAttribute("aria-expanded", String(!zuk)); };
+    const apply = () => { const zuk = !(offen.has(title) ? offen.get(title) : true); g.hidden = zuk; bt.setAttribute("aria-expanded", String(!zuk)); };
     bt.onclick = () => { offen.set(title, bt.getAttribute("aria-expanded") !== "true"); apply(); };
     apply();
     f.append(h); if (dt) f.append(dt); f.append(g); return f;
