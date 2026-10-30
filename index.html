@@ -53,7 +53,7 @@
 .j8{--jc:var(--j8c)}.j9{--jc:var(--j9c)}.j10{--jc:var(--j10c)}
 .jp.j8,.jp.j9,.jp.j10{background:var(--jc);border-color:var(--jc);color:var(--jfg)}
 .jp.ntg{background:var(--surface2);border-color:var(--line);color:var(--muted)}
-.logo{text-align:center;font:800 clamp(64px,12vw,116px)/1 var(--sans);letter-spacing:.01em;margin:calc(clamp(24px,7vh,64px) + 15px) 0 clamp(18px,3vh,30px);}
+.logo{text-align:center;font:800 clamp(64px,12vw,116px)/1 var(--sans);letter-spacing:.01em;margin:calc(clamp(24px,7vh,64px) + 25px) 0 clamp(18px,3vh,30px);}
 .logo span:nth-child(1),.logo span:nth-child(5){color:var(--accent)}
 .logo span:nth-child(2){color:var(--j8c)}
 .logo span:nth-child(3){color:var(--j9c)}
@@ -307,7 +307,7 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
 <p class="hint" id="hint" aria-live="polite" hidden></p>
 <div class="filter" id="fj" role="group" aria-label="Jahrgangsstufe"><span class="lbl">Jahrgang</span><button class="fp alle" type="button" data-v="" aria-pressed="true">Alle</button><button class="fp j8" type="button" data-v="8" aria-pressed="false">8</button><button class="fp j9" type="button" data-v="9" aria-pressed="false">9</button><button class="fp j10" type="button" data-v="10" aria-pressed="false">10</button></div>
 <div class="filter" id="ft" role="group" aria-label="Thema"><span class="lbl">Thema</span><button class="fp alle" type="button" data-v="" aria-pressed="true">Alle</button><button class="fp" type="button" data-v="Teilchenmodell" aria-pressed="false">Teilchenmodell</button><button class="fp" type="button" data-v="Atommodelle" aria-pressed="false">Atommodelle</button><button class="fp" type="button" data-v="Elektronen und Energiestufen" aria-pressed="false">Elektronen und Energiestufen</button><button class="fp" type="button" data-v="Molekülbau" aria-pressed="false">Molekülbau</button><button class="fp" type="button" data-v="Wechselwirkungen" aria-pressed="false">Wechselwirkungen</button><button class="fp" type="button" data-v="Chemische Reaktion" aria-pressed="false">Chemische Reaktion</button><button class="fp" type="button" data-v="Säuren und Basen" aria-pressed="false">Säuren und Basen</button><button class="fp" type="button" data-v="Elektrochemie" aria-pressed="false">Elektrochemie</button></div>
-<div class="status"><span id="status" aria-live="polite"></span><span class="sp"></span><button type="button" id="alle-zu" class="alle-zu">Alle ein-/ausklappen</button><span class="ansicht" id="ansicht" role="group" aria-label="Ansicht"><button type="button" data-v="liste" aria-pressed="true">Liste</button><button type="button" data-v="karten" aria-pressed="false">Karten</button></span></div>
+<div class="status"><span id="status" aria-live="polite"></span><span class="sp"></span><button type="button" id="alle-zu" class="alle-zu">Alle ein-/ausklappen</button><span class="ansicht" id="ansicht" role="group" aria-label="Ansicht"><button type="button" data-v="liste" aria-pressed="false">Liste</button><button type="button" data-v="karten" aria-pressed="true">Karten</button></span></div>
 <div id="liste">
 <h2 class="topic" data-d="Stoffe bestehen aus bewegten Teilchen: Diffusion und Aggregatzustände.">Teilchenmodell</h2>
 <div class="cards">
@@ -509,11 +509,11 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
   const passt = (c, q) => { const a = f1(q).trim().split(" ").filter(Boolean), b = f2(q).trim().split(" ").filter(Boolean); return a.every(w => hat(c.h1, w)) || b.every(w => hat(c.h2, w)); };
   const topics = [...liste.querySelectorAll("h2.topic")].map(h => h.textContent).sort((a, b) => a.localeCompare(b, "de"));
   const desc = {}; liste.querySelectorAll("h2.topic").forEach(h => desc[h.textContent] = h.dataset.d || "");
-  const offen = new Map();  // Handwahl je Bereich (nur in dieser Sitzung); ohne Wahl: zu, solange kein Filter aktiv ist
+  const offen = new Map();  // Handwahl je Bereich (nur in dieser Sitzung); ohne Wahl: aufgeklappt
   [...ft.querySelectorAll(".fp[data-v]:not([data-v=\"\"])")].sort((a, b) => a.dataset.v.localeCompare(b.dataset.v, "de")).forEach(b => ft.appendChild(b));
   const YEARS = ["8","9","10"];
-  const state = {j:[], t:"", q:"", v:"liste"};
-  try { if (localStorage.getItem("ansicht") === "karten") state.v = "karten"; } catch (e) {}
+  const state = {j:[], t:"", q:"", v:"karten"};
+  try { if (localStorage.getItem("ansicht") === "liste") state.v = "liste"; } catch (e) {}
   function load(){
     const q = new URLSearchParams(location.hash.slice(1));
     state.j = (q.get("j") || "").split(",").filter(y => YEARS.includes(y));
@@ -542,7 +542,7 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
     items.forEach(c => g.appendChild(c.el));
     const dt = desc[title] ? document.createElement("p") : null;
     if (dt){ dt.className = "tdesc"; dt.textContent = desc[title]; }
-    const apply = () => { const zuk = !(offen.has(title) ? offen.get(title) : !!(state.j.length || state.t || state.q.trim())); g.hidden = zuk; if (dt) dt.hidden = !zuk; bt.setAttribute("aria-expanded", String(!zuk)); };
+    const apply = () => { const zuk = !(offen.has(title) ? offen.get(title) : true); g.hidden = zuk; if (dt) dt.hidden = !zuk; bt.setAttribute("aria-expanded", String(!zuk)); };
     bt.onclick = () => { offen.set(title, bt.getAttribute("aria-expanded") !== "true"); apply(); };
     apply();
     f.append(h); if (dt) f.append(dt); f.append(g); return f;
