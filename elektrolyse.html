@@ -586,10 +586,35 @@ function disc(c, x, y, r, col, label, lcol){
   c.beginPath(); c.arc(x, y, r, 0, 6.2832); c.fillStyle = col; c.fill();
   if (label){ c.fillStyle = lcol || "#0a0e18"; c.font = "700 " + Math.round(r * 1.05) + "px system-ui,sans-serif"; c.textAlign = "center"; c.textBaseline = "middle"; c.fillText(label, x, y + 0.5); }
 }
+/* Gesichter: happy = Edelgaskonfiguration (Ionen, Moleküle), devil = reaktives Atom (frisch entladen), sleep = abgeschiedenes Metall */
+function inkFor(col){ const h = col.replace("#", ""), v = [0, 2, 4].map(i => parseInt(h.substr(i, 2), 16)); return (0.299 * v[0] + 0.587 * v[1] + 0.114 * v[2]) > 120 ? "#0a0e18" : "#fff"; }
+function face(c, x, y, r, mood, col){
+  const ink = inkFor(col || "#cccccc"), ex = r * 0.36, ey = y - r * 0.14, er = Math.max(0.8, r * 0.11);
+  c.save(); c.strokeStyle = ink; c.fillStyle = ink; c.lineWidth = Math.max(0.9, r * 0.12); c.lineCap = "round";
+  if (mood === "devil"){
+    c.fillStyle = "#e5322d"; c.beginPath();
+    c.moveTo(x - r * 0.85, y - r * 0.45); c.lineTo(x - r * 0.75, y - r * 1.45); c.lineTo(x - r * 0.15, y - r * 0.9);
+    c.moveTo(x + r * 0.85, y - r * 0.45); c.lineTo(x + r * 0.75, y - r * 1.45); c.lineTo(x + r * 0.15, y - r * 0.9); c.fill();
+    c.fillStyle = ink;
+    c.beginPath(); c.moveTo(x - ex - r * 0.25, ey - r * 0.3); c.lineTo(x - ex + r * 0.2, ey - r * 0.05); c.moveTo(x + ex + r * 0.25, ey - r * 0.3); c.lineTo(x + ex - r * 0.2, ey - r * 0.05); c.stroke();
+    c.beginPath(); c.arc(x - ex, ey + r * 0.12, er, 0, 6.2832); c.arc(x + ex, ey + r * 0.12, er, 0, 6.2832); c.fill();
+    c.beginPath(); c.arc(x, y + r * 0.62, r * 0.38, 1.15 * Math.PI, 1.85 * Math.PI); c.stroke();
+  } else if (mood === "sleep"){
+    c.beginPath(); c.arc(x - ex, ey, r * 0.2, 0.15 * Math.PI, 0.85 * Math.PI); c.stroke();
+    c.beginPath(); c.arc(x + ex, ey, r * 0.2, 0.15 * Math.PI, 0.85 * Math.PI); c.stroke();
+    c.beginPath(); c.arc(x, y + r * 0.5, r * 0.1, 0, 6.2832); c.fill();
+    if (r >= 6){ c.fillStyle = "#c9d3ea"; c.font = "700 " + Math.round(r * 0.8) + "px system-ui,sans-serif"; c.textAlign = "left"; c.textBaseline = "alphabetic"; c.fillText("z", x + r * 0.7, y - r * 0.75); }
+  } else {
+    c.beginPath(); c.arc(x - ex, ey, er, 0, 6.2832); c.arc(x + ex, ey, er, 0, 6.2832); c.fill();
+    c.beginPath(); c.arc(x, y + r * 0.02, r * 0.5, 0.2 * Math.PI, 0.8 * Math.PI); c.stroke();
+  }
+  c.restore();
+}
+function fdisc(c, x, y, r, col, mood){ disc(c, x, y, r, col); face(c, x, y, r, mood, col); }
 function molecule(c, x, y, a, col, r){
   const dx = Math.cos(a) * r * 0.85, dy = Math.sin(a) * r * 0.85;
   c.strokeStyle = col; c.lineWidth = r * 0.9; c.lineCap = "round"; c.beginPath(); c.moveTo(x - dx, y - dy); c.lineTo(x + dx, y + dy); c.stroke();
-  disc(c, x - dx, y - dy, r, col); disc(c, x + dx, y + dy, r, col);
+  fdisc(c, x - dx, y - dy, r, col, "happy"); fdisc(c, x + dx, y + dy, r, col, "happy");
 }
 function draw(){
   drawE();
@@ -626,12 +651,15 @@ function draw(){
   for (const d of sim.dep){
     const l = Math.floor(d.idx / ROWS), row = sim.order[d.side][d.idx % ROWS], side = +d.side;
     const x = G.xc + side * (G.hw + G.rm + l * 1.6 * G.rm), y = G.T + 2 + (row + 0.5) * 2 * G.rm;
-    disc(c, x, y, G.rm, E.cMetal);
+    fdisc(c, x, y, G.rm, E.cMetal, "sleep");
   }
   /* Halogenatome an der Anode */
-  for (const q of sim.pend) disc(c, G.xa + q.side * (G.hw + G.rm), q.y, G.rm, E.cMol);
+  for (const q of sim.pend) fdisc(c, G.xa + q.side * (G.hw + G.rm), q.y, G.rm, E.cMol, "devil");
   /* Ionen */
-  for (const p of sim.ions) p.t === "c" ? disc(c, p.x, p.y, G.r, E.cCat, "2+") : disc(c, p.x, p.y, G.r, E.cAn, "−");
+  for (const p of sim.ions){
+    const cat = p.t === "c"; fdisc(c, p.x, p.y, G.r, cat ? E.cCat : E.cAn, "happy");
+    c.fillStyle = "#c9d3ea"; c.font = "700 9px system-ui,sans-serif"; c.textAlign = "left"; c.textBaseline = "alphabetic"; c.fillText(cat ? "2+" : "−", p.x + G.r * 0.7, p.y - G.r * 0.7);
+  }
   for (const m of sim.mols) molecule(c, m.x, m.y, m.a, E.cMol, 6);
   for (const b of sim.bubbles){
     c.beginPath(); c.arc(b.x, b.y, 11, 0, 6.2832); c.fillStyle = "rgba(200,232,106,.18)"; c.fill(); c.strokeStyle = "rgba(200,232,106,.8)"; c.lineWidth = 1.5; c.stroke();
@@ -639,9 +667,9 @@ function draw(){
   }
   for (const f of sim.flash){ c.globalAlpha = f.life * 1.6; c.strokeStyle = f.col; c.lineWidth = 2; c.beginPath(); c.arc(f.x, f.y, 10 + (0.5 - f.life) * 22, 0, 6.2832); c.stroke(); } c.globalAlpha = 1;
   /* Legende */
-  const items = [[E.cCat, E.cat.f], [E.cAn, E.an.f], [E.cMetal, E.metal.f], [E.cMol, E.mol.f]];
+  const items = [[E.cCat, E.cat.f, "happy"], [E.cAn, E.an.f, "happy"], [E.cMetal, E.metal.f, "sleep"], [E.cMol, E.mol.f, "happy"]];
   c.font = "600 12px system-ui,sans-serif"; c.textBaseline = "middle"; c.textAlign = "left";
-  items.forEach((it, i) => { const x = 130 + i * 90; disc(c, x, 385, 6, it[0]); c.fillStyle = "#c9d3ea"; c.fillText(it[1], x + 11, 385); });
+  items.forEach((it, i) => { const x = 130 + i * 90; fdisc(c, x, 385, 7, it[0], it[2]); c.fillStyle = "#c9d3ea"; c.fillText(it[1], x + 11, 385); });
 }
 
 /* ---------- Elektronensicht: zwei Trichter als Elektroden, durch Rohre und Draht verbunden ---------- */
@@ -729,9 +757,11 @@ function estep(dt){
 function pac(c, x, y, r, ang, open){
   c.beginPath(); c.moveTo(x, y); c.arc(x, y, r, ang + open, ang + 6.2832 - open); c.closePath(); c.fillStyle = "#ffd166"; c.fill();
 }
-function eion(c, x, y, col, label, alpha, r = EV.r, tc = "#0a0e18"){
+function eion(c, x, y, col, label, alpha, r = EV.r, tc = "#0a0e18", mood){
   c.globalAlpha = alpha; c.beginPath(); c.arc(x, y, r, 0, 6.2832); c.fillStyle = col; c.fill();
-  c.fillStyle = tc; c.font = "700 " + Math.round(r * 0.78) + "px system-ui,sans-serif"; c.textAlign = "center"; c.textBaseline = "middle"; c.fillText(label, x, y + 0.5); c.globalAlpha = 1;
+  if (mood){ face(c, x, y - r * 0.3, r * 0.62, mood, col); c.fillStyle = tc; c.font = "700 " + Math.round(r * 0.62) + "px system-ui,sans-serif"; c.textAlign = "center"; c.textBaseline = "middle"; c.fillText(label, x, y + r * 0.5); }
+  else { c.fillStyle = tc; c.font = "700 " + Math.round(r * 0.78) + "px system-ui,sans-serif"; c.textAlign = "center"; c.textBaseline = "middle"; c.fillText(label, x, y + 0.5); }
+  c.globalAlpha = 1;
 }
 function drawE(){
   if (!$("estage").clientWidth) return;
@@ -777,30 +807,30 @@ function drawE(){
   c.font = "700 18px system-ui,sans-serif"; c.fillStyle = "#ff9f6b"; c.fillText("−", 233, EV.yb - 14); c.fillStyle = "#6ea8ff"; c.fillText("+", 367, EV.yb - 14);
   /* Legende */
   c.font = "600 12px system-ui,sans-serif"; c.textBaseline = "middle"; c.textAlign = "left";
-  const items = [[E.cAn, E.an.f], [E.cCat, E.cat.f], [E.cMol, symA + " (Atom)"], [E.cMetal, E.metal.f], [E.cMol, E.mol.f, 1]];
-  items.forEach((it, i) => { const x = 22 + i * 100; if (it[2]) molecule(c, x - 2, 338, 0.5, it[0], 4); else disc(c, x, 338, 6, it[0]); c.fillStyle = "#c9d3ea"; c.fillText(it[1], x + 12, 338); });
+  const items = [[E.cAn, E.an.f, 0, "happy"], [E.cCat, E.cat.f, 0, "happy"], [E.cMol, symA + " (Atom)", 0, "devil"], [E.cMetal, E.metal.f, 0, "sleep"], [E.cMol, E.mol.f, 1]];
+  items.forEach((it, i) => { const x = 22 + i * 100; if (it[2]) molecule(c, x - 2, 338, 0.5, it[0], 4); else fdisc(c, x, 338, 7, it[0], it[3]); c.fillStyle = "#c9d3ea"; c.fillText(it[1], x + 12, 338); });
   pac(c, 532, 338, 6, 0, 0.5); c.fillStyle = "#c9d3ea"; c.fillText("Elektron", 544, 338);
   c.setLineDash([5, 4]); c.lineWidth = 1.8; c.strokeStyle = "#ffd166"; c.beginPath(); c.moveTo(16, 356); c.lineTo(42, 356); c.stroke();
   c.strokeStyle = "#7d9bff"; c.beginPath(); c.moveTo(300, 356); c.lineTo(326, 356); c.stroke(); c.setLineDash([]);
   c.fillStyle = "#c9d3ea"; c.fillText("Energie des Elektrons im Ion", 50, 356); c.fillText("Energie im Trichter (Elektrode)", 334, 356);
   /* abgeschiedenes Metall */
-  for (let i = 0; i < es.pile; i++){ const [x, y] = pileSlot(i); disc(c, x, y, 5, E.cMetal); }
+  for (let i = 0; i < es.pile; i++){ const [x, y] = pileSlot(i); fdisc(c, x, y, 5, E.cMetal, "sleep"); }
   /* Anion, wartendes Atom, Molekül */
   const wx = an.wx, wy = EV.yia - 44, mx = (an.ax + wx) / 2, my = (EV.yia + wy) / 2;
   if (an.mst === 3) molecule(c, mx, my, 0.5, E.cMol, 9);
   else if (an.mst !== 4){
-    if (an.mst === 2){ const f = Math.min(1, an.t / 0.5); eion(c, an.ax + (mx - an.ax) * f, EV.yia + (my - EV.yia) * f, E.cMol, symA, 1, 13, atc); eion(c, wx + (mx - wx) * f, wy + (my - wy) * f, E.cMol, symA, 1, 13, atc); }
+    if (an.mst === 2){ const f = Math.min(1, an.t / 0.5); eion(c, an.ax + (mx - an.ax) * f, EV.yia + (my - EV.yia) * f, E.cMol, symA, 1, 13, atc, "devil"); eion(c, wx + (mx - wx) * f, wy + (my - wy) * f, E.cMol, symA, 1, 13, atc, "devil"); }
     else {
-      if (an.w) eion(c, wx, wy, E.cMol, symA, 1, 13, atc);
-      if (an.mst === 5){ const f = Math.max(0, Math.min(1, (an.t - 0.4) / 0.6)); eion(c, an.ax + (wx - an.ax) * f, EV.yia + (wy - EV.yia) * f, E.cMol, symA, 1, 13, atc); }
-      else if (an.mst === 1) eion(c, an.ax, EV.yia, E.cMol, symA, 1, 13, atc);
-      else eion(c, an.x, EV.yia, E.cAn, E.an.f, Math.min(1, an.t / 0.4));
+      if (an.w) eion(c, wx, wy, E.cMol, symA, 1, 13, atc, "devil");
+      if (an.mst === 5){ const f = Math.max(0, Math.min(1, (an.t - 0.4) / 0.6)); eion(c, an.ax + (wx - an.ax) * f, EV.yia + (wy - EV.yia) * f, E.cMol, symA, 1, 13, atc, "devil"); }
+      else if (an.mst === 1) eion(c, an.ax, EV.yia, E.cMol, symA, 1, 13, atc, "devil");
+      else eion(c, an.x, EV.yia, E.cAn, E.an.f, Math.min(1, an.t / 0.4), EV.r, "#0a0e18", "happy");
     }
   }
   /* Kation, Atom, Niederschlag */
-  if (ca.st === "ion") eion(c, ca.x, EV.yik, E.cCat, ca.n === 0 ? E.cat.f : symM + "⁺", Math.min(1, ca.t / 0.4));
-  else if (ca.st === "atom") eion(c, ca.x, EV.yik, E.cMetal, E.metal.f, 1, 13);
-  else if (ca.st === "fall") disc(c, ca.x, ca.y, 5, E.cMetal);
+  if (ca.st === "ion") eion(c, ca.x, EV.yik, E.cCat, ca.n === 0 ? E.cat.f : symM + "⁺", Math.min(1, ca.t / 0.4), EV.r, "#0a0e18", "happy");
+  else if (ca.st === "atom") eion(c, ca.x, EV.yik, E.cMetal, E.metal.f, 1, 13, "#0a0e18", "sleep");
+  else if (ca.st === "fall") fdisc(c, ca.x, ca.y, 5, E.cMetal, "sleep");
   /* Gaswolke */
   for (const q of es.puffs){ c.globalAlpha = Math.max(0, q.life) * 0.55; disc(c, q.x, q.y, 8 + (1 - q.life) * 14, E.cMol); } c.globalAlpha = 1;
   /* Elektronen */
