@@ -12,7 +12,7 @@ Anfragen, auch Schriften sind eingebettet.
 | `rutherford.html` | Rutherford gegen das Spektrum (Vorhersage, Experiment, Erklärung; H, Na, Sr, Ba) | von Hand |
 | `fuellen.html` | Elektronen einfüllen (Energiestufen, 2n², Atome und Ionen H bis Ca) | von Hand |
 | `ionisierung.html` | Ionisierungsenergie (Klickspiel, Na, Mg, Al, K, Ca) | von Hand |
-| `ionenbildung.html` | Ionen bilden und entladen: Cl + e⁻ → Cl⁻ und zurück im Energiestufendiagramm, Energie frei oder zugeführt (Photon), Edelgaskonfiguration = zufrieden, Atom = reaktiv (Gesichter); Halogene, Alkalimetalle, Cu, Zn, Sn; Vorhersage, „Noch ein Elektron?“ | von Hand + Tabellenwerte |
+| `ionenbildung.html` | Ionen bilden und entladen: Cl + e⁻ → Cl⁻ und zurück im Energiestufendiagramm, Energie frei oder zugeführt (Photon), Edelgaskonfiguration = zufrieden, Atom = reaktiv (Gesichter); Halogene und Alkalimetalle, Elektronenverteilung; Vorhersage, „Noch ein Elektron?“ | von Hand + Tabellenwerte |
 | `diagramm.html` | Energiestufendiagramm (Baukasten und Test) | von Hand |
 | `pse.html` | Klickbares Periodensystem | von Hand |
 | `modelle.html` | Atommodelle im Vergleich (Dalton bis Schrödinger, H bis Ar, 2D und 3D) | von Hand |
