@@ -665,12 +665,29 @@ function drawShells(idx){
   c.textBaseline = "middle"; c.textAlign = "left"; c.font = "700 12px system-ui,sans-serif"; c.fillStyle = "#c9d3ea";
   c.fillText("Elektronen auf den Energiestufen: " + lv.sp, 16, 16);
   c.fillStyle = "#7482a3"; c.font = "600 11px system-ui,sans-serif"; c.fillText("Energie ↑", 16, 34);
+  /* das Elektron, das beim Ionisieren/Entladen die Stufe wechselt: Stufe, Platz in der Reihe */
+  const D0 = L[0].D, D1 = L[endIdx()].D, hk = e().kind;
+  let hi = -1; for (let i = 0; i < nmax; i++) if ((D0[i] || 0) !== (D1[i] || 0)) hi = i;
+  const hq = hi < 0 ? 0 : Math.min(D0[hi] || 0, D1[hi] || 0);
   for (let i = 0; i < nmax; i++){
     const y = 40 + (nmax - 1 - i) * RH + RH / 2, n = D[i] || 0, outer = i === D.length - 1;
     c.strokeStyle = outer ? "#7d9bff" : "#3a465c"; c.lineWidth = outer ? 3 : 2; c.beginPath(); c.moveTo(x0, y + 9); c.lineTo(x1, y + 9); c.stroke();
     c.fillStyle = outer ? "#7d9bff" : "#7482a3"; c.font = "600 11px system-ui,sans-serif"; c.textAlign = "left"; c.fillText("n = " + (i + 1), 16, y + 2);
-    for (let q = 0; q < n; q++){ c.beginPath(); c.arc(x0 + 12 + q * sp, y + 2, Math.min(4.6, sp * 0.38), 0, 6.2832); c.fillStyle = outer ? "#7d9bff" : "#c9d3ea"; c.fill(); }
-    if (n){ c.fillStyle = outer ? "#7d9bff" : "#9ba7bc"; c.font = "700 11px system-ui,sans-serif"; c.fillText(String(n), x0 + 12 + n * sp, y + 2); }
+    const rr = Math.min(4.6, sp * 0.38);
+    for (let q = 0; q < n; q++){
+      const hot = i === hi && q === hq, cx = x0 + 12 + q * sp;
+      if (hot){ c.beginPath(); c.arc(cx, y + 2, rr + 4, 0, 6.2832); c.fillStyle = "rgba(255,209,102,.28)"; c.fill(); }
+      c.beginPath(); c.arc(cx, y + 2, hot ? rr + 1 : rr, 0, 6.2832); c.fillStyle = hot ? "#ffd166" : outer ? "#7d9bff" : "#c9d3ea"; c.fill();
+    }
+    let endx = x0 + 12 + n * sp;
+    if (i === hi && n <= hq){   /* leerer Platz: hier fehlt das Elektron bzw. hier käme es hin */
+      const cx = x0 + 12 + hq * sp; c.strokeStyle = "#ffd166"; c.lineWidth = 1.8; c.setLineDash([3, 3]); c.beginPath(); c.arc(cx, y + 2, rr + 1.5, 0, 6.2832); c.stroke(); c.setLineDash([]); endx = cx + sp;
+    }
+    if (n){ c.fillStyle = outer ? "#7d9bff" : "#9ba7bc"; c.font = "700 11px system-ui,sans-serif"; c.textAlign = "left"; c.fillText(String(n), endx, y + 2); endx += 22; }
+    if (i === hi){
+      const has = n > hq, t = hk === "hal" ? (has ? "aufgenommenes Elektron" : "hier fehlt ein Elektron") : (has ? "wird abgegeben" : "abgegebenes Elektron fehlt");
+      c.fillStyle = "#ffd166"; c.font = "700 11px system-ui,sans-serif"; c.textAlign = "left"; c.fillText("← " + t, endx + 4, y + 2);
+    }
   }
   const fx = W - 90;
   c.textAlign = "left"; c.font = "600 11px system-ui,sans-serif"; c.fillStyle = "#7482a3"; c.fillText("frei:", fx, 16);
