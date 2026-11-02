@@ -829,7 +829,7 @@ function drawE(){
     }
   }
   /* Kation, Atom, Niederschlag */
-  if (ca.st === "ion") eion(c, ca.x, EV.yik, E.cCat, ca.n === 0 ? E.cat.f : symM + "⁺", Math.min(1, ca.t / 0.4), EV.r, "#0a0e18", "happy");
+  if (ca.st === "ion") eion(c, ca.x, EV.yik, E.cCat, ca.n === 0 ? E.cat.f : symM + "⁺", Math.min(1, ca.t / 0.4), EV.r, "#0a0e18", ca.n === 0 ? "happy" : "devil");
   else if (ca.st === "atom") eion(c, ca.x, EV.yik, E.cMetal, E.metal.f, 1, 13, "#0a0e18", "sleep");
   else if (ca.st === "fall") fdisc(c, ca.x, ca.y, 5, E.cMetal, "sleep");
   /* Gaswolke */

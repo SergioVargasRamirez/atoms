@@ -117,6 +117,7 @@ sub,sup{line-height:0}
 .chips button{min-width:0;padding:7px 14px}
 .chips button b{font-weight:700}
 #bild{height:560px}
+#schalen{height:138px;border-top:1px solid #1b2338}
 .bigrow{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .go2{font:inherit;font-weight:700;font-size:1rem;padding:12px 10px;border-radius:10px;border:0;color:#fff;cursor:pointer;text-align:center;line-height:1.25}
 .go2 small{display:block;font-weight:400;font-size:.8rem;opacity:.92}
@@ -355,9 +356,10 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
     <div class="lab" style="margin-top:6px">
       <div class="stagewrap">
         <canvas id="bild" aria-label="Energiestufendiagramm: Atom und Ion mit Gesichtern, Elektronen und Photon"></canvas>
+        <canvas id="schalen" aria-label="Verteilung der Elektronen auf die Energiestufen"></canvas>
       </div>
       <div class="side">
-        <div class="task"><b>Aufgabe</b>1. Wähle ein Element, sage voraus und lass den Vorgang laufen: <i>Ionisieren</i> (Atom wird zum Ion) und danach <i>Entladen</i> (Ion wird zum Atom). Vergleiche die Energie in beiden Richtungen.<br>2. Schau auf die Gesichter: Wann ist das Teilchen zufrieden, wann reaktiv? Zeige mit „Noch ein Elektron?“ den nächsten Schritt.<br>3. Vergleiche Chlor, Brom und Iod, dann Lithium bis Caesium.</div>
+        <div class="task"><b>Aufgabe</b>1. Wähle ein Element, sage voraus und lass den Vorgang laufen: <i>Ionisieren</i> (Atom wird zum Ion) und danach <i>Entladen</i> (Ion wird zum Atom). Vergleiche die Energie in beiden Richtungen.<br>2. Unter dem Diagramm siehst du, wie die Elektronen auf die Energiestufen verteilt sind. Schau auf die Gesichter: Wann ist das Teilchen zufrieden, wann reaktiv? Zeige mit „Noch ein Elektron?“ den nächsten Schritt.<br>3. Vergleiche Chlor, Brom und Iod, dann Lithium bis Caesium.</div>
         <div class="bigrow">
           <button class="go2 ion" id="bIon" type="button"></button>
           <button class="go2 ent" id="bEnt" type="button"></button>
@@ -380,6 +382,7 @@ html.eingebettet body > *:not(.eingebettet-hinweis){display:none!important}
   <details>
     <summary>Zahlen im Hintergrund und Grenzen des Modells</summary>
     <ul>
+      <li>Die Elektronenverteilung unter dem Diagramm zählt die Elektronen pro Energiestufe (n = 1, 2, …). Bis Calcium entspricht sie dem Buch (2, 8, 8, 1 …). Bei Cu, Zn, Sn, Rb, Cs und den Halogenen Br und I stehen bis zu 18 Elektronen auf einer Stufe: Das geht über die Regeln im Buch hinaus und folgt der tatsächlichen Besetzung. Cu²⁺ hat 17 Elektronen auf der dritten Stufe.</li>
       <li>Die Werte sind gerundete Literaturwerte in kJ/mol für einzelne Teilchen im Gaszustand: Elektronenaffinität (Cl 349, Br 324, I 295) und Ionisierungsenergien (z. B. Na 496 und 4562; Cu 746 und 1958). Aus den kJ/mol folgt die Wellenlänge eines Photons: λ = 119 627 nm · kJ/mol ÷ E.</li>
       <li>Das Photon ist ein idealisiertes Bild. Ein einzelnes Atom gibt die frei werdende Energie meist durch Stöße an andere Teilchen ab, in Lösung an das Wasser (die Lösung wird minimal wärmer). Umgekehrt muss ein einzelnes Lichtquant die gesamte Energie auf einmal liefern.</li>
       <li><b>Edelgaskonfiguration heißt nicht „niedrigste Energie“.</b> Na⁺ + e⁻ liegt energetisch <i>höher</i> als das Na-Atom. Das Ion ist zufrieden, weil der nächste Schritt (noch ein Elektron abgeben) sehr viel Energie braucht (4562 statt 496 kJ/mol): Es hat keinen Grund, weiter zu reagieren. Beim Chlorid ist es genauso: Ein weiteres Elektron aufzunehmen kostet Energie, das Cl⁻ bleibt stabil. Das Atom dagegen (Cl, Na) setzt mit wenig oder keinem Aufwand um, das macht es reaktiv.</li>
@@ -399,27 +402,27 @@ const nf = v => Math.round(v).toLocaleString("de-DE");
 const SUP = ["", "⁺", "²⁺", "³⁺"];
 const LAM = 119627;  /* λ in nm = 119627 / E in kJ/mol */
 const EL = {
-  Cl:{name:"Chlor", kind:"hal", conf:"Ar", val:7, E:[349], cols:["#c8e86a","#5fd39a"]},
-  Br:{name:"Brom", kind:"hal", conf:"Kr", val:7, E:[324], cols:["#c4421f","#e0a23a"]},
-  I:{name:"Iod", kind:"hal", conf:"Xe", val:7, E:[295], cols:["#8a4b2a","#b07cff"]},
-  Li:{name:"Lithium", kind:"alk", conf:"He", E:[520], wall:7298, cols:["#c9ced8","#6fd0e0"]},
-  Na:{name:"Natrium", kind:"alk", conf:"Ne", E:[496], wall:4562, cols:["#c9ced8","#6fd0e0"]},
-  K:{name:"Kalium", kind:"alk", conf:"Ar", E:[419], wall:3052, cols:["#c9ced8","#6fd0e0"]},
-  Rb:{name:"Rubidium", kind:"alk", conf:"Kr", E:[403], wall:2633, cols:["#c9ced8","#6fd0e0"]},
-  Cs:{name:"Caesium", kind:"alk", conf:"Xe", E:[376], wall:2234, cols:["#c9ced8","#6fd0e0"]},
-  Cu:{name:"Kupfer", kind:"tm", E:[746,1958], wall:3555, cols:["#d9783a","#5aa9ff"], why:"Cu²⁺ hat keine Edelgaskonfiguration, ist in Lösung durch die Wasserhülle aber beständig."},
-  Zn:{name:"Zink", kind:"tm", E:[906,1733], wall:3833, cols:["#c9ced8","#8fa6d6"], why:"Zn²⁺ hat eine gefüllte 3d-Schale (kein Edelgas) und ist in Lösung beständig."},
-  Sn:{name:"Zinn", kind:"tm", E:[709,1412], wall:2943, cols:["#a9b7c6","#d6b88f"], why:"Sn²⁺ hat keine Edelgaskonfiguration, ist in Lösung aber beständig."}
+  Cl:{name:"Chlor", kind:"hal", conf:"Ar", val:7, E:[349], D:[[2,8,7],[2,8,8]], cols:["#c8e86a","#5fd39a"]},
+  Br:{name:"Brom", kind:"hal", conf:"Kr", val:7, E:[324], D:[[2,8,18,7],[2,8,18,8]], cols:["#c4421f","#e0a23a"]},
+  I:{name:"Iod", kind:"hal", conf:"Xe", val:7, E:[295], D:[[2,8,18,18,7],[2,8,18,18,8]], cols:["#8a4b2a","#b07cff"]},
+  Li:{name:"Lithium", kind:"alk", conf:"He", E:[520], D:[[2,1],[2]], wall:7298, cols:["#c9ced8","#6fd0e0"]},
+  Na:{name:"Natrium", kind:"alk", conf:"Ne", E:[496], D:[[2,8,1],[2,8]], wall:4562, cols:["#c9ced8","#6fd0e0"]},
+  K:{name:"Kalium", kind:"alk", conf:"Ar", E:[419], D:[[2,8,8,1],[2,8,8]], wall:3052, cols:["#c9ced8","#6fd0e0"]},
+  Rb:{name:"Rubidium", kind:"alk", conf:"Kr", E:[403], D:[[2,8,18,8,1],[2,8,18,8]], wall:2633, cols:["#c9ced8","#6fd0e0"]},
+  Cs:{name:"Caesium", kind:"alk", conf:"Xe", E:[376], D:[[2,8,18,18,8,1],[2,8,18,18,8]], wall:2234, cols:["#c9ced8","#6fd0e0"]},
+  Cu:{name:"Kupfer", kind:"tm", E:[746,1958], D:[[2,8,18,1],[2,8,18],[2,8,17]], wall:3555, cols:["#d9783a","#5aa9ff"], why:"Cu²⁺ hat keine Edelgaskonfiguration, ist in Lösung durch die Wasserhülle aber beständig."},
+  Zn:{name:"Zink", kind:"tm", E:[906,1733], D:[[2,8,18,2],[2,8,18,1],[2,8,18]], wall:3833, cols:["#c9ced8","#8fa6d6"], why:"Zn²⁺ hat eine gefüllte 3d-Schale (kein Edelgas) und ist in Lösung beständig."},
+  Sn:{name:"Zinn", kind:"tm", E:[709,1412], D:[[2,8,18,18,4],[2,8,18,18,3],[2,8,18,18,2]], wall:2943, cols:["#a9b7c6","#d6b88f"], why:"Sn²⁺ hat keine Edelgaskonfiguration, ist in Lösung aber beständig."}
 };
 function levelsOf(k){
   const e = EL[k], s = k;
   if (e.kind === "hal") return [
-    {y:0, lab:s + " + e⁻", sp:s, ne:1, mood:"devil", col:e.cols[0]},
-    {y:-e.E[0], lab:s + "⁻", sp:s + "⁻", ne:0, mood:"happy", col:e.cols[1]}];
-  const L = [{y:0, lab:s, sp:s, ne:0, mood:e.kind === "alk" ? "devil" : "sleep", col:e.cols[0]}];
+    {y:0, lab:s + " + e⁻", sp:s, ne:1, D:e.D[0], mood:"devil", col:e.cols[0]},
+    {y:-e.E[0], lab:s + "⁻", sp:s + "⁻", ne:0, D:e.D[1], mood:"happy", col:e.cols[1]}];
+  const L = [{y:0, lab:s, sp:s, ne:0, D:e.D[0], mood:e.kind === "alk" ? "devil" : "sleep", col:e.cols[0]}];
   let y = 0;
   e.E.forEach((v, i) => { y += v; const n = i + 1, last = i === e.E.length - 1;
-    L.push({y, lab:s + SUP[n] + " + " + (n > 1 ? n + " " : "") + "e⁻", sp:s + SUP[n], ne:n, mood:last ? "happy" : "devil", col:e.cols[1]}); });
+    L.push({y, lab:s + SUP[n] + " + " + (n > 1 ? n + " " : "") + "e⁻", sp:s + SUP[n], ne:n, D:e.D[n], mood:last ? "happy" : "devil", col:e.cols[1]}); });
   return L;
 }
 /* ---------- Gesichter (wie auf der Seite Elektrolyse) ---------- */
@@ -607,6 +610,7 @@ function draw(){
     if (an || rest !== i) ball(c, bx, mk(i), R, l.col, l.mood, l.sp, 0.25);
   });
   /* Teilchen und Elektronen */
+  let shIdx = rest;
   let mx = bx, my = mk(rest), mc = L[rest].col, mm = L[rest].mood, ms = L[rest].sp;
   if (!an){
     ball(c, mx, my, R, mc, mm, ms, 1);
@@ -617,7 +621,7 @@ function draw(){
     const eu = ease(u);
     my = mk(an.a) + (mk(an.b) - mk(an.a)) * eu;
     const sw = u >= 0.5 ? an.b : an.a;
-    mc = L[sw].col; mm = L[sw].mood; ms = L[sw].sp;
+    shIdx = sw; mc = L[sw].col; mm = L[sw].mood; ms = L[sw].sp;
     ball(c, mx, my, R, mc, mm, ms, 1);
     const na = L[an.a].ne, nb = L[an.b].ne, rel = nb > na, k = Math.max(na, nb) - 1, nfix = Math.min(na, nb);
     for (let q = 0; q < nfix; q++) electron(c, ex(q), my, 1);
@@ -661,7 +665,38 @@ function draw(){
   const lg = [["happy", "#8fd6a8", "zufrieden (Edelgaskonfiguration)"], ["devil", "#c8e86a", "reaktiv"], ["sleep", "#d9783a", "ruhendes Metall"]];
   c.font = "600 12px system-ui,sans-serif"; c.textAlign = "left";
   let lx = 22;
+  drawShells(shIdx);
   lg.forEach(g => { c.beginPath(); c.arc(lx + 9, H - 26, 9, 0, 6.2832); c.fillStyle = g[1]; c.fill(); face(c, lx + 9, H - 26, 9, g[0], g[1]); c.fillStyle = "#c9d3ea"; c.fillText(g[2], lx + 24, H - 26); lx += 28 + c.measureText(g[2]).width + 14; });
+}
+const NOBLE = {"2":"He", "2,8":"Ne", "2,8,8":"Ar", "2,8,18,8":"Kr", "2,8,18,18,8":"Xe"};
+function drawShells(idx){
+  const sc = $("schalen"), dpr = window.devicePixelRatio || 1, W = sc.clientWidth, H = sc.clientHeight;
+  if (!W || !H) return;
+  if (sc.width !== Math.round(W * dpr) || sc.height !== Math.round(H * dpr)){ sc.width = Math.round(W * dpr); sc.height = Math.round(H * dpr); }
+  const c = sc.getContext("2d"); c.setTransform(dpr, 0, 0, dpr, 0, 0); c.clearRect(0, 0, W, H);
+  const lv = L[idx], D = lv.D, nmax = Math.max(...L.map(l => l.D.length)), per = 6;
+  const gap = 6, left = 16, right = 96, bw = Math.min(84, (W - left - right - gap * (nmax - 1)) / nmax), sp = bw / (per + 0.6), r = Math.min(4.6, sp * 0.4);
+  c.textBaseline = "middle"; c.textAlign = "left"; c.font = "700 12px system-ui,sans-serif"; c.fillStyle = "#c9d3ea";
+  c.fillText("Elektronen auf den Energiestufen: " + lv.sp, left, 14);
+  for (let i = 0; i < nmax; i++){
+    const x = left + i * (bw + gap), n = D[i] || 0, outer = i === D.length - 1, y0 = 30;
+    c.strokeStyle = outer ? "#7d9bff" : "#2b3648"; c.lineWidth = outer ? 2 : 1; c.beginPath(); c.roundRect(x, y0, bw, 58, 6); c.stroke();
+    c.fillStyle = "#7482a3"; c.font = "600 11px system-ui,sans-serif"; c.textAlign = "center"; c.fillText("n = " + (i + 1), x + bw / 2, y0 + 70);
+    for (let q = 0; q < n; q++){
+      const cx = x + sp * 0.8 + (q % per) * sp, cy = y0 + 12 + Math.floor(q / per) * (sp * 0.95 + 2);
+      c.beginPath(); c.arc(cx, cy, r, 0, 6.2832); c.fillStyle = outer ? "#7d9bff" : "#c9d3ea"; c.fill();
+    }
+    if (n) { c.fillStyle = outer ? "#7d9bff" : "#9ba7bc"; c.font = "700 11px system-ui,sans-serif"; c.fillText(String(n), x + bw / 2, y0 + 50); }
+  }
+  /* freie Elektronen und Edelgas-Hinweis */
+  const fx = W - right + 14;
+  c.textAlign = "left"; c.font = "600 11px system-ui,sans-serif"; c.fillStyle = "#7482a3"; c.fillText("frei:", fx, 40);
+  for (let q = 0; q < lv.ne; q++) electron(c, fx + 10 + q * 22, 60, 1);
+  if (!lv.ne){ c.fillStyle = "#7482a3"; c.fillText("keine", fx + 28, 40); }
+  const ng = NOBLE[D.join(",")];
+  c.font = "700 12px system-ui,sans-serif"; c.textAlign = "left";
+  if (ng){ c.fillStyle = "#5fd39a"; c.fillText("Edelgaskonfiguration von " + ng, left, H - 8); }
+  else { c.fillStyle = "#9ba7bc"; c.fillText("keine Edelgaskonfiguration", left, H - 8); }
 }
 let lastMode = "ion";
 /* ---------- Bedienung ---------- */
